@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ApiKeyConfig {
 
     @Getter
-    @Value("${SHINHAN_APIKEY}")
+    @Value("${SSAFY_APIKEY}")
     private String apiKey;
 
     private String lastDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
