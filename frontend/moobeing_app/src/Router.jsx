@@ -13,7 +13,7 @@ import TotalJourney from "./routes/TotalJourneyPage";
 import Welcome from "./routes/WelcomePage";
 import Quiz from "./routes/QuizPage";
 import QuizResult from "./routes/QuizResultPage";
-import GetRadish from "./routes/GetRadishPage";
+import GetRadishCharacter from "./routes/GetRadishCharacterPage";
 import useUserStore from "./store/UserStore";
 
 function Router() {
@@ -54,59 +54,6 @@ function Router() {
         <Route
           path="/"
           element={userInfo ? <Home /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/loan-journey/:loanName"
-          element={userInfo ? <LoanJourney /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/login"
-          element={!userInfo ? <Login /> : <Navigate to="/" />}
-        />
-        <Route path="/signup" element={<SignUp />} />
-        <Route
-          path="/mypage"
-          element={userInfo ? <MyPage /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/radish-collection"
-          element={userInfo ? <RadishCollection /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/repayment/:selectedLoanName"
-          element={userInfo ? <Repayment /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/spend"
-          element={userInfo ? <Spend /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/total-journey"
-          element={userInfo ? <TotalJourney /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/welcome"
-          element={userInfo ? <Welcome /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/quiz"
-          element={
-            userInfo && canAccessQuiz ? (
-              <Quiz />
-            ) : userInfo ? (
-              <Navigate to="/" />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/quiz/result/:quizId"
-          element={userInfo ? <QuizResult /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/get-radish"
-          element={userInfo ? <GetRadish /> : <Navigate to="/login" />}
         />
       </Routes>
     </BrowserRouter>
