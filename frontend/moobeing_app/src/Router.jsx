@@ -1,19 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Home from "./routes/HomePage";
-import Loading from "./routes/LoadingPage";
-import LoanJourney from "./routes/LoanJourneyPage";
-import Login from "./routes/LoginPage";
-import SignUp from "./routes/SignUpPage";
-import MyPage from "./routes/MyPage";
-import RadishCollection from "./routes/RadishCollectionPage";
-import Repayment from "./routes/RepaymentPage";
-import Spend from "./routes/SpendPage";
-import TotalJourney from "./routes/TotalJourneyPage";
-import Welcome from "./routes/WelcomePage";
-import Quiz from "./routes/QuizPage";
-import QuizResult from "./routes/QuizResultPage";
-import GetRadishCharacter from "./routes/GetRadishCharacterPage";
+import Home from "./pages/HomePage";
+import Loading from "./pages/LoadingPage";
+
 import useUserStore from "./store/UserStore";
 
 function Router() {
@@ -51,6 +40,22 @@ function Router() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route
+          path="/"
+          element={userInfo ? <Home /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/loading"
+          element={userInfo ? <Loading /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/login"
+          element={userInfo ? <Login /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/signup"
+          element={userInfo ? <SignUp /> : <Navigate to="/login" />}
+        />
         <Route
           path="/"
           element={userInfo ? <Home /> : <Navigate to="/login" />}
