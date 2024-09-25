@@ -39,3 +39,4 @@ spring:
     level:
       com.app: debug
 
+SSAFY_APIKEY: ${SSAFY_APIKEY}

@@ -1,7 +1,6 @@
 package com.im.moobeing.domain.expense.dto.response;
 
-import com.im.moobeing.domain.expense.entity.Expense;
-
+import com.im.moobeing.domain.expense.entity.Deal;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,14 +9,14 @@ import lombok.Getter;
 public class ExpenseHistoryResponse {
 	private String title;
 	private String categoryName;
-	private int price;
+	private Long price;
 
-	public static ExpenseHistoryResponse of(Expense expense) {
-		return new ExpenseHistoryResponse(expense.getTitle(), expense.getExpenseCategory().getName(),
-			expense.getPrice());
+	public static ExpenseHistoryResponse of(Deal deal) {
+		return new ExpenseHistoryResponse(deal.getTitle(), deal.getDealCategory().getName(),
+			deal.getPrice());
 	}
 
-	public static ExpenseHistoryResponse from(String title, String categoryName, int price) {
+	public static ExpenseHistoryResponse from(String title, String categoryName, Long price) {
 		return new ExpenseHistoryResponse(title, categoryName, price);
 	}
 }

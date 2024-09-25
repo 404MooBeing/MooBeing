@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.im.moobeing.domain.expense.dto.request.ExpenseCreateRequest;
 import com.im.moobeing.domain.expense.dto.response.ExpenseCategoryResponse;
 import com.im.moobeing.domain.expense.dto.response.ExpenseDateResponse;
-import com.im.moobeing.domain.expense.service.ExpenseService;
 import com.im.moobeing.domain.member.entity.Member;
 
 import io.swagger.v3.oas.annotations.Operation;

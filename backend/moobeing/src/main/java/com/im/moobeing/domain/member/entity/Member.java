@@ -1,5 +1,6 @@
 package com.im.moobeing.domain.member.entity;
 
+import com.im.moobeing.domain.account.entity.Account;
 import com.im.moobeing.domain.member.dto.request.MemberChangeRequest;
 import com.im.moobeing.domain.member.dto.request.MemberPwChangeRequest;
 import com.im.moobeing.global.entity.BaseTimeEntity;
@@ -30,9 +31,6 @@ public class Member extends BaseTimeEntity {
     @Column(name = "total_points", nullable = true)
     private Long totalPoints = 0L;
 
-    @Column(name = "total_loan", nullable = true)
-    private Long totalLoan = 0L;
-
     @Column(name = "name", nullable = true, length = 50)
     private String name;
 
@@ -45,42 +43,28 @@ public class Member extends BaseTimeEntity {
     @Column(name = "user_key", nullable = true, length = 255)
     private String userKey;
 
-    @Column(name = "month_aver", nullable = true, length = 255)
-    private Long monthAver;
-
     @Column(name = "selected_radish_id", nullable = true)
     private Long selectedRadishId = 1L;
 
-    @Column(name = "month_complete", nullable = true, length = 255)
-    private MonthStatus monthComplete = MonthStatus.FALSE;
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MemberRadish> memberRadishes = new ArrayList<>();
 
     @Column
-    private String account;
-
-    @Column(name = "good_member", nullable = true, length = 255)
-    private boolean goodMember;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Account> accounts = new ArrayList<>();
 
     @Builder
-    public Member(Long id, String email, String password, Long totalPoints, Long totalLoan, String name, String gender, String birthday, String userKey, Long monthAver, Long selectedRadishId, MonthStatus monthComplete, String account, boolean goodMember) {
+    public Member(Long id, String email, String password, Long totalPoints, String name, String gender, String birthday, String userKey, Long selectedRadishId) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.totalPoints = totalPoints;
-        this.totalLoan = totalLoan;
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
         this.userKey = userKey;
-        this.monthAver = monthAver;
         this.selectedRadishId = selectedRadishId;
-        this.monthComplete = monthComplete;
-        this.account = account;
-        this.goodMember = goodMember;
     }
-
 
     public void changeMember(MemberChangeRequest memberChangeRequest){
         this.name = memberChangeRequest.getName();
@@ -94,21 +78,8 @@ public class Member extends BaseTimeEntity {
         this.memberRadishes.add(memberRadish);
     }
 
-    public void setMemberUserKey(String userKey) {
-        this.userKey = userKey;
-    }
-
     public void setMemberRadishId(Long selectedRadishId) {
         this.selectedRadishId = selectedRadishId;
     }
 
-    public void setMemberAccount(String account) { this.account = account; }
-
-    public void setMemberComplete(MonthStatus monthComplete) {
-        this.monthComplete = monthComplete;
-    }
-
-    public void setGoodMember(boolean goodMember) {
-        this.goodMember = goodMember;
-    }
 }

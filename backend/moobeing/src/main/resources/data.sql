@@ -304,7 +304,7 @@ INSERT IGNORE INTO expense_category (expense_category_id, name) VALUES
 (6, '건강');
 
 -- 9. Expense 테이블에 더미 데이터 삽입 (이미 존재할 경우 삽입 무시)
-INSERT IGNORE INTO expense (expense_id, member_id, expense_category_id, title, price, expense_date) VALUES
+INSERT IGNORE INTO deal (expense_id, member_id, expense_category_id, title, price, expense_date) VALUES
 (1, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 1, '마트 장보기', 50000, '2024-08-01 10:00:00'),
 (2, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 2, '대출 상환금', 200000, '2024-08-02 12:00:00'),
 (3, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 3, '영화 관람', 15000, '2024-08-03 15:00:00'),
@@ -313,7 +313,7 @@ INSERT IGNORE INTO expense (expense_id, member_id, expense_category_id, title, p
 (6, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 6, '병원 진료비', 70000, '2024-08-06 09:00:00');
 
 -- 6월 더미 데이터 삽입
-INSERT IGNORE INTO expense (expense_id, member_id, expense_category_id, title, price, expense_date) VALUES
+INSERT IGNORE INTO deal (expense_id, member_id, expense_category_id, title, price, expense_date) VALUES
 (7, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 1, '마트 장보기', 65000, '2024-06-01 10:00:00'),
 (8, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 3, '커피 구매', 4500, '2024-06-02 11:00:00'),
 (9, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 4, '친구들과 저녁', 80000, '2024-06-02 20:00:00'),
@@ -345,7 +345,7 @@ INSERT IGNORE INTO expense (expense_id, member_id, expense_category_id, title, p
 (35, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 6, '피부과 진료비', 70000, '2024-06-30 15:00:00');
 
 -- 7월 더미 데이터 삽입
-INSERT IGNORE INTO expense (expense_id, member_id, expense_category_id, title, price, expense_date) VALUES
+INSERT IGNORE INTO deal (expense_id, member_id, expense_category_id, title, price, expense_date) VALUES
 (36, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 1, '마트 장보기', 68000, '2024-07-01 11:00:00'),
 (37, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 3, '커피 구매', 5000, '2024-07-01 15:00:00'),
 (38, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 4, '친구들과 저녁', 82000, '2024-07-02 20:00:00'),
@@ -378,7 +378,7 @@ INSERT IGNORE INTO expense (expense_id, member_id, expense_category_id, title, p
 (65, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 2, '대출 상환금', 200000, '2024-07-29 12:00:00');
 
 -- 8월 더미 데이터 삽입
-INSERT IGNORE INTO expense (expense_id, member_id, expense_category_id, title, price, expense_date) VALUES
+INSERT IGNORE INTO deal (expense_id, member_id, expense_category_id, title, price, expense_date) VALUES
 (66, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 1, '마트 장보기', 70000, '2024-08-01 11:00:00'),
 (67, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 3, '커피 구매', 5000, '2024-08-01 15:00:00'),
 (68, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 4, '친구들과 저녁', 85000, '2024-08-02 20:00:00'),

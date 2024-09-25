@@ -15,17 +15,17 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ExpenseCategory {
+public class DealCategory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long expenseCategoryId;
+	private Long dealCategoryId;
 
 	@Column
 	private String name;
 
 	@Builder
-	public ExpenseCategory(Long expenseCategoryId, String name) {
-		this.expenseCategoryId = expenseCategoryId;
+	public DealCategory(Long dealCategoryId, String name) {
+		this.dealCategoryId = dealCategoryId;
 		this.name = name;
 	}
 }
