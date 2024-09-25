@@ -1,5 +1,6 @@
 package com.im.moobeing.domain.account.entity;
 
+import com.im.moobeing.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,24 +17,25 @@ public class Account {
 	@Column(name = "account_id")
 	private Long accountId;
 
-	@Column(name = "account_name", nullable = true)
+	@Column(name = "account_name")
 	private String accountName;
 
-	@Column(name = "account_num", nullable = true)
+	@Column(name = "account_num")
 	private String accountNum;
 
-	@Column(name = "member_id", nullable = true)
-	private Long memberId;
+	@JoinColumn(name = "member")
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Member member;
 
-	@Column(name = "account_balance", nullable = true)
+	@Column(name = "account_balance")
 	private Long accountBalance;
 
 	@Builder
-	public Account(Long accountId, String accountNum, Long memberId, Long accountBalance) {
+	public Account(Long accountId, String accountNum, Member member, Long accountBalance) {
 		this.accountId = accountId;
 		this.accountNum = accountNum;
-		this.memberId = memberId;
 		this.accountBalance = accountBalance;
+		this.member = member;
 	}
 
 	public void setAccountBalance(Long accountBalance) {

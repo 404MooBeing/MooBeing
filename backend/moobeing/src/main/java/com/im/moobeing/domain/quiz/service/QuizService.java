@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.im.moobeing.domain.expense.dto.response.ExpenseCategoryResponse;
-import com.im.moobeing.domain.expense.service.ExpenseService;
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.domain.member.service.MemberService;
 import com.im.moobeing.domain.quiz.dto.request.QuizAnswerRequest;

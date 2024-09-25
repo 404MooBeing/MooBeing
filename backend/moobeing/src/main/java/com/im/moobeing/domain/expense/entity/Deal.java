@@ -1,5 +1,6 @@
 package com.im.moobeing.domain.expense.entity;
 
+import com.im.moobeing.global.entity.BaseTimeEntity;
 import java.time.LocalDateTime;
 
 import com.im.moobeing.domain.member.entity.Member;
@@ -22,35 +23,30 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Expense {
+public class Deal extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long expenseId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id", nullable = false)
+	@JoinColumn(name = "member")
 	private Member member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "expense_category_id", nullable = false)
-	private ExpenseCategory expenseCategory;
+	@JoinColumn(name = "expense_category_id")
+	private DealCategory dealCategory;
 
 	@Column
 	private String title;
 
 	@Column
-	private int price;
-
-	@Column
-	private LocalDateTime expenseDate;
+	private Long price;
 
 	@Builder
-	private Expense(Member member, ExpenseCategory expenseCategory, String title, int price,
-		LocalDateTime expenseDate) {
+	private Deal(Member member, DealCategory dealCategory, String title, Long price) {
 		this.member = member;
-		this.expenseCategory = expenseCategory;
+		this.dealCategory = dealCategory;
 		this.price = price;
-		this.expenseDate = expenseDate;
 		this.title = title;
 	}
 }
