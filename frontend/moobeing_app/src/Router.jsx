@@ -35,19 +35,29 @@ function Router() {
   // Header와 Footer를 표시하지 않을 경로 목록
   const noHeaderFooterRoutes = ['/loading', '/login', '/signup'];
 
-  const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(location.pathname);
+  const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(
+    location.pathname
+  );
 
   return (
     <>
       {shouldShowHeaderFooter && <Header />}
-      <div style={{ minHeight: shouldShowHeaderFooter ? 'calc(100vh - 120px)' : '100vh', padding: '20px' }}>
+      <div
+        style={{
+          minHeight: shouldShowHeaderFooter ? "calc(100vh - 120px)" : "100vh",
+          padding: "20px",
+        }}
+      >
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/loading" element={<Loading />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/alarm" element={<Alarm />} />
-          <Route path="/choose-character" element={<CapsuleChooseCharacter />} />
+          <Route
+            path="/choose-character"
+            element={<CapsuleChooseCharacter />}
+          />
           <Route path="/choose-location" element={<CapsuleChooseLocation />} />
           <Route path="/capsule-harvest" element={<CapsuleHarvest />} />
           <Route path="/capsule-intro" element={<CapsuleIntro />} />
