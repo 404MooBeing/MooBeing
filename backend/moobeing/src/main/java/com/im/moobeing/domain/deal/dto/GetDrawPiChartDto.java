@@ -1,4 +1,4 @@
-package com.im.moobeing.domain.expense.dto;
+package com.im.moobeing.domain.deal.dto;
 
 import lombok.Builder;
 import lombok.Getter;

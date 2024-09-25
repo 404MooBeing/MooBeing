@@ -1,7 +1,6 @@
-package com.im.moobeing.domain.expense.entity;
+package com.im.moobeing.domain.deal.entity;
 
 import com.im.moobeing.global.entity.BaseTimeEntity;
-import java.time.LocalDateTime;
 
 import com.im.moobeing.domain.member.entity.Member;
 

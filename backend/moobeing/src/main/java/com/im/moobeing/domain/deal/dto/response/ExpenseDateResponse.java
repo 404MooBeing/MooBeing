@@ -1,4 +1,4 @@
-package com.im.moobeing.domain.expense.dto.response;
+package com.im.moobeing.domain.deal.dto.response;
 
 import java.time.LocalDate;
 import java.util.List;

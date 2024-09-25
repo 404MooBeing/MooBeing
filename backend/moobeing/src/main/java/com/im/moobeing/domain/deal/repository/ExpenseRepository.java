@@ -1,6 +1,6 @@
-package com.im.moobeing.domain.expense.repository;
+package com.im.moobeing.domain.deal.repository;
 
-import com.im.moobeing.domain.expense.entity.Deal;
+import com.im.moobeing.domain.deal.entity.Deal;
 import com.im.moobeing.domain.member.entity.Member;
 import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;

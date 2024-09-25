@@ -1,7 +1,8 @@
-package com.im.moobeing.domain.expense.controller;
+package com.im.moobeing.domain.deal.controller;
 
 import java.util.List;
 
+import com.im.moobeing.domain.deal.service.DealService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.im.moobeing.domain.expense.dto.request.ExpenseCreateRequest;
-import com.im.moobeing.domain.expense.dto.response.ExpenseCategoryResponse;
-import com.im.moobeing.domain.expense.dto.response.ExpenseDateResponse;
+import com.im.moobeing.domain.deal.dto.request.ExpenseCreateRequest;
+import com.im.moobeing.domain.deal.dto.response.ExpenseCategoryResponse;
+import com.im.moobeing.domain.deal.dto.response.ExpenseDateResponse;
 import com.im.moobeing.domain.member.entity.Member;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/expense")
 @RequiredArgsConstructor
 public class ExpenseController {
-	private final ExpenseService expenseService;
+	private final DealService dealService;
 
 	@Operation(summary = "소비 카테고리별 조회", description = "사용자의 한달간 소비를 카테고리별로 조회한다.")
 	@ApiResponse(responseCode = "401", description = "사용자 인증이 올바르지 않음",
@@ -43,7 +44,7 @@ public class ExpenseController {
 			@RequestParam Integer year,
 			@RequestParam Integer month
 	) {
-		return ResponseEntity.ok(expenseService.getExpenseCategory(member, year, month));
+		return ResponseEntity.ok(dealService.getExpenseCategory(member, year, month));
 	}
 
 	@Operation(summary = "일자별 소비 내역 조회", description = "사용자의 한달 소비를 날짜별로 보여준다.")
@@ -57,7 +58,7 @@ public class ExpenseController {
 			@RequestParam Integer year,
 			@RequestParam Integer month
 	) {
-		return ResponseEntity.ok(expenseService.getExpenseAllByDate(member, year, month));
+		return ResponseEntity.ok(dealService.getExpenseAllByDate(member, year, month));
 	}
 
 	@Operation(summary = "테스트 소비 내역 추가", description = "사용자의 소비를 추가한다.")
@@ -70,7 +71,7 @@ public class ExpenseController {
 			@AuthenticationPrincipal Member member,
 			@RequestBody ExpenseCreateRequest expenseCreateRequest
 	) {
-		expenseService.createExpense(member, expenseCreateRequest);
+		dealService.createExpense(member, expenseCreateRequest);
 		return ResponseEntity.ok(null);
 	}
 
@@ -79,7 +80,7 @@ public class ExpenseController {
 	public ResponseEntity<?> drawPiChart(@AuthenticationPrincipal Member member,
 		@RequestParam Integer year,
 		@RequestParam Integer month){
-			return ResponseEntity.status(HttpStatus.OK).body(expenseService.drawPiChart(member, year, month));
+			return ResponseEntity.status(HttpStatus.OK).body(dealService.drawPiChart(member, year, month));
 	}
 
 }

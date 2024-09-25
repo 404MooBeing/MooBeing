@@ -1,4 +1,4 @@
-package com.im.moobeing.domain.expense.dto.request;
+package com.im.moobeing.domain.deal.dto.request;
 
 import lombok.*;
 

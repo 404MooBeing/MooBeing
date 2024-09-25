@@ -1,6 +1,6 @@
-package com.im.moobeing.domain.expense.dto.response;
+package com.im.moobeing.domain.deal.dto.response;
 
-import com.im.moobeing.domain.expense.entity.Deal;
+import com.im.moobeing.domain.deal.entity.Deal;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

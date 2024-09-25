@@ -8,7 +8,7 @@ import com.im.moobeing.domain.account.dto.response.ProfitMarginResponse;
 import com.im.moobeing.domain.account.dto.response.SendAccountResponse;
 import com.im.moobeing.domain.account.entity.Account;
 import com.im.moobeing.domain.account.repository.AccountRepository;
-import com.im.moobeing.domain.expense.repository.ExpenseRepository;
+import com.im.moobeing.domain.deal.repository.ExpenseRepository;
 import com.im.moobeing.domain.loan.entity.LoanProduct;
 import com.im.moobeing.domain.loan.entity.LoanRepaymentRecord;
 import com.im.moobeing.domain.loan.entity.MemberLoan;

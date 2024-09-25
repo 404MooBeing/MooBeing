@@ -1,4 +1,4 @@
-package com.im.moobeing.domain.expense.entity;
+package com.im.moobeing.domain.deal.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

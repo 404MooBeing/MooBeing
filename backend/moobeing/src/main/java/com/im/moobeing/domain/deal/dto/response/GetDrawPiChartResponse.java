@@ -1,10 +1,10 @@
-package com.im.moobeing.domain.expense.dto.response;
+package com.im.moobeing.domain.deal.dto.response;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.im.moobeing.domain.expense.dto.GetCategoryListDto;
-import com.im.moobeing.domain.expense.dto.GetDrawPiChartDto;
+import com.im.moobeing.domain.deal.dto.GetCategoryListDto;
+import com.im.moobeing.domain.deal.dto.GetDrawPiChartDto;
 
 import lombok.Builder;
 import lombok.Getter;
