@@ -8,7 +8,7 @@ import com.im.moobeing.domain.account.dto.response.ProfitMarginResponse;
 import com.im.moobeing.domain.account.dto.response.SendAccountResponse;
 import com.im.moobeing.domain.account.entity.Account;
 import com.im.moobeing.domain.account.repository.AccountRepository;
-import com.im.moobeing.domain.deal.repository.ExpenseRepository;
+import com.im.moobeing.domain.deal.repository.DealRepository;
 import com.im.moobeing.domain.loan.entity.LoanProduct;
 import com.im.moobeing.domain.loan.entity.LoanRepaymentRecord;
 import com.im.moobeing.domain.loan.entity.MemberLoan;
@@ -34,7 +34,7 @@ public class AccountService {
 	private final AccountRepository accountRepository;
 	private final MemberLoanRepository memberLoanRepository;
 	private final LoanRepaymentRecordRepository loanRepaymentRecordRepository;
-	private final ExpenseRepository expenseRepository;
+	private final DealRepository dealRepository;
 	private final LoanProductRepository loanProductRepository;
 
 	public GetAccountResponse getAccount(Member member) {
@@ -106,7 +106,7 @@ public class AccountService {
 			beforeYear = beforeYear - 1;
 		}
 
-		Long remainder = member.getMonthAver() - expenseRepository.findTotalPriceByYearAndMonth(beforeYear, beforeMonth);
+		Long remainder = member.getMonthAver() - dealRepository.findTotalPriceByYearAndMonth(beforeYear, beforeMonth);
 
 		// 만약 지난달에 초과 지출하거나,
 		if (remainder < 0){

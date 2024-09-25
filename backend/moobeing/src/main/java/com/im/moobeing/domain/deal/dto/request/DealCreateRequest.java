@@ -8,10 +8,10 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExpenseCreateRequest {
+public class DealCreateRequest {
     @NonNull
     String title;
-    int price;
+    long price;
     @NonNull
     String category;
     @NonNull

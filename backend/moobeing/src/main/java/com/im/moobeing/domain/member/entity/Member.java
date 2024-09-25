@@ -46,6 +46,15 @@ public class Member extends BaseTimeEntity {
     @Column(name = "selected_radish_id", nullable = true)
     private Long selectedRadishId = 1L;
 
+    @Column(name = "month_complete", nullable = true, length = 255)
+    private MonthStatus monthComplete = MonthStatus.FALSE;
+
+    @Column(name = "month_aver", nullable = true, length = 255)
+    private Long monthAver;
+
+    @Column
+    private Boolean isGoodMember;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MemberRadish> memberRadishes = new ArrayList<>();
 

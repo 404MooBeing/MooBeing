@@ -6,17 +6,17 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ExpenseHistoryResponse {
+public class DealHistoryResponse {
 	private String title;
 	private String categoryName;
 	private Long price;
 
-	public static ExpenseHistoryResponse of(Deal deal) {
-		return new ExpenseHistoryResponse(deal.getTitle(), deal.getDealCategory().getName(),
+	public static DealHistoryResponse of(Deal deal) {
+		return new DealHistoryResponse(deal.getTitle(), deal.getDealCategory().getDescription(),
 			deal.getPrice());
 	}
 
-	public static ExpenseHistoryResponse from(String title, String categoryName, Long price) {
-		return new ExpenseHistoryResponse(title, categoryName, price);
+	public static DealHistoryResponse from(String title, String categoryName, Long price) {
+		return new DealHistoryResponse(title, categoryName, price);
 	}
 }

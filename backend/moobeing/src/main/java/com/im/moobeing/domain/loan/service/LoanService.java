@@ -57,9 +57,7 @@ public class LoanService {
 			LoanProduct product = loanProductRepository.findByLoanName(loan.getLoanProductName())
 				.orElseThrow(() -> new BusinessException(ErrorCode.LP_NOT_FOUND));
 
-			getMemberLoanDtoList.add(
-				GetMemberLoanDto.of(loan, product, member.isGoodMember())
-			);
+			getMemberLoanDtoList.add(GetMemberLoanDto.of(loan, product, member.getIsGoodMember()));
 
 			totalLoanAmount += loan.getRemainingBalance();
 		}
@@ -70,7 +68,7 @@ public class LoanService {
 			getMemberLoanDtoList.sort(Comparator.comparing(GetMemberLoanDto::getRemainingBalance).reversed());
 		}
 
-		return GetMemberLoanResponse.of(totalLoanAmount, getMemberLoanDtoList, member.isGoodMember());
+		return GetMemberLoanResponse.of(totalLoanAmount, getMemberLoanDtoList, member.getIsGoodMember());
 	}
 
 	public GetLoanMapResponse getLoanMap(Member member, String reqProductName) {

@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.im.moobeing.domain.deal.dto.request.ExpenseCreateRequest;
-import com.im.moobeing.domain.deal.dto.response.ExpenseCategoryResponse;
-import com.im.moobeing.domain.deal.dto.response.ExpenseDateResponse;
+import com.im.moobeing.domain.deal.dto.request.DealCreateRequest;
+import com.im.moobeing.domain.deal.dto.response.DealCategoryResponse;
+import com.im.moobeing.domain.deal.dto.response.DealDateResponse;
 import com.im.moobeing.domain.member.entity.Member;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,12 +39,12 @@ public class ExpenseController {
 			schema = @Schema(implementation = ErrorResponse.class),
 			examples = @ExampleObject(value = "{\"error\" : \"사용자 인증에 실패하였습니다.\"}")))
 	@GetMapping(path = "/category", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ExpenseCategoryResponse>> getExpenseCategory(
+	public ResponseEntity<List<DealCategoryResponse>> getExpenseCategory(
 			@AuthenticationPrincipal Member member,
 			@RequestParam Integer year,
 			@RequestParam Integer month
 	) {
-		return ResponseEntity.ok(dealService.getExpenseCategory(member, year, month));
+		return ResponseEntity.ok(dealService.getDealCategory(member, year, month));
 	}
 
 	@Operation(summary = "일자별 소비 내역 조회", description = "사용자의 한달 소비를 날짜별로 보여준다.")
@@ -53,12 +53,12 @@ public class ExpenseController {
 			schema = @Schema(implementation = ErrorResponse.class),
 			examples = @ExampleObject(value = "{\"error\" : \"사용자 인증에 실패하였습니다.\"}")))
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ExpenseDateResponse>> getExpenseAllByDate(
+	public ResponseEntity<List<DealDateResponse>> getExpenseAllByDate(
 			@AuthenticationPrincipal Member member,
 			@RequestParam Integer year,
 			@RequestParam Integer month
 	) {
-		return ResponseEntity.ok(dealService.getExpenseAllByDate(member, year, month));
+		return ResponseEntity.ok(dealService.getDealAllByDate(member, year, month));
 	}
 
 	@Operation(summary = "테스트 소비 내역 추가", description = "사용자의 소비를 추가한다.")
@@ -69,9 +69,9 @@ public class ExpenseController {
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> createExpense(
 			@AuthenticationPrincipal Member member,
-			@RequestBody ExpenseCreateRequest expenseCreateRequest
+			@RequestBody DealCreateRequest dealCreateRequest
 	) {
-		dealService.createExpense(member, expenseCreateRequest);
+		dealService.createDeal(member, dealCreateRequest);
 		return ResponseEntity.ok(null);
 	}
 

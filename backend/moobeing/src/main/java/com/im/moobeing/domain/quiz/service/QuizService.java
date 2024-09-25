@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.im.moobeing.domain.deal.dto.response.ExpenseCategoryResponse;
+import com.im.moobeing.domain.deal.dto.response.DealCategoryResponse;
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.domain.member.service.MemberService;
 import com.im.moobeing.domain.quiz.dto.request.QuizAnswerRequest;
@@ -108,13 +108,13 @@ public class QuizService {
 
 	@Transactional
 	public void createQuiz(Member member){
-		List<ExpenseCategoryResponse> expenseForQuiz = expenseService.getExpenseForQuiz(member);
+		List<DealCategoryResponse> expenseForQuiz = expenseService.getExpenseForQuiz(member);
 		if (expenseForQuiz.isEmpty()) {
 			return;
 		}
 		Random random = new Random();
 		int randomIdx = random.nextInt(expenseForQuiz.size());
-		ExpenseCategoryResponse expenseCategory = expenseForQuiz.get(randomIdx);
+		DealCategoryResponse expenseCategory = expenseForQuiz.get(randomIdx);
 		// 퀴즈 결과를 랜덤으로 생성 0 -> up, 1 -> down
 		int upOrDown = random.nextInt(2);
 		// up 일 경우

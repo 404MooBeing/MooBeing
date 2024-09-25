@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 @Getter
-public class ExpenseCategoryResponse {
+public class DealCategoryResponse {
 	private String categoryName;
-	private int totalPrice;
+	private long totalPrice;
 }
