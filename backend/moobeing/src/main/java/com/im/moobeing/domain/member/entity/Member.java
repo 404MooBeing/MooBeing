@@ -5,10 +5,7 @@ import com.im.moobeing.domain.member.dto.request.MemberChangeRequest;
 import com.im.moobeing.domain.member.dto.request.MemberPwChangeRequest;
 import com.im.moobeing.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,12 +43,14 @@ public class Member extends BaseTimeEntity {
     @Column(name = "selected_radish_id", nullable = true)
     private Long selectedRadishId = 1L;
 
+    @Setter
     @Column(name = "month_complete", nullable = true, length = 255)
     private MonthStatus monthComplete = MonthStatus.FALSE;
 
     @Column(name = "month_aver", nullable = true, length = 255)
     private Long monthAver;
 
+    @Setter
     @Column
     private Boolean isGoodMember;
 

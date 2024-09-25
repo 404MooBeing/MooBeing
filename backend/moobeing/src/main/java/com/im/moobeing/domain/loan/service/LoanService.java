@@ -360,7 +360,7 @@ public class LoanService {
 			return GetAllCountLoanResponse.of(allLoanCnt,completedCnt, false);
 		}
 
-		member.setMemberComplete(MonthStatus.TRUE);
+		member.setMonthComplete(MonthStatus.TRUE);
 
 		memberRepository.save(member);
 
@@ -372,7 +372,7 @@ public class LoanService {
 		if (member.getMonthComplete() != MonthStatus.TRUE){
 			throw new BusinessException(ErrorCode.MC_WRONG_REQUEST);
 		}
-		member.setMemberComplete(MonthStatus.DONE);
+		member.setMonthComplete(MonthStatus.DONE);
 
 		memberRepository.save(member);
 
@@ -407,7 +407,7 @@ public class LoanService {
 
 	@Transactional
 	public String showMonthButton(Member member) {
-		member.setMemberComplete(MonthStatus.TRUE);
+		member.setMonthComplete(MonthStatus.TRUE);
 
 		memberRepository.save(member);
 
@@ -510,7 +510,7 @@ public class LoanService {
 
 	@Transactional
 	public void setGoodMember(Member member) {
-		member.setGoodMember(true);
+		member.setIsGoodMember(true);
 		memberRepository.save(member);
 	}
 }

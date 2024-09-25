@@ -3,6 +3,7 @@ package com.im.moobeing.domain.quiz.service;
 import java.util.List;
 import java.util.Random;
 
+import com.im.moobeing.domain.deal.service.DealService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,7 +34,7 @@ public class QuizService {
 
 	private static final Logger log = LoggerFactory.getLogger(QuizService.class);
 	private final MemberService memberService;
-	private final ExpenseService expenseService;
+	private final DealService expenseService;
 	private final QuizRepository quizRepository;
 
 	@Transactional(readOnly = true)
@@ -108,7 +109,7 @@ public class QuizService {
 
 	@Transactional
 	public void createQuiz(Member member){
-		List<DealCategoryResponse> expenseForQuiz = expenseService.getExpenseForQuiz(member);
+		List<DealCategoryResponse> expenseForQuiz = expenseService.getDealForQuiz(member);
 		if (expenseForQuiz.isEmpty()) {
 			return;
 		}
@@ -118,7 +119,7 @@ public class QuizService {
 		// 퀴즈 결과를 랜덤으로 생성 0 -> up, 1 -> down
 		int upOrDown = random.nextInt(2);
 		// up 일 경우
-		int answer = expenseCategory.getTotalPrice();
+		int answer = (int) expenseCategory.getTotalPrice();
 		int example;
 		if (upOrDown % 2 == 0){
 			// 10 % 더한 금액을 퀴즈 예시로 설정

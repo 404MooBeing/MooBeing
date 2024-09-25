@@ -23,7 +23,7 @@ public class Account {
 	@Column(name = "account_num")
 	private String accountNum;
 
-	@JoinColumn(name = "member")
+	@JoinColumn(name = "member_id")
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
 

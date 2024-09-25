@@ -44,7 +44,7 @@ public class AccountController {
 		return ResponseEntity.status(HttpStatus.OK).body(accountService.profitMargin(member));
 	}
 	@Operation(summary = "계좌 생성하기", description = "")
-	@PostMapping
+	@PutMapping
 	public ResponseEntity<?> createAccount(@AuthenticationPrincipal Member member, @RequestParam Long productId) {
 		return ResponseEntity.ok(accountService.makeAccount(member, productId));
 	}

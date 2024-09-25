@@ -10,17 +10,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "expense")
+@Table(name = "deal")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Deal extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long expenseId;
+	private Long dealId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member")
+	@JoinColumn(name = "member_id")
 	private Member member;
 
 	@Enumerated(EnumType.STRING)
