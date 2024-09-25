@@ -1,12 +1,16 @@
 import React from "react";
-// import styled from "styled-components";
 
 const Home = () => {  
 return (
-    <div>
-      <h1>홈화면</h1>
-    </div>
-  );
+  <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <main style={{ flex: 1 }}>
+      <div>
+        <h1>홈화면</h1>
+        {/* 여기에 홈 페이지의 다른 내용을 추가하세요 */}
+      </div>
+    </main>
+  </div>
+);
 };
 
 export default Home;

@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import React from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import Header from "./components/Fixed/Header";
+import Footer from "./components/Fixed/Footer";
 import Home from "./pages/HomePage";
 import Loading from "./pages/LoadingPage";
 import Login from "./pages/LoginPage";
@@ -29,8 +31,9 @@ import TransactionHistory from "./pages/TransactionHistoryPage";
 import Welcome from "./pages/WelcomePage";
 
 function Router() {
-  const [userInfo, setUserInfo] = useState(null);
+  const location = useLocation();
 
+<<<<<<< frontend/moobeing_app/src/Router.jsx
   useEffect(() => {
     // 컴포넌트가 마운트될 때 한 번만 실행됩니다.
     setUserInfo({ name: "John Doe", email: "john@example.com" });
@@ -142,6 +145,49 @@ function Router() {
         element={userInfo ? <Welcome /> : <Navigate to="/login" />}
       />
     </Routes>
+=======
+  // Header와 Footer를 표시하지 않을 경로 목록
+  const noHeaderFooterRoutes = ['/loading'];
+
+  const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(location.pathname);
+
+  return (
+    <>
+      {shouldShowHeaderFooter && <Header />}
+      <div style={{ minHeight: shouldShowHeaderFooter ? 'calc(100vh - 120px)' : '100vh', padding: '20px' }}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/loading" element={<Loading />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/alarm" element={<Alarm />} />
+          <Route path="/choose-character" element={<CapsuleChooseCharacter />} />
+          <Route path="/choose-location" element={<CapsuleChooseLocation />} />
+          <Route path="/capsule-harvest" element={<CapsuleHarvest />} />
+          <Route path="/capsule-intro" element={<CapsuleIntro />} />
+          <Route path="/capsule-create" element={<CapsuleCreate />} />
+          <Route path="/capsule-planting" element={<CapsulePlanting />} />
+          <Route path="/capsule-search" element={<CapsuleSearch />} />
+          <Route path="/coin-exchange" element={<CoinExchange />} />
+          <Route path="/coin" element={<Coin />} />
+          <Route path="/get-radishcharacter" element={<GetRadishCharacter />} />
+          <Route path="/loan-journey" element={<LoanJourney />} />
+          <Route path="/loan" element={<Loan />} />
+          <Route path="/loan-payment" element={<LoanPayment />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/moobti" element={<Moobti />} />
+          <Route path="/my-capsule" element={<MyCapsule />} />
+          <Route path="/user" element={<User />} />
+          <Route path="/password-change" element={<PasswordChange />} />
+          <Route path="/quiz" element={<Quiz />} />
+          <Route path="/spend" element={<Spend />} />
+          <Route path="/transaction-history" element={<TransactionHistory />} />
+          <Route path="/welcome" element={<Welcome />} />
+        </Routes>
+      </div>
+      {shouldShowHeaderFooter && <Footer />}
+    </>
+>>>>>>> frontend/moobeing_app/src/Router.jsx
   );
 }
 
