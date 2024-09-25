@@ -4,7 +4,7 @@ import smileRad from "../assets/radishes/smileRad.svg";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
-  margin-top: 30%;
+  margin-top: 15%;
   padding: 30px;
   display: flex;
   flex-direction: column;

@@ -1,7 +1,194 @@
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 
-function CapsuleCreate() {
-  return <h1>하이룽</h1>;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 10%;
+`;
+
+const TransactionBox = styled.div`
+  border: 1px solid #ccc;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+`;
+
+const TransactionInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const TransactionName = styled.p`
+  font-weight: bold;
+  margin: 0 0 5px 0;
+`;
+
+const TransactionAmount = styled.p`
+  margin: 0;
+`;
+
+const TransactionTime = styled.p`
+  margin: 0;
+  align-self: flex-end;
+`;
+
+const ImgForm = styled.div`
+  background-color: #f5fded;
+  height: 200px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-top: none;
+  position: relative;
+`;
+
+const ImagePreview = styled.img`
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+`;
+
+const ImageInput = styled.input`
+  display: none;
+`;
+
+const ImageLabel = styled.label`
+  cursor: pointer;
+  padding: 10px 15px;
+  background-color: #e0eed2;
+  border-radius: 5px;
+`;
+
+const ReselectionButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+const TextForm = styled.div`
+  background-color: #f5fded;
+  height: 200px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  position: relative;
+`;
+
+const TextArea = styled.textarea`
+  width: 100%;
+  height: calc(100% - 20px);
+  border: none;
+  background-color: transparent;
+  resize: none;
+  font-family: inherit;
+  outline: none;
+
+  &:focus {
+    outline: 2px solid darkgreen;
+  }
+`;
+
+const CharCount = styled.span`
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-size: 12px;
+  color: #666;
+`;
+
+const NextButton = styled.button`
+  width: 100%;
+  background-color: #e0eed2;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  align-self: center;
+  margin-top: 15%;
+`;
+
+function CapsuleMessage() {
+  const [text, setText] = useState("");
+  const [image, setImage] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleTextChange = (e) => {
+    if (e.target.value.length <= 100) {
+      setText(e.target.value);
+    }
+  };
+
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImage(URL.createObjectURL(file));
+    }
+  };
+
+  const handleImageSelection = () => {
+    fileInputRef.current.click();
+  };
+
+  return (
+    <Container>
+      <TransactionBox>
+        <TransactionInfo>
+          <TransactionName>거래명</TransactionName>
+          <TransactionAmount>10,000원</TransactionAmount>
+        </TransactionInfo>
+        <TransactionTime>2023.05.25</TransactionTime>
+      </TransactionBox>
+
+      <ImgForm>
+        {image ? (
+          <>
+            <ImagePreview src={image} alt="Preview" />
+            <ReselectionButton onClick={handleImageSelection}>
+              다시 선택
+            </ReselectionButton>
+          </>
+        ) : (
+          <ImageLabel onClick={handleImageSelection}>이미지 추가</ImageLabel>
+        )}
+        <ImageInput
+          type="file"
+          onChange={handleImageChange}
+          accept="image/*"
+          ref={fileInputRef}
+        />
+      </ImgForm>
+
+      <TextForm>
+        <TextArea
+          value={text}
+          onChange={handleTextChange}
+          placeholder="메시지를 입력하세요..."
+        />
+        <CharCount>{text.length} / 100</CharCount>
+      </TextForm>
+
+      <NextButton>다음</NextButton>
+    </Container>
+  );
 }
 
-export default CapsuleCreate;
+export default CapsuleMessage;
