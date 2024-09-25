@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/HomePage";
 import Loading from "./pages/LoadingPage";
-import Login from "./pages/LoginPage"; 
+import Login from "./pages/LoginPage";
 import SignUp from "./pages/SignUpPage";
 import Alarm from "./pages/AlarmPage";
 import CapsuleChooseCharacter from "./pages/CapsuleChooseCharacterPage";
 import CapsuleChooseLocation from "./pages/CapsuleChooseLocationPage";
 import CapsuleHarvest from "./pages/CapsuleHarvestPage";
 import CapsuleIntro from "./pages/CapsuleIntroPage";
+import CapsuleCreate from "./pages/CapsuleCreatePage";
 import CapsulePlanting from "./pages/CapsulePlantingPage";
 import CapsuleSearch from "./pages/CapsuleSearchPage";
 import CoinExchange from "./pages/CoinExchangePage";
@@ -32,7 +33,7 @@ function Router() {
 
   useEffect(() => {
     // 컴포넌트가 마운트될 때 한 번만 실행됩니다.
-    setUserInfo({ name: 'John Doe', email: 'john@example.com' });
+    setUserInfo({ name: "John Doe", email: "john@example.com" });
   }, []);
 
   return (
@@ -56,20 +57,22 @@ function Router() {
       />
       <Route
         path="/choose-character"
-        element={userInfo ? <CapsuleChooseCharacter /> : <Navigate to="/login" />}
+        element={
+          userInfo ? <CapsuleChooseCharacter /> : <Navigate to="/login" />
+        }
       />
       <Route
         path="/choose-location"
-        element={userInfo ? <CapsuleChooseLocation /> : <Navigate to="/login" />}
+        element={
+          userInfo ? <CapsuleChooseLocation /> : <Navigate to="/login" />
+        }
       />
       <Route
         path="/capsule-harvest"
         element={userInfo ? <CapsuleHarvest /> : <Navigate to="/login" />}
       />
-      <Route
-        path="/capsule-intro"
-        element={userInfo ? <CapsuleIntro /> : <Navigate to="/login" />}
-      />
+      <Route path="/capsule-intro" element={<CapsuleIntro />} />
+      <Route path="/capsule-create" element={<CapsuleCreate />} />
       <Route
         path="/capsule-planting"
         element={userInfo ? <CapsulePlanting /> : <Navigate to="/login" />}
