@@ -1,8 +1,11 @@
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import useUserStore from "../../store/UserStore";
+import RadishCoinImg from "../../assets/coin/RadishCoin.png";
 // import { getUserInfo } from "../../apis/UserApi";
 import { useEffect, useState } from "react";
+
+
 
 const Container = styled.div`
   display: flex;
@@ -32,17 +35,16 @@ const PasswordChangeButton = styled.button`
 
 const SubHeader = styled.div`
   background-color: #f5fded;
-  height: 8vh;
+  height: 14vh;
   width: 90%;
   margin-bottom: 5%;
   margin-top: 40px;
   border-radius: 20px;
-  display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 15px 20px 25px;
+  padding: 30px 15px 20px 25px;
   box-sizing: border-box;
+  font-size : 20px;
 `;
 
 const Contents = styled.div`
@@ -74,28 +76,44 @@ const Value = styled.div`
   text-align: right;
 `;
 
-const LogoutButton = styled.div`
-  height: 10%;
-  width: 95px;
-  border-radius: 10px;
-  margin-top: 15vh;
-  margin-bottom: 5px;
-  padding: 10px 20px;
-  background-color: #e0eed2;
-  color: #24272d;
-  font-size: 13px;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  @media (min-width: 600px) {
-    width: 110px;
+const RadishCoin = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 16px;
-  }
+    height : 50%;
 `;
+
+const RadishCoinBtn = styled.button`
+    margin-left:40px;
+    height: 60%;
+    margin-right: 20px;
+    width: 85px;
+    background-color: #e0eed2;
+    color: #24272d;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    justify-content: center;
+      border: none;
+  cursor: pointer;
+`;
+
+const Toggle = styled.div`
+    height: 20%;
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
+const ToggleItem = styled.span`
+    font-size : 20px;
+  color: ${(props) => (props.active ? 'black' : 'gray')};
+  font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
+  margin : 0px 14px
+`;
+
 
 // 생년월일을 "YYYY-MM-DD" 형식으로 변환하는 함수
 const formatBirthday = (birthday) => {
@@ -109,22 +127,39 @@ const formatBirthday = (birthday) => {
   return `${year}-${month}-${day}`;
 };
 
+
+
 const MyInfo = ({ onPasswordChangeClick }) => {
   // Zustand 스토어에서 필요한 상태와 함수 가져오기
-  const userInfo = useState({
-    "email": "test@gmail.com",
-    "name": "Test User",
-    "gender": "M",
-    "birthday": "000101"
+  const [userInfo, setUserInfo] = useState({
+    name: "김싸피",
+    birthday: "980321",
+    email: "mooch@ssafy.edu",
+    gender: "M",
+    id : "ssafy11",
+    coin : 10000
   })
-  const setUserInfo = useUserStore((state) => state.setUserInfo);
+//   const setUserInfo = useUserStore((state) => state.setUserInfo);
+
+    const [showComponent, setShowComponent] = useState("info");
+
+    const toggle = () => {
+        if (showComponent === "info"){
+            setShowComponent("collection")
+        }else{
+            setShowComponent("info")
+        }
+
+      };
+
+
   const logout = useUserStore((state) => state.logout); // 로그아웃 액션 가져오기
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // const userData = await getUserInfo(); // 사용자 정보 가져오기
-        // setUserInfo(userData); // Zustand 스토어에 저장
+         // Zustand 스토어에 저장
       } catch (error) {
         console.error("데이터 가져오기 실패:", error);
       }
@@ -144,28 +179,49 @@ const MyInfo = ({ onPasswordChangeClick }) => {
 
   return (
     <Container>
+      
       <SubHeader>
-        <strong>{userInfo.name || "사용자"} 님</strong>
-        <PasswordChangeButton onClick={onPasswordChangeClick}>
-          비밀번호 변경
-        </PasswordChangeButton>
+        <div>{userInfo.name || "사용자"} 님</div>
+        <RadishCoin>
+            <img src={RadishCoinImg}></img>
+            <Label>무 코인</Label>
+            <Value>{userInfo.coin}개</Value>
+            <RadishCoinBtn>송금하기</RadishCoinBtn>
+        </RadishCoin>
       </SubHeader>
+      <Toggle onClick={toggle}>
+        <ToggleItem
+          active={showComponent === 'info'}
+          onClick={toggle}
+        >
+          내 정보
+        </ToggleItem>
+        |
+        <ToggleItem
+          active={showComponent === 'collection'}
+          onClick={toggle}
+        >
+          무 컬렉션
+        </ToggleItem>
+      </Toggle>
       <Contents>
         <SubTitle>개인정보</SubTitle>
         <InfoRow>
-          <Label>이메일</Label>
-          <Value>{userInfo.email || ""}</Value>
+          <Label>아이디</Label>
+          <Value>{userInfo.id}</Value>
         </InfoRow>
         <InfoRow>
           <Label>생년월일</Label>
           <Value>{formattedBirthday}</Value>
         </InfoRow>
         <InfoRow>
-          <Label>성별</Label>
-          <Value>{getGenderDisplay(userInfo.gender)}</Value>
+          <Label>이메일</Label>
+          <Value>{userInfo.email || ""}</Value>
         </InfoRow>
       </Contents>
-      <LogoutButton onClick={logout}>로그아웃</LogoutButton>
+      <PasswordChangeButton onClick={onPasswordChangeClick}>
+          비밀번호 변경
+    </PasswordChangeButton>
     </Container>
   );
 };

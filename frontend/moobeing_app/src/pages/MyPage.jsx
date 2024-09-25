@@ -2,8 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import MyInfo from "../components/User/MyInfo";
 import PasswordChange from "../components/User/PasswordChange";
-import Header from "../components/Fixed/Header";
-import Footer from "../components/Fixed/Footer";
+
 
 const Container = styled.div`
   display: flex;
