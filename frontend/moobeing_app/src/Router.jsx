@@ -4,14 +4,13 @@ import Header from "./components/Fixed/Header";
 import Footer from "./components/Fixed/Footer";
 import Home from "./pages/HomePage";
 import Loading from "./pages/LoadingPage";
-import Login from "./pages/LoginPage";
+import Login from "./pages/LoginPage"; 
 import SignUp from "./pages/SignUpPage";
 import Alarm from "./pages/AlarmPage";
 import CapsuleChooseCharacter from "./pages/CapsuleChooseCharacterPage";
 import CapsuleChooseLocation from "./pages/CapsuleChooseLocationPage";
 import CapsuleHarvest from "./pages/CapsuleHarvestPage";
 import CapsuleIntro from "./pages/CapsuleIntroPage";
-import CapsuleCreate from "./pages/CapsuleCreatePage";
 import CapsulePlanting from "./pages/CapsulePlantingPage";
 import CapsuleSearch from "./pages/CapsuleSearchPage";
 import CoinExchange from "./pages/CoinExchangePage";
@@ -33,121 +32,8 @@ import Welcome from "./pages/WelcomePage";
 function Router() {
   const location = useLocation();
 
-<<<<<<< frontend/moobeing_app/src/Router.jsx
-  useEffect(() => {
-    // 컴포넌트가 마운트될 때 한 번만 실행됩니다.
-    setUserInfo({ name: "John Doe", email: "john@example.com" });
-  }, []);
-
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route
-        path="/loading"
-        element={userInfo ? <Loading /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/login"
-        element={userInfo ? <Navigate to="/" /> : <Login />}
-      />
-      <Route
-        path="/signup"
-        element={userInfo ? <Navigate to="/" /> : <SignUp />}
-      />
-      <Route
-        path="/alarm"
-        element={userInfo ? <Alarm /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/choose-character"
-        element={
-          userInfo ? <CapsuleChooseCharacter /> : <Navigate to="/login" />
-        }
-      />
-      <Route
-        path="/choose-location"
-        element={
-          userInfo ? <CapsuleChooseLocation /> : <Navigate to="/login" />
-        }
-      />
-      <Route
-        path="/capsule-harvest"
-        element={userInfo ? <CapsuleHarvest /> : <Navigate to="/login" />}
-      />
-      <Route path="/capsule-intro" element={<CapsuleIntro />} />
-      <Route path="/capsule-create" element={<CapsuleCreate />} />
-      <Route
-        path="/capsule-planting"
-        element={userInfo ? <CapsulePlanting /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/capsule-search"
-        element={userInfo ? <CapsuleSearch /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/coin-exchange"
-        element={userInfo ? <CoinExchange /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/coin"
-        element={userInfo ? <Coin /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/get-radishcharacter"
-        element={userInfo ? <GetRadishCharacter /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/loan-journey"
-        element={userInfo ? <LoanJourney /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/loan"
-        element={userInfo ? <Loan /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/loan-payment"
-        element={userInfo ? <LoanPayment /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/menu"
-        element={userInfo ? <Menu /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/moobti"
-        element={userInfo ? <Moobti /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/my-capsule"
-        element={userInfo ? <MyCapsule /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/user"
-        element={userInfo ? <User /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/password-change"
-        element={userInfo ? <PasswordChange /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/quiz"
-        element={userInfo ? <Quiz /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/spend"
-        element={userInfo ? <Spend /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/transcation-history"
-        element={userInfo ? <TransactionHistory /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/welcome"
-        element={userInfo ? <Welcome /> : <Navigate to="/login" />}
-      />
-    </Routes>
-=======
   // Header와 Footer를 표시하지 않을 경로 목록
-  const noHeaderFooterRoutes = ['/loading'];
+  const noHeaderFooterRoutes = ['/loading', '/login', '/signup'];
 
   const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(location.pathname);
 
@@ -165,7 +51,6 @@ function Router() {
           <Route path="/choose-location" element={<CapsuleChooseLocation />} />
           <Route path="/capsule-harvest" element={<CapsuleHarvest />} />
           <Route path="/capsule-intro" element={<CapsuleIntro />} />
-          <Route path="/capsule-create" element={<CapsuleCreate />} />
           <Route path="/capsule-planting" element={<CapsulePlanting />} />
           <Route path="/capsule-search" element={<CapsuleSearch />} />
           <Route path="/coin-exchange" element={<CoinExchange />} />
@@ -187,7 +72,6 @@ function Router() {
       </div>
       {shouldShowHeaderFooter && <Footer />}
     </>
->>>>>>> frontend/moobeing_app/src/Router.jsx
   );
 }
 
