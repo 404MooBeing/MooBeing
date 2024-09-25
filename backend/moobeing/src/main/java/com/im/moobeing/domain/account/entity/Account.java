@@ -41,4 +41,8 @@ public class Account {
 	public void setAccountBalance(Long accountBalance) {
 		this.accountBalance = accountBalance;
 	}
+
+	public void updateBalance(Long diff) {
+		this.accountBalance += diff;
+	}
 }

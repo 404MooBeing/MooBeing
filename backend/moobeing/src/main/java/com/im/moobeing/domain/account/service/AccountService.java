@@ -2,12 +2,19 @@ package com.im.moobeing.domain.account.service;
 
 import com.im.moobeing.domain.account.dto.GetAccountDto;
 import com.im.moobeing.domain.account.dto.LoanListDto;
+import com.im.moobeing.domain.account.dto.request.CreateAccountProductRequest;
+import com.im.moobeing.domain.account.dto.request.DepositRequest;
 import com.im.moobeing.domain.account.dto.request.SendAccountRequest;
+import com.im.moobeing.domain.account.dto.request.TransferRequest;
+import com.im.moobeing.domain.account.dto.response.AccountProductResponse;
 import com.im.moobeing.domain.account.dto.response.GetAccountResponse;
 import com.im.moobeing.domain.account.dto.response.ProfitMarginResponse;
 import com.im.moobeing.domain.account.dto.response.SendAccountResponse;
 import com.im.moobeing.domain.account.entity.Account;
+import com.im.moobeing.domain.account.entity.AccountProduct;
+import com.im.moobeing.domain.account.repository.AccountProductRepository;
 import com.im.moobeing.domain.account.repository.AccountRepository;
+import com.im.moobeing.domain.account.repository.AccountSequenceRepository;
 import com.im.moobeing.domain.deal.repository.DealRepository;
 import com.im.moobeing.domain.loan.entity.LoanProduct;
 import com.im.moobeing.domain.loan.entity.LoanRepaymentRecord;
@@ -17,6 +24,7 @@ import com.im.moobeing.domain.loan.repository.LoanRepaymentRecordRepository;
 import com.im.moobeing.domain.loan.repository.MemberLoanRepository;
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.global.error.ErrorCode;
+import com.im.moobeing.global.error.exception.BadRequestException;
 import com.im.moobeing.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +45,8 @@ public class AccountService {
 	private final LoanRepaymentRecordRepository loanRepaymentRecordRepository;
 	private final DealRepository dealRepository;
 	private final LoanProductRepository loanProductRepository;
+	private final AccountProductRepository accountProductRepository;
+	private final AccountSequenceRepository accountSequenceRepository;
 
 	public GetAccountResponse getAccount(Member member) {
 		List<Account> accountList =  accountRepository.findByMemberId(member.getId());
@@ -166,5 +177,90 @@ public class AccountService {
 	// 총 이자 비용 계산 함수
 	public static double calculateTotalInterest(double monthlyPayment, int loanTermMonths, double principal) {
 		return (monthlyPayment * loanTermMonths) - principal;
+	}
+
+	@Transactional(readOnly = false)
+	public void createAccountProduct(CreateAccountProductRequest request) {
+		if (accountProductRepository.existsByBankCodeAndAccountName(request.getBankCode(), request.getAccountName())) {
+			throw new BadRequestException(ErrorCode.AC_ALREADY_EXISTS_PRODUCT);
+		}
+		AccountProduct accountProduct = AccountProduct.builder()
+				.bankCode(request.getBankCode())
+				.accountName(request.getAccountName())
+				.accountDescription(request.getAccountDescription())
+				.build();
+		accountProductRepository.save(accountProduct);
+	}
+
+	public List<AccountProductResponse> getAllAccountProducts() {
+		return accountProductRepository.findAll()
+				.stream()
+				.map(ap -> AccountProductResponse.of(ap, ap.getAccountName()))
+				.toList();
+	}
+
+	@Transactional(readOnly = false)
+	public Account makeAccount(Member member, Long productId) {
+		AccountProduct accountProduct = accountProductRepository.findById(productId)
+				.orElseThrow(() -> new BadRequestException(ErrorCode.AC_INVALID_PRODUCT_CODE));
+
+		Account account = makeAccount(member, productId, accountProduct.getBankCode());
+
+        return accountRepository.save(account);
+	}
+
+	@Transactional(readOnly = false)
+	public void transferFunds(Member member, TransferRequest transferRequest) {
+		Account account = accountRepository.findByMemberIdAndAccountNum(member.getId(), transferRequest.getFromAccount())
+				.orElseThrow(() -> new BadRequestException(ErrorCode.AC_INVALID_ACCOUNT_NUM));
+		if (account.getAccountBalance() < transferRequest.getBalance()) {
+			throw new BadRequestException(ErrorCode.AC_INSUFFICIENT_BALANCE);
+		}
+		Account toAccount = accountRepository.findByAccountNum(transferRequest.getToAccount())
+				.orElseThrow(() -> new BadRequestException(ErrorCode.AC_INVALID_TO_ACCOUNT_NUM));
+
+		account.updateBalance(-transferRequest.getBalance());
+		accountRepository.save(account);
+		toAccount.updateBalance(transferRequest.getBalance());
+		accountRepository.save(toAccount);
+	}
+
+	@Transactional(readOnly = false)
+	public void depositFunds(Member member, DepositRequest depositRequest) {
+		Account account = accountRepository.findByMemberIdAndAccountNum(member.getId(), depositRequest.getAccountNo())
+				.orElseThrow(() -> new BadRequestException(ErrorCode.AC_INVALID_ACCOUNT_NUM));
+		account.updateBalance(depositRequest.getTransactionBalance());
+	}
+
+	@Transactional
+	public Account makeAccount(Member member, Long productId, String bankCode) {
+		AccountProduct accountProduct = accountProductRepository.findById(productId)
+				.orElseThrow(() -> new BadRequestException(ErrorCode.AC_INVALID_PRODUCT_CODE));
+
+		String accountNum = generateAccountNumber(member, bankCode);
+
+		Account account = Account.builder()
+				.accountNum(accountNum)
+				.member(member)
+				.accountBalance(0L)
+				.build();
+
+		return accountRepository.save(account);
+	}
+
+	private String generateAccountNumber(Member member, String bankCode) {
+		String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
+		incrementAccountSequence("account_sequence_" + bankCode); // 각 은행별로 시퀀스 관리
+		Long sequenceNumber = accountSequenceRepository.getNextVal("account_sequence_" + bankCode);
+
+		return bankCode + date + String.format("%06d", sequenceNumber);
+	}
+
+	@Transactional
+	public void incrementAccountSequence(String seqName) {
+		int updatedRows = accountSequenceRepository.incrementSequence(seqName);
+		if (updatedRows == 0) {
+			throw new RuntimeException("Failed to increment sequence");
+		}
 	}
 }
