@@ -59,7 +59,7 @@ function Router() {
             path="/choose-character"
             element={<CapsuleChooseCharacter />}
           />
-          <Route path="/choose-location" element={<CapsuleChooseLocation />} />
+          <Route path="/c" element={<CapsuleChooseLocation />} />
           <Route path="/capsule-harvest" element={<CapsuleHarvest />} />
           <Route path="/capsule-intro" element={<CapsuleIntro />} />
           <Route path="/capsule-create" element={<CapsuleCreate />} />

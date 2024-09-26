@@ -1,8 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import previousIcon from "../assets/button/PreviousIcon.svg";
+import nextIcon from "../assets/button/NextIcon.svg";
+import blushRad from "../assets/radishes/blushRad.svg";
+import rainbowRad from "../assets/radishes/rainbowRad.svg";
+import musinsaRad from "../assets/radishes/musinsaRad.svg";
+import basicRad from "../assets/radishes/basicRad.svg";
+import { getUserRadishCollection } from "../apis/RadishApi";
 
 const Container = styled.div`
+  margin-top: 10%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -11,13 +19,16 @@ const Container = styled.div`
 
 const Title = styled.h1`
   align-self: flex-start;
+
   margin-bottom: 10px;
+  font-size: 28px;
 `;
 
-const LeftDay = styled.h2`
+const LeftDay = styled.p`
   align-self: flex-start;
   color: #616161;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
+  font-size: 28px;
 `;
 
 const CharacterContainer = styled.div`
@@ -30,7 +41,7 @@ const CharacterContainer = styled.div`
 
 const CharacterCard = styled.div`
   width: 200px;
-  height: 300px;
+  height: 220px;
   border-radius: 20px;
   background: #f5fded;
   box-shadow: 0.3px 0.3px 6px 0px rgba(0, 0, 0, 0.12);
@@ -44,6 +55,7 @@ const CharacterCard = styled.div`
 const CharacterImg = styled.img`
   max-width: 80%;
   max-height: 80%;
+  margin-bottom: 13%;
 `;
 
 const CharacterName = styled.div`
@@ -52,14 +64,14 @@ const CharacterName = styled.div`
   width: 100%;
   padding: 10px;
   border-radius: 0px 0px 20px 20px;
-  border-top: 1px solid #000;
+  border-top: 1px solid #c9c9c9;
   background: #fff;
   text-align: center;
 `;
 
 const NavigationButton = styled.div`
-  width: 25px;
-  height: 26px;
+  width: 30px;
+  height: 31px;
   border-radius: 10px;
   border: 1px solid #afafaf;
   background: #fff;
@@ -82,36 +94,77 @@ const RightButton = styled(NavigationButton)`
 const CharacterSizes = styled.div`
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+  width: 230px;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
-const CharacterSize = styled.div`
+const CharacterSize = styled.button`
   padding: 5px 10px;
-  border: 1px solid #000;
-  border-radius: 5px;
+  border-radius: 10px;
+  border: 1px solid #afafaf;
+  background: #fff;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+  flex: 1;
+  max-width: 100px;
+  height: 40px;
+  cursor: pointer;
+  outline: ${(props) => (props.selected ? "2px solid #348833" : "none")};
+  font-weight: bold;
 `;
 
 const NextButton = styled.button`
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
+  width: 100%;
+  background-color: #e0eed2;
+  color: black;
   border: none;
+  margin-top: 10%;
+  padding: 10px 20px;
+  font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
   align-self: center;
 `;
 
-const characters = [
-  { name: "작은무", size: 3, image: "/path/to/small-radish.png" },
-  { name: "중간무", size: 5, image: "/path/to/medium-radish.png" },
-  { name: "큰무", size: 7, image: "/path/to/large-radish.png" },
-];
+const DateInfo = styled.p`
+  color: #348833;
+  margin-top: 20px;
+  align-self: center;
+`;
 
 function ChooseCharacter() {
   const [currentCharacter, setCurrentCharacter] = useState(0);
+  const [currentSize, setCurrentSize] = useState(null);
   const navigate = useNavigate();
+
+  const [characters, setCharacters] = useState([
+    { radishName: "기본무", radishImageUrl: basicRad },
+    { radishName: "부끄렁무", radishImageUrl: blushRad },
+    { radishName: "무신사", radishImageUrl: musinsaRad },
+    { radishName: "무지개", radishImageUrl: rainbowRad },
+  ]);
+
+  const sizes = [
+    { name: "작은무", day: 20 },
+    { name: "중간무", day: 40 },
+    { name: "큰무", day: 60 },
+  ];
+
+  // useEffect(() => {
+  //   const fetchRadishCollection = async () => {
+  //     try {
+  //       const response = await getUserRadishCollection();
+  //       setCharacters(response.memberRadishes);
+  //     } catch (error) {
+  //       console.error("Failed to fetch radish collection:", error);
+  //     }
+  //   };
+
+  //   fetchRadishCollection();
+  // }, []);
 
   const nextCharacter = () => {
     setCurrentCharacter((prev) => (prev + 1) % characters.length);
@@ -123,31 +176,52 @@ function ChooseCharacter() {
     );
   };
 
+  const getHarvestDate = (days) => {
+    const today = new Date();
+    const harvestDate = new Date(today.setDate(today.getDate() + days));
+    return harvestDate.toISOString().split("T")[0].replace(/-/g, "/");
+  };
+
   return (
     <Container>
       <Title>심을 무캡슐을 선택해주세요</Title>
-      <LeftDay>수확까지 +{characters[currentCharacter].size}일</LeftDay>
+      <LeftDay>
+        수확까지 +{currentSize !== null ? sizes[currentSize].day : 0}일
+      </LeftDay>
       <CharacterContainer>
         <LeftButton onClick={prevCharacter}>
-          <img src="/path/to/left-icon.png" alt="Previous" />
+          <img src={previousIcon} alt="Previous" />
         </LeftButton>
         <CharacterCard>
           <CharacterImg
-            src={characters[currentCharacter].image}
-            alt={characters[currentCharacter].name}
+            src={characters[currentCharacter].radishImageUrl}
+            alt={characters[currentCharacter].radishName}
           />
-          <CharacterName>{characters[currentCharacter].name}</CharacterName>
+          <CharacterName>
+            {characters[currentCharacter].radishName}
+          </CharacterName>
         </CharacterCard>
         <RightButton onClick={nextCharacter}>
-          <img src="/path/to/right-icon.png" alt="Next" />
+          <img src={nextIcon} alt="Next" />
         </RightButton>
       </CharacterContainer>
       <CharacterSizes>
-        {characters.map((char, index) => (
-          <CharacterSize key={index}>{char.name}</CharacterSize>
+        {sizes.map((size, index) => (
+          <CharacterSize
+            key={index}
+            onClick={() => setCurrentSize(index)}
+            selected={currentSize === index}
+          >
+            {size.name}
+          </CharacterSize>
         ))}
       </CharacterSizes>
-      <NextButton onClick={() => navigate("/next-page")}>다음</NextButton>
+      {currentSize !== null && (
+        <DateInfo>
+          {getHarvestDate(sizes[currentSize].day)}에 수확가능해요!
+        </DateInfo>
+      )}
+      <NextButton onClick={() => navigate("/choose-location")}>다음</NextButton>
     </Container>
   );
 }
