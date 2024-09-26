@@ -64,6 +64,9 @@ dependencies {
 
 	// healthCheck
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	// S3
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.772'
 }
 
 tasks.named('test') {

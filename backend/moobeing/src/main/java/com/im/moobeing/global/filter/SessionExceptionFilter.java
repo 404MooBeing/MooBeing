@@ -20,6 +20,7 @@ public class SessionExceptionFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
+            log.error(e.getMessage());
             setErrorResponse(response, ErrorCode.AU_SESSION_EXPIRED);
         }
     }

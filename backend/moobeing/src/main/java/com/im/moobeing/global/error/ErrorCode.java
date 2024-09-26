@@ -48,7 +48,20 @@ public enum ErrorCode {
 	AC_NOT_HAVE_ENOUGH(HttpStatus.BAD_REQUEST, "AC002", "해당 계좌에 남은 돈이 적습니다."),
 
 	// MonthComplete
-	MC_WRONG_REQUEST(HttpStatus.BAD_REQUEST, "MC001", "이번달은 상환 보상은 이미 받았습니다.");
+	MC_WRONG_REQUEST(HttpStatus.BAD_REQUEST, "MC001", "이번달은 상환 보상은 이미 받았습니다."),
+
+	// Account
+	AC_INVALID_BANK_CODE(HttpStatus.BAD_REQUEST, "AC001", "잘못된 BankCode 입니다."),
+	AC_ALREADY_EXISTS_PRODUCT(HttpStatus.TOO_MANY_REQUESTS, "AC002", "이미 계좌 상품이 존재합니다."),
+	AC_INVALID_PRODUCT_CODE(HttpStatus.BAD_REQUEST, "AC003", "잘못된 상품 코드입니다."),
+	AC_INVALID_ACCOUNT_NUM(HttpStatus.BAD_REQUEST, "AC004", "잘못된 계좌번호입니다."),
+	AC_INSUFFICIENT_BALANCE(HttpStatus.BAD_REQUEST, "AC005", "잔액이 부족합니다."),
+	AC_INVALID_TO_ACCOUNT_NUM(HttpStatus.BAD_REQUEST, "AC006", "잘못된 계좌번호로 전송을 시도했습니다."),
+
+	// Loan
+	LN_CREDIT_SCORE_TOO_LOW(HttpStatus.FORBIDDEN, "LN001", "신용등급이 낮아 대출이 거절되었습니다."),
+	LN_ALREADY_EXISTS_PRODUCT(HttpStatus.TOO_MANY_REQUESTS, "LN002", "이미 대출 상품이 존재합니다."),
+	LN_INVALID_PRODUCT_CODE(HttpStatus.BAD_REQUEST, "LN003", "잘못된 상품 코드입니다.");
 
 
 	private final HttpStatus status;

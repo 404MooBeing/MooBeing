@@ -23,7 +23,7 @@ public class Account {
 	@Column(name = "account_num")
 	private String accountNum;
 
-	@JoinColumn(name = "member")
+	@JoinColumn(name = "member_id")
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
 
@@ -40,5 +40,9 @@ public class Account {
 
 	public void setAccountBalance(Long accountBalance) {
 		this.accountBalance = accountBalance;
+	}
+
+	public void updateBalance(Long diff) {
+		this.accountBalance += diff;
 	}
 }
