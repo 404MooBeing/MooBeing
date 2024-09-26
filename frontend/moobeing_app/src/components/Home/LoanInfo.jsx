@@ -83,7 +83,8 @@ const RepaymentButton = styled.button`
   font-family: 'mainFont';
 `
 
-function LoanInfo() {
+const LoanInfo = () => {
+  // eslint-disable-next-line
   const [loanSum, setLoanSum] = useState({ monthlyLoanAmount: 300000 });
 
   const navigate = useNavigate();

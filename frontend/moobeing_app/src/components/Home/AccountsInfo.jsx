@@ -57,7 +57,8 @@ const AccountListContainer = styled.div`
   flex-grow: 1;
 `;
 
-function AccountInfo() {
+const AccountInfo = () => {
+  // eslint-disable-next-line
   const [totalAccountAmount, setTotalAccountAmount] = useState(10000000000); 
 
   return (

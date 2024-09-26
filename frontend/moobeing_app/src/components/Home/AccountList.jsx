@@ -132,7 +132,7 @@ const NoAccountText = styled.p`
   margin: 0;
 `;
 
-function AccountList() {
+const AccountList = () => {
   const [accounts, setAccounts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const accountsPerPage = 3;
@@ -185,7 +185,7 @@ function AccountList() {
   };
 
   const navigateToSpend = (accountName) => {
-    navigate(`/spend/${accountName}`);
+    navigate(`/transaction-history/${accountName}`);
   };
 
   const visibleAccounts = accounts.slice(currentIndex, currentIndex + accountsPerPage);

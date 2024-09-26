@@ -46,7 +46,6 @@ function Router() {
       <div
         style={{
           minHeight: shouldShowHeaderFooter ? "calc(100vh - 120px)" : "100vh",
-          padding: "20px",
         }}
       >
         <Routes>
@@ -78,7 +77,7 @@ function Router() {
           <Route path="/password-change" element={<PasswordChange />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/spend" element={<Spend />} />
-          <Route path="/transaction-history" element={<TransactionHistory />} />
+          <Route path="/transaction-history/:accountId" element={<TransactionHistory />} />
           <Route path="/welcome" element={<Welcome />} />
         </Routes>
       </div>

@@ -11,7 +11,7 @@ import NextRadishInfo from "../components/Home/NextRadishInfo";
 const Screen = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100vh; /* 전체 화면을 차지 */
 `;
 
 const Container = styled.div`
@@ -20,9 +20,9 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  overflow-y: auto;
+  overflow-y: auto; /* 내부 콘텐츠만 스크롤 가능 */
   box-sizing: border-box;
-  padding-bottom: 70px;
+  padding-bottom: 150px; /* Footer 공간 확보 */
 `;
 
 
