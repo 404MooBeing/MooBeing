@@ -3,7 +3,7 @@ import styled from "styled-components";
 import useUserStore from "../../store/UserStore";
 // import { getUserInfo } from "../../apis/UserApi";
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 
 
 const Container = styled.div`
@@ -78,10 +78,13 @@ const formatBirthday = (birthday) => {
 
 
 const MyInfo = ({userInfo}) => {
-  const logout = useUserStore((state) => state.logout); // 로그아웃 액션 가져오기
 
+  const navigate = useNavigate()
+
+  const logout = useUserStore((state) => state.logout); // 로그아웃 액션 가져오기
+  const [passwordChange, setPasswordChange] = useState(false)
   const onPasswordChangeClick = () => {
-    console.log("비번 바꾸기")
+    navigate('/password-change')
   }
 
   // 생년월일 형식 변환
@@ -94,6 +97,7 @@ const MyInfo = ({userInfo}) => {
   };
 
   return (
+    
     <Container>
       <Contents>
         <SubTitle>개인정보</SubTitle>

@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import RadishCoinImg from "../../assets/coin/RadishCoin.png";
 import RightArrowBtn from "../../assets/button/rightButtonBlack.svg"
+import { useNavigate } from "react-router-dom";
 
 
 const SubHeader = styled.div`
@@ -53,6 +54,12 @@ const RadishCoinBtn = styled.button`
 
 
 const MyInfoHeader = ({userInfo}) => {
+
+    const navigate = useNavigate()
+
+    const radishCoinClickHandler = () => {
+        navigate('/coin')
+    }
 
     return (
     <SubHeader>

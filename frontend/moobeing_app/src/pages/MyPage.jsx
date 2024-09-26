@@ -69,6 +69,7 @@ const MyPage = () => {
     fetchData();
   }, [setUserInfo]);
 
+  
 
   return (
     <Container>
