@@ -16,5 +16,4 @@ public enum DealCategory {
     DealCategory(String description) {
         this.description = description;
     }
-
 }

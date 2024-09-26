@@ -3,6 +3,7 @@ package com.im.moobeing.domain.deal.controller;
 import java.util.List;
 
 import com.im.moobeing.domain.deal.service.DealService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/expense")
 @RequiredArgsConstructor
+@Slf4j
 public class ExpenseController {
 	private final DealService dealService;
 
@@ -44,6 +46,7 @@ public class ExpenseController {
 			@RequestParam Integer year,
 			@RequestParam Integer month
 	) {
+		log.error("HIHI"+member.getId());
 		return ResponseEntity.ok(dealService.getDealCategory(member, year, month));
 	}
 

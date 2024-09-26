@@ -12,7 +12,7 @@ public class DealHistoryResponse {
 	private Long price;
 
 	public static DealHistoryResponse of(Deal deal) {
-		return new DealHistoryResponse(deal.getTitle(), deal.getDealCategory().getDescription(),
+		return new DealHistoryResponse(deal.getTitle(), deal.getDealCategory().name(),
 			deal.getPrice());
 	}
 
