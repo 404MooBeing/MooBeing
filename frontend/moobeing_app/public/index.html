@@ -3,11 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/basicRad.png" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#ffffff" />
-    <meta name="description" content="Web site created using create-react-app" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
     <!-- 캐시 제어를 위한 meta 태그 (선택 사항) -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo_192.png" />
@@ -26,6 +33,14 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>MooBeing</title>
+    <!-- <script
+      type="text/javascript"
+      src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=<%= process.env.REACT_APP_NAVER_MAP_CLIENT_SECRET%>"
+    ></script> -->
+    <script
+      type="text/javascript"
+      src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=%REACT_APP_NAVER_MAP_CLIENT_ID%&submodules=geocoder"
+    ></script>
   </head>
   <body>
     <noscript>과소비가 '무'가 되는 그날까지</noscript>

@@ -58,7 +58,7 @@ function Router() {
             path="/choose-character"
             element={<CapsuleChooseCharacter />}
           />
-          <Route path="/c" element={<CapsuleChooseLocation />} />
+          <Route path="/choose-location" element={<CapsuleChooseLocation />} />
           <Route path="/capsule-harvest" element={<CapsuleHarvest />} />
           <Route path="/capsule-intro" element={<CapsuleIntro />} />
           <Route path="/capsule-create" element={<CapsuleCreate />} />
@@ -77,7 +77,10 @@ function Router() {
           <Route path="/password-change" element={<PasswordChange />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/spend" element={<Spend />} />
-          <Route path="/transaction-history/:accountId" element={<TransactionHistory />} />
+          <Route
+            path="/transaction-history/:accountId"
+            element={<TransactionHistory />}
+          />
           <Route path="/welcome" element={<Welcome />} />
         </Routes>
       </div>
