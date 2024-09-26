@@ -1,54 +1,51 @@
-import React from 'react';
-import styled from 'styled-components';
-import CapsuleCard from '../components/MyCapsule/CapsuleCard';
+import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import styled from "styled-components";
+import TransactionInfo from "../components/TransactionHistory/TransactionInfo";
+import TransactionList from "../components/TransactionHistory/TransactionList";
 
-const PageContainer = styled.div`
-  background-color: #f0f8f0;
-  min-height: calc(100vh - 120px);
-  padding: 20px;
-`;
-
-const Title = styled.div`
+const Screen = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  height: 100vh; /* 전체 화면을 차지 */
+`;
+
+const Container = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
-  font-size: 18px;
-  font-weight: bold;
+  width: 100%;
+  overflow-y: auto; /* 내부 콘텐츠만 스크롤 가능 */
+  box-sizing: border-box;
+  padding-bottom: 150px; /* Footer 공간 확보 */
 `;
 
-const DateLabel = styled.div`
-  background-color: #e0e0e0;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 14px;
-  margin-bottom: 10px;
-  display: inline-block;
-`;
+const TransactionHistory = () => {
+  const location = useLocation();
+  const { account, accounts } = location.state || {};
 
-const TransactionHistoryPage = () => {
+  // 무 심기 선택 버튼 state 조절
+  const [isRadishSelected, setIsRadishSelected] = useState(false);
+
+  // 무 심기 선택 버튼 조절
+  const toggleRadishSelection = () => {
+    setIsRadishSelected(!isRadishSelected);
+  };
+
   return (
-    <PageContainer>
-      <Title>
-        <span>{'<'}</span>
-        전체조회
-        <span>{'>'}</span>
-      </Title>
-      
-      <DateLabel>9월 12일</DateLabel>
-      
-      <CapsuleCard 
-        title="참순불가마"
-        amount="30,000"
-        imageSrc="/path/to/single_image.jpg"
-        content="오늘 포동포동한 소풍을 갔다.\n국밥중앙 박물관 오픈런을 하였다."
-      />
-      
-      <DateLabel>9월 10일</DateLabel>
-      
-      {/* 추가 CapsuleCard 컴포넌트들을 여기에 배치 */}
-    </PageContainer>
+    <Screen>
+      <Container>
+        <TransactionInfo
+          account={account}
+          accounts={accounts}
+          isRadishSelected={isRadishSelected}
+          toggleRadishSelection={toggleRadishSelection}
+        />
+        <TransactionList isRadishSelected={isRadishSelected} />
+      </Container>
+    </Screen>
   );
 };
 
-export default TransactionHistoryPage;
+export default TransactionHistory;

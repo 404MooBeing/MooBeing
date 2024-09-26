@@ -53,8 +53,8 @@ const SubTitle = styled.div`
 `;
 
 const CreditLevel = styled.div`
-  background-color: ${({ grade }) =>
-    GraphColors[grade]}; /* 배경색을 등급별로 설정 */
+  background-color: ${({ $grade }) =>
+    GraphColors[$grade]}; /* 배경색을 등급별로 설정 */
   font-size: 1rem;
   font-weight: bold;
   border-radius: 15px; /* 모서리를 약간 둥글게 */
@@ -64,7 +64,7 @@ const CreditLevel = styled.div`
 
 const GraphContainer = styled.div`
   width: 100%;
-  background-color: ${({ grade }) => GraphColors[grade]};
+  background-color: ${({ $grade }) => GraphColors[$grade]};
   height: 30px;
   border-radius: 20px;
   overflow: visible;
@@ -72,12 +72,12 @@ const GraphContainer = styled.div`
   margin: 15px 0px;
 `;
 
-const GraphFill = styled.div.attrs(({ fillpercent }) => ({
+const GraphFill = styled.div.attrs(({ $fillpercent }) => ({
   style: {
-    width: `${fillpercent}%`,
+    width: `${$fillpercent}%`,
   },
 }))`
-  background-color: ${({ grade }) => darken(0.3, GraphColors[grade])};
+  background-color: ${({ $grade }) => darken(0.3, GraphColors[$grade])};
   height: 100%;
   border-radius: 20px;
   transition: width 2s ease;
@@ -147,14 +147,14 @@ const CreditScore = () => {
     <Container>
       <SubHeader>
         <SubTitle>나의 신용등급</SubTitle>
-        <CreditLevel grade={creditInfo.ratingName}>
+        <CreditLevel $grade={creditInfo.ratingName}>
           {creditInfo.ratingName}
         </CreditLevel>
       </SubHeader>
-      <GraphContainer grade={creditInfo.ratingName}>
+      <GraphContainer $grade={creditInfo.ratingName}>
         <GraphFill
-          grade={creditInfo.ratingName}
-          fillpercent={creditInfo.ratingPercent}
+          $grade={creditInfo.ratingName}
+          $fillpercent={creditInfo.ratingPercent}
         >
           <Radish src={radishImage} alt="Radish" />
         </GraphFill>
