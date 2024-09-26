@@ -9,7 +9,7 @@ import Line from "../../assets/button/Line.svg";
 //   selectRadish,
 //   growBabyRadish,
 // } from "../apis/RadishApi";
-import useUserStore from "../../store/UserStore";
+// import useUserStore from "../../store/UserStore";
 import checkBox from "../../assets/checkBox.svg";
 
 const PageWrapper = styled.div`
@@ -281,7 +281,7 @@ const MyRadish = () => {
   const [isChooseActive, setIsChooseActive] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [characters, setCharacters] = useState([]);
-  const { userInfo, setUserInfo } = useUserStore();
+  // const { userInfo, setUserInfo } = useUserStore();
   const [growingCharacter, setGrowingCharacter] = useState(null);
   const [isGrowthComplete, setIsGrowthComplete] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
@@ -338,12 +338,12 @@ const MyRadish = () => {
     if (selectedCharacter) {
       try {
         // await selectRadish(selectedCharacter.radishName);
-        setUserInfo({
-          ...userInfo,
-          radishName: selectedCharacter.radishName,
-          radishRank: selectedCharacter.radishRank,
-          radishImageUrl: selectedCharacter.radishImageUrl,
-        });
+        // setUserInfo({
+        //   ...userInfo,
+        //   radishName: selectedCharacter.radishName,
+        //   radishRank: selectedCharacter.radishRank,
+        //   radishImageUrl: selectedCharacter.radishImageUrl,
+        // });
         setIsChooseActive(false);
         setSelectedCharacter(null);
       } catch (error) {
@@ -472,12 +472,12 @@ const MyRadish = () => {
                     {char.radishName}
                   </CharacterName>
                   <CharacterCount>{char.radishNumber}x</CharacterCount>
-                  {((!isChooseActive &&
+                  {/* {((!isChooseActive &&
                     char.radishName === userInfo.radishName) ||
                     (isChooseActive &&
                       selectedCharacter?.radishId === char.radishId)) && (
                     <CheckBoxOverlay src={checkBox} alt="Selected" />
-                  )}
+                  )} */}
                   {char.radishName === "응애무" &&
                     char.radishNumber >= 5 &&
                     !isGrowthComplete &&
