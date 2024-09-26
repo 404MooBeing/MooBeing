@@ -163,14 +163,14 @@ const DateSortPopUp = ({ onClose, onSelectMonth, initialYear, onSelectAllView })
         <ContentWrapper>
           <YearSelector>
             <YearButton 
-              src={YearDownButton} 
+              src={YearUpButton} 
               alt="연도 증가" 
               onClick={incrementYear} 
               style={{ visibility: year === currentYear ? 'hidden' : 'visible', marginBottom: '5px' }}
             />
             <YearText>{year}</YearText>
             <YearButton 
-              src={YearUpButton} 
+              src={YearDownButton} 
               alt="연도 감소" 
               onClick={decrementYear} 
               style={{ marginTop: '5px' }}
