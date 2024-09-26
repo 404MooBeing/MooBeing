@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import DownButton from '../assets/button/yearDownButton.svg';
+import { getAllAlarms, getAlarmsByCategory } from '../apis/AlarmApi';
 
 const AlarmContainer = styled.div`
   padding: 10px 20px;
@@ -41,21 +42,26 @@ const AlarmItem = styled.li`
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+`;
+
+const AlarmIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 10px;
+  flex-shrink: 0;
+`;
+
+const AlarmContent = styled.div`
+  flex-grow: 1;
 `;
 
 const AlarmTitle = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 5px;
-`;
-
-const AlarmIcon = styled.div`
-  width: 20px;
-  height: 20px;
-  background-color: #4CAF50;
-  border-radius: 50%;
-  margin-right: 10px;
-  flex-shrink: 0;
 `;
 
 const AlarmTitleText = styled.h3`
@@ -72,23 +78,7 @@ const AlarmTime = styled.span`
 const AlarmMessage = styled.p`
   margin: 0;
   font-size: 14px;
-  margin-left: 30px; // 아이콘 너비 + 마진
 `;
-
-const alarms = [
-  { id: 1, title: 'MooBTI 학인', message: '이번 달 소비내역 분석을 할 수 있어요', time: '15시간 전' },
-  { id: 2, title: '금융 상식 퀴즈 생성', message: '오늘의 금융 상식 퀴즈를 맞춰보세요.', time: '17일전' },
-  { id: 3, title: '금융 퀴즈 생성', message: '저번 달 소비에 대한 퀴즈를 맞춰보세요.', time: '2일전' },
-  { id: 4, title: '타임 무 알림', message: '김나에서 심은 타임무를 수확할 시간이에요', time: '6일전' },
-  { id: 1, title: 'MooBTI 학인', message: '이번 달 소비내역 분석을 할 수 있어요', time: '15시간 전' },
-  { id: 2, title: '금융 상식 퀴즈 생성', message: '오늘의 금융 상식 퀴즈를 맞춰보세요.', time: '17일전' },
-  { id: 3, title: '금융 퀴즈 생성', message: '저번 달 소비에 대한 퀴즈를 맞춰보세요.', time: '2일전' },
-  { id: 4, title: '타임 무 알림', message: '김나에서 심은 타임무를 수확할 시간이에요', time: '6일전' },
-  { id: 1, title: 'MooBTI 학인', message: '이번 달 소비내역 분석을 할 수 있어요', time: '15시간 전' },
-  { id: 2, title: '금융 상식 퀴즈 생성', message: '오늘의 금융 상식 퀴즈를 맞춰보세요.', time: '17일전' },
-  { id: 3, title: '금융 퀴즈 생성', message: '저번 달 소비에 대한 퀴즈를 맞춰보세요.', time: '2일전' },
-  { id: 4, title: '타임 무 알림', message: '김나에서 심은 타임무를 수확할 시간이에요', time: '6일전' },
-];
 
 const DropdownMenu = styled.div`
   position: absolute;
@@ -137,9 +127,41 @@ const MenuIcon = styled.div`
 
 const AlarmPage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [alarms, setAlarms] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchAlarms();
+  }, [selectedCategory]);
+
+  const fetchAlarms = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      let data;
+      if (selectedCategory === '전체') {
+        data = await getAllAlarms();
+      } else {
+        data = await getAlarmsByCategory(selectedCategory);
+      }
+      setAlarms(data);
+    } catch (err) {
+      setError('알림을 불러오는 데 실패했습니다.');
+      console.error('Error fetching alarms:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setIsDropdownOpen(false);
   };
 
   const menuItems = [
@@ -157,7 +179,7 @@ const AlarmPage = () => {
       </AlarmHeader>
       <DropdownMenu isOpen={isDropdownOpen}>
         {menuItems.map((item, index) => (
-          <MenuItem key={index}>
+          <MenuItem key={index} onClick={() => handleCategorySelect(item.text)}>
             <MenuText>{item.text}</MenuText>
             <MenuIcon>{item.icon}</MenuIcon>
           </MenuItem>
@@ -165,14 +187,18 @@ const AlarmPage = () => {
       </DropdownMenu>
       <AlarmList>
         <AlarmListContent>
-          {alarms.map((alarm) => (
+          {loading && <p>로딩 중...</p>}
+          {error && <p>{error}</p>}
+          {!loading && !error && alarms.map((alarm) => (
             <AlarmItem key={alarm.id}>
-              <AlarmTitle>
-                <AlarmIcon />
-                <AlarmTitleText>{alarm.title}</AlarmTitleText>
-                <AlarmTime>{alarm.time}</AlarmTime>
-              </AlarmTitle>
-              <AlarmMessage>{alarm.message}</AlarmMessage>
+              <AlarmIcon src={alarm.iconUrl} alt="알림 아이콘" />
+              <AlarmContent>
+                <AlarmTitle>
+                  <AlarmTitleText>{alarm.title}</AlarmTitleText>
+                  <AlarmTime>{alarm.time}</AlarmTime>
+                </AlarmTitle>
+                <AlarmMessage>{alarm.message}</AlarmMessage>
+              </AlarmContent>
             </AlarmItem>
           ))}
         </AlarmListContent>
