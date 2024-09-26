@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -130,7 +131,11 @@ function CapsuleMessage() {
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
+  const handleNext = () => {
+    navigate("/choose-character");
+  };
   const handleTextChange = (e) => {
     if (e.target.value.length <= 100) {
       setText(e.target.value);
@@ -186,7 +191,7 @@ function CapsuleMessage() {
         <CharCount>{text.length} / 100</CharCount>
       </TextForm>
 
-      <NextButton>다음</NextButton>
+      <NextButton onClick={handleNext}>다음</NextButton>
     </Container>
   );
 }
