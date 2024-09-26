@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import SearchIconSvg from '../assets/button/SearchButton.svg';
+import RightButton from '../assets/button/rightButtonBlack.svg';
 
 const PageContainer = styled.div`
   display: flex;
@@ -91,6 +92,7 @@ const MenuItem = styled.li`
 
 const MenuPage = () => {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const menuItems = [
     { name: '내 소비 현황', path: '/spend' },
@@ -101,28 +103,54 @@ const MenuPage = () => {
     { name: '챗봇', path: '/quiz' },
   ];
 
+  // 초성 변환 함수
+  const getChosung = (str) => {
+    const cho = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+    let result = "";
+    for (let i = 0; i < str.length; i++) {
+      const code = str.charCodeAt(i) - 44032;
+      if (code > -1 && code < 11172) result += cho[Math.floor(code / 588)];
+      else result += str[i];
+    }
+    return result;
+  };
+
+  // 검색 함수
+  const filterMenuItems = (items, term) => {
+    return items.filter(item => 
+      item.name.includes(term) || 
+      getChosung(item.name).includes(getChosung(term))
+    );
+  };
+
+  const filteredMenuItems = filterMenuItems(menuItems, searchTerm);
+
   return (
     <PageContainer>
       <KimpaPanel>
         <KimpaText>
-          김싸피님 <KimpaArrow>&gt;</KimpaArrow>
+          김싸피님 <KimpaArrow><img src={RightButton} alt="오른쪽 화살표" width="20" height="20" style={{ verticalAlign: 'middle' }} /></KimpaArrow>
         </KimpaText>
         <LogoutButton>로그아웃</LogoutButton>
       </KimpaPanel>
 
       <SearchContainer>
-        <SearchInput placeholder="검색어를 입력하세요" />
+        <SearchInput 
+          placeholder="검색어를 입력하세요" 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         <SearchIconContainer>
           <SearchIcon src={SearchIconSvg} alt="검색" />
         </SearchIconContainer>
       </SearchContainer>
 
       <MenuList>
-        {menuItems.map((item, index) => (
+        {filteredMenuItems.map((item, index) => (
           <MenuItem 
             key={index} 
             onClick={() => navigate(item.path)}
-            isLast={index === menuItems.length - 1}
+            isLast={index === filteredMenuItems.length - 1}
           >
             {item.name}
           </MenuItem>

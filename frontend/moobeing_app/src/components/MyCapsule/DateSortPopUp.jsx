@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import YearDownButton from '../../assets/button/yearDownButton.svg';
+import YearUpButton from '../../assets/button/yearUpButton.svg';
 
 const Overlay = styled.div`
   position: fixed;
@@ -80,10 +82,11 @@ const YearText = styled.div`
   height: 100px; // 연도 텍스트를 중앙에 위치시키기 위해 높이 설정
 `;
 
-const YearButton = styled.span`
+const YearButton = styled.img`
   cursor: pointer;
   padding: 5px 0;
-  color: #888;
+  width: 20px;
+  height: 20px;
   user-select: none;
 `;
 
@@ -154,14 +157,24 @@ const DateSortPopUp = ({ onClose, onSelectMonth, initialYear, onSelectAllView })
       <Overlay onClick={handleOverlayClick} />
       <PopUpContainer>
         <Header>
-          <Title>년/월 선택</Title>
+          <Title>년 / 월 선택</Title>
           <AllViewButton onClick={onSelectAllView}>전체조회</AllViewButton>
         </Header>
         <ContentWrapper>
           <YearSelector>
-            <YearButton onClick={incrementYear} style={{ visibility: year === currentYear ? 'hidden' : 'visible', marginBottom: '5px' }}>∧</YearButton>
+            <YearButton 
+              src={YearDownButton} 
+              alt="연도 증가" 
+              onClick={incrementYear} 
+              style={{ visibility: year === currentYear ? 'hidden' : 'visible', marginBottom: '5px' }}
+            />
             <YearText>{year}</YearText>
-            <YearButton onClick={decrementYear} style={{ marginTop: '5px' }}>∨</YearButton>
+            <YearButton 
+              src={YearUpButton} 
+              alt="연도 감소" 
+              onClick={decrementYear} 
+              style={{ marginTop: '5px' }}
+            />
           </YearSelector>
           <MonthGrid>
             {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
