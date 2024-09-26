@@ -1,8 +1,134 @@
+import React from 'react';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import SearchIconSvg from '../assets/button/SearchButton.svg';
+
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 767px;
+  margin: 0 auto;
+  background-color: #ffffff;
+`;
+
+const KimpaPanel = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #F5FDED;
+  padding: 15px 20px;
+  margin: 10px 20px;
+  border-radius: 20px;
+`;
+
+const KimpaText = styled.span`
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+`;
+
+const KimpaArrow = styled.span`
+  margin-left: 8px; // 화살표와 텍스트 사이의 간격
+`;
+
+const LogoutButton = styled.button`
+  background-color: #E0EED2;
+  border: none;
+  border-radius: 15px;
+  padding: 7px 12px; // 상하 패딩을 7px로, 좌우 패딩을 12px로 증가
+  font-size: 12px; // 기존 글자 크기에서 2px 줄임 (일반적으로 14px이 기본값이므로 12px로 설정)
+  cursor: pointer;
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 20px 20px 10px; // 상단 마진을 20px로 유지
+  height: 40px;
+`;
+
+const SearchInput = styled.input`
+  flex: 1;
+  border: 1px solid #4CAF50;
+  border-radius: 17px;
+  padding: 0 15px;
+  font-size: 16px;
+  height: 100%;
+  outline: none;
+`;
+
+const SearchIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border: 1px solid #4CAF50; // 테두리 색상을 초록색으로 변경
+  border-radius: 17px;
+  margin-left: 10px;
+`;
+
+const SearchIcon = styled.img`
+  width: 20px;
+  height: 20px;
+`;
+
+const MenuList = styled.ul`
+  list-style-type: none;
+  padding: 0 20px;
+  margin: 20px 0 0; // 상단 마진을 20px로 설정
+  flex: 1;
+  overflow-y: auto;
+`;
+
+const MenuItem = styled.li`
+  padding: 12px 0 10px 20px;
+  border-bottom: ${props => props.isLast ? 'none' : '1px solid #E0E0E0'};
+  cursor: pointer;
+`;
+
 const MenuPage = () => {
+  const navigate = useNavigate();
+
+  const menuItems = [
+    { name: '내 소비 현황', path: '/spend' },
+    { name: '내 대출 현황', path: '/loan' },
+    { name: '내 무 ZIP', path: '/capsule-search' },
+    { name: '내 무 캡슐', path: '/my-capsule' },
+    { name: '내 무비티아이', path: '/moobti' },
+    { name: '챗봇', path: '/quiz' },
+  ];
+
   return (
-    <div>
-      <h1>MenuPage</h1>
-    </div>
+    <PageContainer>
+      <KimpaPanel>
+        <KimpaText>
+          김싸피님 <KimpaArrow>&gt;</KimpaArrow>
+        </KimpaText>
+        <LogoutButton>로그아웃</LogoutButton>
+      </KimpaPanel>
+
+      <SearchContainer>
+        <SearchInput placeholder="검색어를 입력하세요" />
+        <SearchIconContainer>
+          <SearchIcon src={SearchIconSvg} alt="검색" />
+        </SearchIconContainer>
+      </SearchContainer>
+
+      <MenuList>
+        {menuItems.map((item, index) => (
+          <MenuItem 
+            key={index} 
+            onClick={() => navigate(item.path)}
+            isLast={index === menuItems.length - 1}
+          >
+            {item.name}
+          </MenuItem>
+        ))}
+      </MenuList>
+    </PageContainer>
   );
 };
 
