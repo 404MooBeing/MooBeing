@@ -23,7 +23,23 @@ const Container = styled.div`
 
 const TransactionHistory = () => {
   const location = useLocation();
-  const { account, accounts } = location.state || {};
+  const { account: initialAccount, accounts } = location.state || {};
+
+  // account 상태를 상위 컴포넌트에서 관리
+  const [account, setAccount] = useState(initialAccount || {});
+
+  // 계좌 변경 함수 (TransactionInfo에서 호출)
+  const handleAccountChange = (selectedAcc) => {
+    setAccount(selectedAcc);
+  };
+
+   // 조회 조건 관리
+  const [sortCriteria, setSortCriteria] = useState({ period: "1개월", type: "전체" });
+  
+  // 정렬 기준 변경 함수
+  const handleSortSelect = (selectedSort) => {
+    setSortCriteria(selectedSort); // 정렬 기준 업데이트
+  };
 
   // 무 심기 선택 버튼 state 조절
   const [isRadishSelected, setIsRadishSelected] = useState(false);
@@ -33,6 +49,7 @@ const TransactionHistory = () => {
     setIsRadishSelected(!isRadishSelected);
   };
 
+
   return (
     <Screen>
       <Container>
@@ -41,8 +58,15 @@ const TransactionHistory = () => {
           accounts={accounts}
           isRadishSelected={isRadishSelected}
           toggleRadishSelection={toggleRadishSelection}
+          onAccountChange={handleAccountChange}
+          onSortSelect={handleSortSelect}
+          sortCriteria={sortCriteria}
         />
-        <TransactionList isRadishSelected={isRadishSelected} />
+        <TransactionList 
+          account={account} 
+          isRadishSelected={isRadishSelected}
+          sortCriteria={sortCriteria} 
+        />
       </Container>
     </Screen>
   );

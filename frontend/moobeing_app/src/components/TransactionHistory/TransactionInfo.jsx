@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import DropDownArrow from "../../assets/dropdown/DropdownArrow.png";
 import CopyButton from "../../assets/button/copyButton.svg";
@@ -163,15 +163,26 @@ const RadishButton = styled.button`
   font-family: 'mainFont';
 `;
 
-const TransactionInfo = ({ account, accounts, isRadishSelected, toggleRadishSelection }) => {
+const TransactionInfo = ({ 
+  account, 
+  accounts, 
+  isRadishSelected, 
+  toggleRadishSelection, 
+  onAccountChange, 
+  onSortSelect, 
+  sortCriteria }) => {
   const [selectedAccount, setSelectedAccount] = useState(account || {});
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSortPopupOpen, setIsSortPopupOpen] = useState(false);
-  const [sortCriteria, setSortCriteria] = useState({ period: "1개월", type: "전체" }); // 기본 정렬 값
+
+  useEffect(() => {
+    setSelectedAccount(account); // 상위 컴포넌트로부터 변경된 계좌 반영
+  }, [account]);
 
   const handleAccountChange = (selectedAcc) => {
     setSelectedAccount(selectedAcc);
     setIsDropdownOpen(false);
+    onAccountChange(selectedAcc); // 상위 컴포넌트에 계좌 변경 알림
   };
 
   const handleCopyAccountNum = () => {
@@ -187,7 +198,8 @@ const TransactionInfo = ({ account, accounts, isRadishSelected, toggleRadishSele
   };
 
   const handleSortSelect = (selectedSort) => {
-    setSortCriteria(selectedSort); // 선택된 정렬 기준 업데이트
+    onSortSelect(selectedSort);  // 상위 컴포넌트로 정렬 기준 전달
+    setIsSortPopupOpen(false);
   };
 
   return (
@@ -211,7 +223,7 @@ const TransactionInfo = ({ account, accounts, isRadishSelected, toggleRadishSele
             </CustomDropdownList>
           )}
         </CustomDropdownContainer>
-        
+
         <AccountNumContainer>
           <AccountNum>{selectedAccount?.accountNum}</AccountNum>
           <CopyImg src={CopyButton} alt="Copy" onClick={handleCopyAccountNum} />
@@ -230,7 +242,7 @@ const TransactionInfo = ({ account, accounts, isRadishSelected, toggleRadishSele
         </RadishButton>
       </SortAndRadish>
       {isSortPopupOpen && (
-        <SortTransaction onClose={toggleSortPopup} onSelect={handleSortSelect}/>
+        <SortTransaction onClose={toggleSortPopup} onSelect={handleSortSelect} />
       )}
     </AccountHeader>
   );
