@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 import com.im.moobeing.global.entity.BaseTimeEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name = "radish_capsule")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RadishCapsule extends BaseTimeEntity {
+public class RadishCapsule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,14 +52,14 @@ public class RadishCapsule extends BaseTimeEntity {
     private String addressName;
 
     @Column(name = "create_at")
-    private LocalDate createAt;
+    private LocalDateTime createAt;
 
     @Column(name = "end_at")
-    private LocalDate endAt;
+    private LocalDateTime endAt;
 
     @Builder
     public RadishCapsule(Long id, Deal deal, Radish character, String description, String imgUrl, CapsuleType type,
-                         Double lat, Double lng, String placeName, String addressName, LocalDate createAt, LocalDate endAt) {
+                         Double lat, Double lng, String placeName, String addressName, LocalDateTime createAt, LocalDateTime endAt) {
         this.id = id;
         this.deal = deal;
         this.character = character;
@@ -69,7 +70,7 @@ public class RadishCapsule extends BaseTimeEntity {
         this.lng = lng;
         this.placeName = placeName;
         this.addressName = addressName;
-        this.createAt = createAt;
+        this.createAt = LocalDateTime.now();
         this.endAt = endAt;
     }
 }
