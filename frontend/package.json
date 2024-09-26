@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@r2don/react-naver-map": "^0.0.18"
+  }
+}
