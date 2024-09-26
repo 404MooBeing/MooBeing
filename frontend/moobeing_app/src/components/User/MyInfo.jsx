@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import useUserStore from "../../store/UserStore";
-import RadishCoinImg from "../../assets/coin/RadishCoin.png";
 // import { getUserInfo } from "../../apis/UserApi";
 import { useEffect, useState } from "react";
 
@@ -33,20 +32,6 @@ const PasswordChangeButton = styled.button`
   }
 `;
 
-const SubHeader = styled.div`
-  background-color: #f5fded;
-  height: 14vh;
-  width: 90%;
-  margin-bottom: 5%;
-  margin-top: 40px;
-  border-radius: 20px;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30px 15px 20px 25px;
-  box-sizing: border-box;
-  font-size : 20px;
-`;
-
 const Contents = styled.div`
   display: flex;
   flex-direction: column;
@@ -76,43 +61,6 @@ const Value = styled.div`
   text-align: right;
 `;
 
-const RadishCoin = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 16px;
-    height : 50%;
-`;
-
-const RadishCoinBtn = styled.button`
-    margin-left:40px;
-    height: 60%;
-    margin-right: 20px;
-    width: 85px;
-    background-color: #e0eed2;
-    color: #24272d;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: bold;
-    justify-content: center;
-      border: none;
-  cursor: pointer;
-`;
-
-const Toggle = styled.div`
-    height: 20%;
-    width: 60%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`
-
-const ToggleItem = styled.span`
-    font-size : 20px;
-  color: ${(props) => (props.active ? 'black' : 'gray')};
-  font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
-  margin : 0px 14px
-`;
 
 
 // 생년월일을 "YYYY-MM-DD" 형식으로 변환하는 함수
@@ -129,44 +77,12 @@ const formatBirthday = (birthday) => {
 
 
 
-const MyInfo = ({ onPasswordChangeClick }) => {
-  // Zustand 스토어에서 필요한 상태와 함수 가져오기
-  const [userInfo, setUserInfo] = useState({
-    name: "김싸피",
-    birthday: "980321",
-    email: "mooch@ssafy.edu",
-    gender: "M",
-    id : "ssafy11",
-    coin : 10000
-  })
-//   const setUserInfo = useUserStore((state) => state.setUserInfo);
-
-    const [showComponent, setShowComponent] = useState("info");
-
-    const toggle = () => {
-        if (showComponent === "info"){
-            setShowComponent("collection")
-        }else{
-            setShowComponent("info")
-        }
-
-      };
-
-
+const MyInfo = ({userInfo}) => {
   const logout = useUserStore((state) => state.logout); // 로그아웃 액션 가져오기
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // const userData = await getUserInfo(); // 사용자 정보 가져오기
-         // Zustand 스토어에 저장
-      } catch (error) {
-        console.error("데이터 가져오기 실패:", error);
-      }
-    };
-
-    fetchData();
-  }, [setUserInfo]);
+  const onPasswordChangeClick = () => {
+    console.log("비번 바꾸기")
+  }
 
   // 생년월일 형식 변환
   const formattedBirthday = formatBirthday(userInfo.birthday);
@@ -179,31 +95,6 @@ const MyInfo = ({ onPasswordChangeClick }) => {
 
   return (
     <Container>
-      
-      <SubHeader>
-        <div>{userInfo.name || "사용자"} 님</div>
-        <RadishCoin>
-            <img src={RadishCoinImg}></img>
-            <Label>무 코인</Label>
-            <Value>{userInfo.coin}개</Value>
-            <RadishCoinBtn>송금하기</RadishCoinBtn>
-        </RadishCoin>
-      </SubHeader>
-      <Toggle onClick={toggle}>
-        <ToggleItem
-          active={showComponent === 'info'}
-          onClick={toggle}
-        >
-          내 정보
-        </ToggleItem>
-        |
-        <ToggleItem
-          active={showComponent === 'collection'}
-          onClick={toggle}
-        >
-          무 컬렉션
-        </ToggleItem>
-      </Toggle>
       <Contents>
         <SubTitle>개인정보</SubTitle>
         <InfoRow>
@@ -224,10 +115,6 @@ const MyInfo = ({ onPasswordChangeClick }) => {
     </PasswordChangeButton>
     </Container>
   );
-};
-
-MyInfo.propTypes = {
-  onPasswordChangeClick: PropTypes.func.isRequired,
 };
 
 export default MyInfo;
