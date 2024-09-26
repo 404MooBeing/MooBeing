@@ -301,59 +301,58 @@ INSERT IGNORE INTO account (account_id, account_num, member_id, account_balance,
 (5, '110-5678-9012', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 5000000, '신한 S-20 정기예금');
 
 
--- Insert dummy data into the Expense table (ignore if already exists)
+-- 9. Expense 테이블에 더미 데이터 삽입 (이미 존재할 경우 삽입 무시)
 INSERT IGNORE INTO deal (deal_id, member_id, deal_category, title, price, created_date) VALUES
-(1, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', 'Grocery Shopping', 50000, '2024-08-01 10:00:00'),
-(2, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', 'Loan Repayment', 200000, '2024-08-02 12:00:00'),
-(3, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', 'Movie Viewing', 15000, '2024-08-03 15:00:00'),
-(4, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', 'Drinks with Friends', 80000, '2024-08-04 20:00:00'),
-(5, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', 'Taxi Ride', 25000, '2024-08-05 08:00:00'),
-(6, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', 'Hospital Fee', 70000, '2024-08-06 09:00:00');
+                                                                                            (1, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '마트 장보기', 50000, '2024-08-01 10:00:00'),
+                                                                                            (2, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', '대출 상환금', 200000, '2024-08-02 12:00:00'),
+                                                                                            (3, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '영화 관람', 15000, '2024-08-03 15:00:00'),
+                                                                                            (4, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '술자리', 80000, '2024-08-04 20:00:00'),
+                                                                                            (5, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '택시 이용', 25000, '2024-08-05 08:00:00'),
+                                                                                            (6, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '병원 진료비', 70000, '2024-08-06 09:00:00');
 
--- Insert dummy data for June
+-- 6월 더미 데이터 삽입
 INSERT IGNORE INTO deal (deal_id, member_id, deal_category, title, price, created_date) VALUES
-(7, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', 'Grocery Shopping', 65000, '2024-06-01 10:00:00'),
-(8, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', 'Coffee Purchase', 4500, '2024-06-02 11:00:00'),
-(9, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', 'Dinner with Friends', 80000, '2024-06-02 20:00:00'),
-(10, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', 'Subway Ride', 1250, '2024-06-03 08:00:00'),
-(11, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', 'Loan Repayment', 200000, '2024-06-05 12:00:00'),
-(12, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', 'Movie Viewing', 15000, '2024-06-06 19:00:00'),
-(13, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', 'Lunch', 12000, '2024-06-07 12:00:00'),
-(14, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', 'Book Purchase', 15000, '2024-06-08 14:00:00'),
-(15, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', 'Drinks with Friends', 90000, '2024-06-09 21:00:00'),
-(16, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', 'Taxi Ride', 18000, '2024-06-10 23:00:00'),
-(17, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', 'Dinner', 25000, '2024-06-11 19:00:00'),
-(18, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', 'Pilates Class', 60000, '2024-06-12 18:00:00'),
-(19, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', 'Loan Repayment', 200000, '2024-06-15 12:00:00'),
-(20, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', 'Movie Viewing', 13000, '2024-06-15 16:00:00'),
-(21, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', 'Meeting Friends at Café', 18000, '2024-06-16 15:00:00'),
-(22, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', 'Bus Ride', 1200, '2024-06-17 08:30:00'),
-(23, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', 'Breakfast', 5000, '2024-06-18 08:00:00'),
-(24, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', 'Hospital Fee', 50000, '2024-06-19 09:00:00'),
-(25, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', 'Loan Repayment', 200000, '2024-06-20 12:00:00'),
-(26, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', 'Dining Out', 30000, '2024-06-21 19:00:00'),
-(27, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', 'Musical Viewing', 80000, '2024-06-22 20:00:00'),
-(28, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', 'Dinner with Friends', 70000, '2024-06-23 20:00:00'),
-(29, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', 'Taxi Ride', 24000, '2024-06-24 23:00:00'),
-(30, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', 'Nutritional Supplements', 40000, '2024-06-25 10:00:00'),
-(31, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', 'Lunch', 12000, '2024-06-26 12:00:00'),
-(32, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', 'Book Purchase', 16000, '2024-06-27 14:00:00'),
-(33, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', 'Drinks', 75000, '2024-06-28 21:00:00'),
-(34, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', 'Subway Ride', 1250, '2024-06-29 09:00:00'),
-(35, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', 'Dermatology Fee', 70000, '2024-06-30 15:00:00');
+                                                                                            (7, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '마트 장보기', 65000, '2024-06-01 10:00:00'),
+                                                                                            (8, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '커피 구매', 4500, '2024-06-02 11:00:00'),
+                                                                                            (9, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '친구들과 저녁', 80000, '2024-06-02 20:00:00'),
+                                                                                            (10, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '지하철 이용', 1250, '2024-06-03 08:00:00'),
+                                                                                            (11, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', '대출 상환금', 200000, '2024-06-05 12:00:00'),
+                                                                                            (12, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '영화 관람', 15000, '2024-06-06 19:00:00'),
+                                                                                            (13, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '점심식사', 12000, '2024-06-07 12:00:00'),
+                                                                                            (14, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '책 구매', 15000, '2024-06-08 14:00:00'),
+                                                                                            (15, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '술자리', 90000, '2024-06-09 21:00:00'),
+                                                                                            (16, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '택시 이용', 18000, '2024-06-10 23:00:00'),
+                                                                                            (17, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '저녁식사', 25000, '2024-06-11 19:00:00'),
+                                                                                            (18, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '필라테스 수업', 60000, '2024-06-12 18:00:00'),
+                                                                                            (19, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', '대출 상환금', 200000, '2024-06-15 12:00:00'),
+                                                                                            (20, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '영화 관람', 13000, '2024-06-15 16:00:00'),
+                                                                                            (21, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '카페에서 친구 만나기', 18000, '2024-06-16 15:00:00'),
+                                                                                            (22, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '버스 이용', 1200, '2024-06-17 08:30:00'),
+                                                                                            (23, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '아침식사', 5000, '2024-06-18 08:00:00'),
+                                                                                            (24, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '병원 진료비', 50000, '2024-06-19 09:00:00'),
+                                                                                            (25, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', '대출 상환금', 200000, '2024-06-20 12:00:00'),
+                                                                                            (26, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '외식', 30000, '2024-06-21 19:00:00'),
+                                                                                            (27, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '뮤지컬 관람', 80000, '2024-06-22 20:00:00'),
+                                                                                            (28, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '친구들과 저녁', 70000, '2024-06-23 20:00:00'),
+                                                                                            (29, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '택시 이용', 24000, '2024-06-24 23:00:00'),
+                                                                                            (30, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '영양제 구매', 40000, '2024-06-25 10:00:00'),
+                                                                                            (31, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '점심식사', 12000, '2024-06-26 12:00:00'),
+                                                                                            (32, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '책 구매', 16000, '2024-06-27 14:00:00'),
+                                                                                            (33, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '술자리', 75000, '2024-06-28 21:00:00'),
+                                                                                            (34, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '지하철 이용', 1250, '2024-06-29 09:00:00'),
+                                                                                            (35, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '피부과 진료비', 70000, '2024-06-30 15:00:00');
 
--- Insert dummy data for July
+-- 7월 더미 데이터 삽입
 INSERT IGNORE INTO deal (deal_id, member_id, deal_category, title, price, created_date) VALUES
-(36, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', 'Grocery Shopping', 68000, '2024-07-01 11:00:00'),
-(37, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', 'Coffee Purchase', 5000, '2024-07-01 15:00:00'),
-(38, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', 'Dinner with Friends', 82000, '2024-07-02 20:00:00'),
-(39, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', 'Taxi Ride', 21000, '2024-07-03 08:00:00'),
-(40, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', 'Loan Repayment', 200000, '2024-07-04 12:00:00'),
-(41, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', 'Pilates Class', 60000, '2024-07-05 18:00:00'),
-(42, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', 'Lunch', 15000, '2024-07-06 13:00:00'),
-(43, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', 'Movie Viewing', 14000, '2024-07-07 17:00:00'),
-(44, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', 'Drinks', 90000, '2024-07-08 20:00:00');
-
+                                                                                            (36, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '마트 장보기', 68000, '2024-07-01 11:00:00'),
+                                                                                            (37, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '커피 구매', 5000, '2024-07-01 15:00:00'),
+                                                                                            (38, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '친구들과 저녁', 82000, '2024-07-02 20:00:00'),
+                                                                                            (39, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '택시 이용', 21000, '2024-07-03 08:00:00'),
+                                                                                            (40, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', '대출 상환금', 200000, '2024-07-04 12:00:00'),
+                                                                                            (41, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '필라테스 수업', 60000, '2024-07-05 18:00:00'),
+                                                                                            (42, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '점심식사', 15000, '2024-07-06 13:00:00'),
+                                                                                            (43, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '영화 관람', 14000, '2024-07-07 17:00:00'),
+                                                                                            (44, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '술자리', 90000, '2024-07-08 20:00:00');
 
 -- 10. Quiz 테이블에 더미 데이터 삽입 (이미 존재할 경우 삽입 무시)
 INSERT IGNORE INTO quiz (quiz_id, created_date, modified_date, answer, ended_at, example, is_correct, status, member_id)

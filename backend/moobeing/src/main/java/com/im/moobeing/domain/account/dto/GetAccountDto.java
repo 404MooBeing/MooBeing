@@ -9,11 +9,13 @@ import lombok.Getter;
 public class GetAccountDto {
 	private String accountName;
 	private String accountNum;
+	private Long balance;
 
 	public static GetAccountDto of(Account account) {
 		return GetAccountDto.builder()
-			.accountNum(account.getAccountNum())
+				.accountNum(account.getAccountNum())
 				.accountName(account.getAccountName())
+				.balance(account.getAccountBalance())
 			.build();
 	}
 }
