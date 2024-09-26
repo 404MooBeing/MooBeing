@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CapsuleCard from '../components/MyCapsule/CapsuleCard';
 import DateSortPopUp from '../components/MyCapsule/DateSortPopUp';
+import { getCapsulesByYearMonth, getAllCapsules } from '../apis/MyCapsuleApi';
 
-const PageContainer = styled.div`
+const Screen = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+const Container = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
   background-color: #f0f8f0;
+`;
+
+const ContentWrapper = styled.div`
   padding: 20px;
-  position: relative;
+  margin-bottom: 150px; /* 아래에 150px 공간 추가 */
 `;
 
 const Title = styled.div`
@@ -14,7 +30,7 @@ const Title = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  font-size: 23.4px;
+  font-size: 30px;
   font-weight: bold;
   cursor: pointer;
 `;
@@ -27,19 +43,23 @@ const TitleText = styled.span`
     margin: 0 22px;
     user-select: none;
     cursor: pointer;
-    font-size: 18px;
+  }
+
+  & > span:first-child,
+  & > span:last-child {
+    font-size: 20px;
+  }
+
+  & > span:nth-child(2) {
+    font-size: 25px;
   }
 `;
 
-const BlurOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(128, 128, 128, 0.5); // 회색으로 설정, 투명도 조절
-  backdrop-filter: blur(2px); // 블러 강도를 낮춤
-  z-index: 10;
+const DateLabelContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 15px;
 `;
 
 const DateLabel = styled.div`
@@ -49,86 +69,141 @@ const DateLabel = styled.div`
   font-size: 16px;
   font-weight: bold;
   display: inline-block;
-  margin-bottom: 15px;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
 `;
 
-// 더미 데이터
-const dummyData = [
-  {
-    id: 1,
-    date: '9월 12일',
-    title: '참순불가마',
-    amount: '30,000',
-    imageUrl: 'https://github.com/user-attachments/assets/ca076534-070a-441b-b270-f65740b6c35f',
-    iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9', // 아이콘 URL 추가
-    content: '오늘 포동포동한 소풍을 갔다.\n국밥중앙 박물관 오픈런을 하였다.'
-  },
-  {
-    id: 2,
-    date: '9월 10일',
-    title: '스타벅스',
-    amount: '15,000',
-    imageUrl: 'https://github.com/user-attachments/assets/5e71b0fe-31ea-4e10-a7a4-39efe92edf8e',
-    iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9', // 아이콘 URL 추가
-    content: '친구와 함께 커피를 마셨다.\n새로 나온 메뉴를 시도해 보았다.'
-  },
-  {
-    id: 3,
-    date: '9월 8일',
-    title: '영화관',
-    amount: '25,000',
-    imageUrl: 'https://github.com/user-attachments/assets/03dd01fd-9e46-4c9f-b411-be78e72fd4e3',
-    iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9', // 아이콘 URL 추가
-    content: '오랜만에 영화를 보러 갔다.\n팝콘과 콜라도 함께 즐겼다.'
-  }
-];
+const BlurOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(128, 128, 128, 0.2);
+  backdrop-filter: blur(1px);
+  z-index: 10;
+`;
 
 const MyCapsulePage = () => {
   const [isDateSortOpen, setIsDateSortOpen] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [isAllView, setIsAllView] = useState(false);
+  const [capsules, setCapsules] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchCapsules();
+  }, [selectedYear, selectedMonth, isAllView]);
+
+  const fetchCapsules = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      let data;
+      if (isAllView) {
+        data = await getAllCapsules();
+      } else {
+        data = await getCapsulesByYearMonth(selectedYear, selectedMonth);
+      }
+      setCapsules(data);
+    } catch (err) {
+      setError('캡슐을 불러오는 데 실패했습니다.');
+      console.error('Error fetching capsules:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const toggleDateSort = () => {
     setIsDateSortOpen(!isDateSortOpen);
   };
 
-  const handleMonthSelect = (month) => {
+  const handleMonthSelect = (year, month) => {
+    setSelectedYear(year);
     setSelectedMonth(month);
+    setIsAllView(false);
     setIsDateSortOpen(false);
   };
 
+  const handleSelectAllView = () => {
+    setIsAllView(true);
+    setIsDateSortOpen(false);
+  };
+
+  const changeMonth = (increment) => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+
+    let newMonth = selectedMonth + increment;
+    let newYear = selectedYear;
+
+    if (newMonth > 12) {
+      newMonth = 1;
+      newYear += 1;
+    } else if (newMonth < 1) {
+      newMonth = 12;
+      newYear -= 1;
+    }
+
+    // 현재 날짜보다 미래인 경우 변경하지 않음
+    if (newYear > currentYear || (newYear === currentYear && newMonth > currentMonth)) {
+      return;
+    }
+
+    handleMonthSelect(newYear, newMonth);
+  };
+
+  const getTitleText = () => {
+    if (isAllView) {
+      return '전체조회';
+    }
+    return `${selectedYear}년 ${selectedMonth}월`;
+  };
+
   return (
-    <PageContainer>
-      <Title onClick={toggleDateSort}>
-        <TitleText>
-          <span>{'<'}</span>
-          전체조회
-          <span>{'>'}</span>
-        </TitleText>
-      </Title>
-      
-      {dummyData.map((item) => (
-        <React.Fragment key={item.id}>
-          <DateLabel>{item.date}</DateLabel>
-          <CapsuleCard 
-            title={item.title}
-            amount={item.amount}
-            imageUrl={item.imageUrl}
-            iconUrl={item.iconUrl}
-            content={item.content}
-          />
-        </React.Fragment>
-      ))}
-      
-      {isDateSortOpen && (
-        <>
-          <BlurOverlay />
-          <DateSortPopUp onClose={toggleDateSort} onSelectMonth={handleMonthSelect} />
-        </>
-      )}
-    </PageContainer>
+    <Screen>
+      <Container>
+        <ContentWrapper>
+          <Title>
+            <TitleText>
+              <span onClick={() => changeMonth(-1)}>{'<'}</span>
+              <span onClick={toggleDateSort}>{getTitleText()}</span>
+              <span onClick={() => changeMonth(1)}>{'>'}</span>
+            </TitleText>
+          </Title>
+          
+          {loading && <p>로딩 중...</p>}
+          {error && <p>{error}</p>}
+          {!loading && !error && capsules.map((item) => (
+            <React.Fragment key={item.id}>
+              <DateLabelContainer>
+                <DateLabel>{item.date}</DateLabel>
+              </DateLabelContainer>
+              <CapsuleCard 
+                title={item.title}
+                amount={item.amount}
+                imageUrl={item.imageUrl}
+                iconUrl={item.iconUrl}
+                content={item.content}
+              />
+            </React.Fragment>
+          ))}
+        </ContentWrapper>
+        
+        {isDateSortOpen && (
+          <>
+            <BlurOverlay />
+            <DateSortPopUp 
+              onClose={toggleDateSort} 
+              onSelectMonth={handleMonthSelect}
+              initialYear={selectedYear}
+              onSelectAllView={handleSelectAllView}
+            />
+          </>
+        )}
+      </Container>
+    </Screen>
   );
 };
 
