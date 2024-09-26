@@ -8,17 +8,22 @@ import com.im.moobeing.domain.member.repository.MemberRadishRepository;
 import com.im.moobeing.domain.radish.dto.request.CreateRadishCapsuleRequest;
 import com.im.moobeing.domain.radish.dto.response.CharactersResponse;
 import com.im.moobeing.domain.radish.dto.response.CreateRadishCapsuleResponse;
+import com.im.moobeing.domain.radish.dto.response.RadishCapsuleResponse;
 import com.im.moobeing.domain.radish.entity.RadishCapsule;
 import com.im.moobeing.domain.radish.repository.RadishCapsuleRepository;
 import com.im.moobeing.global.error.ErrorCode;
 import com.im.moobeing.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,5 +71,53 @@ public class RadishService {
                 .filter(memberRadish -> !Objects.isNull(memberRadish.getRadishNumber()) && memberRadish.getRadishNumber() > 0)
                 .map(mr -> CharactersResponse.of(mr.getRadish(), mr.getRadishNumber()))
                 .toList();
+    }
+
+    public List<RadishCapsuleResponse> getAllRadishCapsules(Member member, Integer page) {
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+
+        List<RadishCapsule> capsules = radishCapsuleRepository.findAllByMemberId(member.getId(), pageable);
+
+        return capsules.stream()
+                .map(capsule -> new RadishCapsuleResponse(
+                        capsule.getId(),
+                        formatDate(capsule.getCreateAt().toLocalDate()), // 날짜 포맷팅
+                        capsule.getDeal().getTitle(),
+                        formatAmount(capsule.getDeal().getPrice()), // 금액 포맷팅
+                        capsule.getImgUrl(),
+                        capsule.getCharacter().getRadishImageUrl(),
+                        capsule.getDescription()))
+                .collect(Collectors.toList());
+    }
+
+    private String formatDate(LocalDate date) {
+        return String.format("%d월 %d일", date.getMonthValue(), date.getDayOfMonth());
+    }
+
+    private String formatAmount(Long amount) {
+        return String.format("%,d", amount);
+    }
+
+    public List<RadishCapsuleResponse> getRadishCapsuleByMonth(Member member, Integer year, Integer month, Integer page) {
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate endDate = yearMonth.atEndOfMonth();
+
+        List<RadishCapsule> capsules = radishCapsuleRepository.findByMemberAndBeforeDate(member.getId(), endDate, pageable);
+
+
+        return capsules.stream()
+                .map(capsule -> new RadishCapsuleResponse(
+                        capsule.getId(),
+                        formatDate(capsule.getCreateAt().toLocalDate()),
+                        capsule.getDeal().getTitle(),
+                        formatAmount(capsule.getDeal().getPrice()),
+                        capsule.getImgUrl(),
+                        capsule.getCharacter().getRadishImageUrl(),
+                        capsule.getDescription()))
+                .collect(Collectors.toList());
     }
 }

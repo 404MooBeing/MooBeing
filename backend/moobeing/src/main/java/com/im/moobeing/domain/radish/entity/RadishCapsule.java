@@ -1,14 +1,13 @@
 package com.im.moobeing.domain.radish.entity;
 
 import com.im.moobeing.domain.deal.entity.Deal;
+import com.im.moobeing.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.im.moobeing.global.entity.BaseTimeEntity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "radish_capsule")
@@ -20,6 +19,10 @@ public class RadishCapsule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "radish_capsule_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deal_id")
