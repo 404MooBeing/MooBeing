@@ -93,7 +93,7 @@ const QuizButton = styled.button`
   }
 `;
 
-function QuizPopup() {
+const QuizPopup = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
   const navigate = useNavigate();

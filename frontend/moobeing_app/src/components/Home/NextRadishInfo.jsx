@@ -45,11 +45,11 @@ const CountdownContainer = styled.div`
 `;
 
 const Countdown = styled.div`
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
 
   @media (min-width: 600px) {
-    font-size: 50px;
+    font-size: 35px;
   }
 `;
 
@@ -76,7 +76,7 @@ const ComingSoon = styled.div`
   text-align: center;
 `;
 
-function LoanInfo() {
+const LoanInfo = () => {
   const [timeLeft, setTimeLeft] = useState("");
 
   const targetDate = new Date("2024-10-05T00:00:00");
@@ -105,7 +105,7 @@ function LoanInfo() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  });
 
   return (
     <Container>
