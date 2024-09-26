@@ -88,8 +88,10 @@ const ComparisonText = styled.div`
   font-family: 'mainFont';
 `;
 
-function MonthlyPayment() {
+const MonthlyPayment = () => {
+  // eslint-disable-next-line
   const [paymentSum, setLoanSum] = useState({ monthlyPaymentAmount: 300000 });
+  // eslint-disable-next-line
   const [compareText, setCompareText] = useState('지난 달보다 3,022원 더 썼어요!')
 
   const navigate = useNavigate();

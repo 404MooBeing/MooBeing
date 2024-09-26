@@ -107,7 +107,7 @@ const CreditText = styled.div`
   }
 `;
 
-function CreditScore() {
+const CreditScore = () => {
   // 더미 데이터
   const userInfo = {
     radishImageUrl: radish, // 더미 이미지 URL
@@ -117,7 +117,7 @@ function CreditScore() {
     ratingName: "B", // 더미 신용등급
     ratingPercent: 70, // 더미 신용등급 백분율
   };
-
+  // eslint-disable-next-line
   const [creditInfo, setCreditInfo] = useState({
     ratingName: creditRate ? creditRate.ratingName : "A",
     ratingPercent: creditRate ? Math.max(creditRate.ratingPercent, 0) : 100,
