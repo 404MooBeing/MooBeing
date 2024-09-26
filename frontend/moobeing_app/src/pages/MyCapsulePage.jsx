@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import CapsuleCard from '../components/MyCapsule/CapsuleCard';
 import DateSortPopUp from '../components/MyCapsule/DateSortPopUp';
 import { getCapsulesByYearMonth, getAllCapsules } from '../apis/MyCapsuleApi';
+import LeftButton from '../assets/button/leftButtonBlack.svg';
+import RightButton from '../assets/button/rightButtonBlack.svg';
 
 const Screen = styled.div`
   display: flex;
@@ -39,19 +41,19 @@ const TitleText = styled.span`
   display: flex;
   align-items: center;
   
-  & > span {
+  & > img {
     margin: 0 22px;
     user-select: none;
     cursor: pointer;
+    width: 20px;
+    height: 20px;
   }
 
-  & > span:first-child,
-  & > span:last-child {
-    font-size: 20px;
-  }
-
-  & > span:nth-child(2) {
+  & > span {
     font-size: 25px;
+    margin: 0 22px;
+    user-select: none;
+    cursor: pointer;
   }
 `;
 
@@ -167,9 +169,9 @@ const MyCapsulePage = () => {
         <ContentWrapper>
           <Title>
             <TitleText>
-              <span onClick={() => changeMonth(-1)}>{'<'}</span>
+              <img src={LeftButton} alt="이전 달" onClick={() => changeMonth(-1)} />
               <span onClick={toggleDateSort}>{getTitleText()}</span>
-              <span onClick={() => changeMonth(1)}>{'>'}</span>
+              <img src={RightButton} alt="다음 달" onClick={() => changeMonth(1)} />
             </TitleText>
           </Title>
           
