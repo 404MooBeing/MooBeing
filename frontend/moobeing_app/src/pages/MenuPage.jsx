@@ -27,6 +27,7 @@ const KimpaText = styled.span`
   font-weight: bold;
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const KimpaArrow = styled.span`
@@ -106,30 +107,43 @@ const MenuPage = () => {
   // 초성 변환 함수
   const getChosung = (str) => {
     const cho = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
-    let result = "";
-    for (let i = 0; i < str.length; i++) {
-      const code = str.charCodeAt(i) - 44032;
-      if (code > -1 && code < 11172) result += cho[Math.floor(code / 588)];
-      else result += str[i];
-    }
-    return result;
+    return str.split('').map(char => {
+      const code = char.charCodeAt(0) - 44032;
+      if (code > -1 && code < 11172) return cho[Math.floor(code / 588)];
+      return char;
+    }).join('');
   };
 
-  // 검색 함수
+  // 검색 함수 개선
   const filterMenuItems = (items, term) => {
-    return items.filter(item => 
-      item.name.includes(term) || 
-      getChosung(item.name).includes(getChosung(term))
-    );
+    if (!term) return items;
+    const searchTerms = term.toLowerCase().split(/\s+/);
+    return items.filter(item => {
+      const itemName = item.name.toLowerCase();
+      const itemChosung = getChosung(item.name.toLowerCase());
+      return searchTerms.every(term => {
+        const termChosung = getChosung(term);
+        return itemName.includes(term) || itemChosung.includes(termChosung);
+      });
+    });
   };
 
-  const filteredMenuItems = filterMenuItems(menuItems, searchTerm);
+  // 실시간으로 필터링된 메뉴 아이템
+  const filteredItems = filterMenuItems(menuItems, searchTerm);
+
+  // 마이페이지로 이동하는 함수
+  const goToMyPage = () => {
+    navigate('/user');
+  };
 
   return (
     <PageContainer>
       <KimpaPanel>
-        <KimpaText>
-          김싸피님 <KimpaArrow><img src={RightButton} alt="오른쪽 화살표" width="20" height="20" style={{ verticalAlign: 'middle' }} /></KimpaArrow>
+        <KimpaText onClick={goToMyPage}>
+          김싸피님 
+          <KimpaArrow>
+            <img src={RightButton} alt="오른쪽 화살표" width="20" height="20" style={{ verticalAlign: 'middle' }} />
+          </KimpaArrow>
         </KimpaText>
         <LogoutButton>로그아웃</LogoutButton>
       </KimpaPanel>
@@ -146,11 +160,11 @@ const MenuPage = () => {
       </SearchContainer>
 
       <MenuList>
-        {filteredMenuItems.map((item, index) => (
+        {filteredItems.map((item, index, array) => (
           <MenuItem 
             key={index} 
             onClick={() => navigate(item.path)}
-            isLast={index === filteredMenuItems.length - 1}
+            isLast={index === array.length - 1}
           >
             {item.name}
           </MenuItem>
