@@ -1,9 +1,48 @@
-const Loan = () => {
+import React from "react";
+import styled from "styled-components";
+import LoanProductRecommend from "../components/Loan/LoanProductRecommend";
+import LoansInfo from "../components/Loan/LoansInfo";
+import MonthlyLoanPayment from "../components/Loan/MonthlyLoanPayment";
+import LeftMoneyManage from "../components/Loan/LeftMoneyManage";
+import LoanCoupon from "../components/Loan/LoanCoupon";
+import HiddenRadish from "../components/Loan/HiddenRadish";
+
+const Screen = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+`;
+
+const ScrollableContainer = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; // iOS에서 부드러운 스크롤을 위해
+`;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 70px;
+`;
+
+const LoanPage = () => {
   return (
-      <div>
-          <h1>대출</h1>
-      </div>
+    <Screen>
+      <ScrollableContainer>
+        <ContentWrapper>
+          <LoanProductRecommend />
+          <LoansInfo />
+          <MonthlyLoanPayment />
+          <LeftMoneyManage />
+          <LoanCoupon />
+          <HiddenRadish />
+        </ContentWrapper>
+      </ScrollableContainer>
+    </Screen>
   );
 };
 
-export default Loan;
+export default LoanPage;

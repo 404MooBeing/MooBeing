@@ -104,7 +104,7 @@ const MenuPage = () => {
     { name: '챗봇', path: '/quiz' },
   ];
 
-  // 초성 변환 함수
+  // 초성 변환 함수 개선
   const getChosung = (str) => {
     const cho = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
     return str.split('').map(char => {
@@ -117,14 +117,14 @@ const MenuPage = () => {
   // 검색 함수 개선
   const filterMenuItems = (items, term) => {
     if (!term) return items;
-    const searchTerms = term.toLowerCase().split(/\s+/);
+    const lowerTerm = term.toLowerCase();
+    const chosungTerm = getChosung(term);
     return items.filter(item => {
-      const itemName = item.name.toLowerCase();
-      const itemChosung = getChosung(item.name.toLowerCase());
-      return searchTerms.every(term => {
-        const termChosung = getChosung(term);
-        return itemName.includes(term) || itemChosung.includes(termChosung);
-      });
+      const lowerName = item.name.toLowerCase();
+      const chosungName = getChosung(item.name);
+      return lowerName.includes(lowerTerm) || 
+             chosungName.includes(chosungTerm) ||
+             lowerName.replace(/\s+/g, '').includes(lowerTerm.replace(/\s+/g, ''));
     });
   };
 
