@@ -75,8 +75,8 @@ const Footer = () => {
   const handleHomeClick = () => {
     navigate("/");
   };
-  const handleJourneyClick = () => {
-    navigate("/loan-journey");
+  const handleLoanClick = () => {
+    navigate("/loan");
   };
   const handleSpendClick = () => {
     navigate("/spend");
@@ -94,9 +94,9 @@ const Footer = () => {
         <img className="footer-icon" alt="home" src={HomeIcon} />
         <div className="text-wrapper">홈</div>
       </div>
-      <div className="footer-item" onClick={handleJourneyClick}>
-        <img className="footer-icon" alt="journey" src={JourneyIcon} />
-        <div className="text-wrapper">여정</div>
+      <div className="footer-item" onClick={handleLoanClick}>
+        <img className="footer-icon" alt="loan" src={JourneyIcon} />
+        <div className="text-wrapper">대출</div>
       </div>
       <div className="footer-item" onClick={handleSpendClick}>
         <img className="footer-icon" alt="consume" src={ConsumeIcon} />
