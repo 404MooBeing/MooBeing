@@ -80,7 +80,7 @@ public class RadishService {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(page - 1, pageSize);
 
-        List<RadishCapsule> capsules = radishCapsuleRepository.findAllByIsHarvestedAndMemberId(true, member.getId(), pageable);
+        List<RadishCapsule> capsules = radishCapsuleRepository.findAllByIsHarvestedAndMemberIdOrderByCreateAtDesc(true, member.getId(), pageable);
 
         return capsules.stream()
                 .map(RadishCapsuleResponse::of)

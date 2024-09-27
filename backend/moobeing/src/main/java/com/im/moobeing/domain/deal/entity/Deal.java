@@ -1,5 +1,6 @@
 package com.im.moobeing.domain.deal.entity;
 
+import com.im.moobeing.domain.account.entity.Account;
 import com.im.moobeing.global.entity.BaseTimeEntity;
 
 import com.im.moobeing.domain.member.entity.Member;
@@ -33,11 +34,20 @@ public class Deal extends BaseTimeEntity {
 	@Column
 	private Long price;
 
+	@Column(name = "remain_balance")
+	private Long remainBalance;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "account_id")
+	private Account account;
+
 	@Builder
-	private Deal(Member member, DealCategory dealCategory, String title, Long price) {
+	public Deal(Member member, DealCategory dealCategory, String title, Long price, Long remainBalance, Account account) {
 		this.member = member;
 		this.dealCategory = dealCategory;
-		this.price = price;
 		this.title = title;
+		this.price = price;
+		this.remainBalance = remainBalance;
+		this.account = account;
 	}
 }

@@ -1,19 +1,22 @@
 package com.im.moobeing.domain.deal.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.im.moobeing.domain.account.entity.AccountProduct;
+import com.im.moobeing.domain.account.repository.AccountProductRepository;
 import com.im.moobeing.domain.deal.dto.request.DealCreateRequest;
+import com.im.moobeing.domain.deal.dto.request.TransactionHistoryRequest;
+import com.im.moobeing.domain.deal.dto.response.*;
 import com.im.moobeing.global.error.exception.BusinessException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.im.moobeing.domain.deal.dto.GetCategoryListDto;
 import com.im.moobeing.domain.deal.dto.GetDrawPiChartDto;
-import com.im.moobeing.domain.deal.dto.response.DealCategoryResponse;
-import com.im.moobeing.domain.deal.dto.response.DealDateResponse;
-import com.im.moobeing.domain.deal.dto.response.DealHistoryResponse;
-import com.im.moobeing.domain.deal.dto.response.GetDrawPiChartResponse;
 import com.im.moobeing.domain.deal.entity.Deal;
 import com.im.moobeing.domain.deal.entity.DealCategory;
 import com.im.moobeing.domain.deal.repository.DealRepository;
@@ -37,6 +40,7 @@ public class DealService {
     private final DealRepository dealRepository;
     private final MemberLoanRepository memberLoanRepository;
     private final LoanRepaymentRecordRepository loanRepaymentRecordRepository;
+    private final AccountProductRepository accountProductRepository;
 
     public List<DealCategoryResponse> getDealCategory(Member member, Integer year, Integer month) {
         validateDate(year, month);
@@ -187,7 +191,7 @@ public class DealService {
         // 오늘을 포함시킬 경우 거래 내용에 변경이 생길 수 있다.
         LocalDate today = LocalDate.now().minusDays(1);
         LocalDate from = LocalDate.now().minusDays(7);
-        List<Deal> deals = dealRepository.findAllDealByCreatedDateBetween(from.atStartOfDay(), today.atStartOfDay());
+        List<Deal> deals = dealRepository.findAllByMemberAndDateRange(member, from.atStartOfDay(), today.atStartOfDay());
 
         Map<String, Long> totalDealsByCategory = deals.stream()
                 .collect(Collectors.groupingBy(
@@ -200,6 +204,57 @@ public class DealService {
                         .categoryName(entry.getKey())
                         .totalPrice(entry.getValue())
                         .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<TransactionHistoryResponse> getTransactionHistory(TransactionHistoryRequest request, Member member) {
+        int pageSize = 10;
+
+        LocalDateTime startDate = LocalDateTime.now().minusMonths(Objects.isNull(request.months()) ? 9999 : request.months()); // month 없이 요청하면 다 가져오기
+        LocalDateTime endDate = LocalDateTime.now();
+        Pageable pageable = PageRequest.of(request.page() - 1, pageSize);
+
+        List<Deal> deals = dealRepository.findAllByAccountAndDateRange(
+                request.accountId(),
+                member.getId(),
+                startDate,
+                endDate,
+                request.transactionType(),
+                pageable
+        );
+
+        return deals.stream()
+                .map(TransactionHistoryResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<AccountSummaryResponse> getAccountSummary(Member member, Integer year, Integer month, Integer day) {
+        List<Deal> deals = dealRepository.findAllByMemberAndYearAndMonthAndDay(member, year, month, day);
+
+        Map<Long, Long> totalAmountByAccount = deals.stream()
+                .collect(Collectors.groupingBy(
+                        deal -> deal.getAccount().getAccountId(),
+                        Collectors.summingLong(Deal::getPrice)
+                ));
+
+        return totalAmountByAccount.entrySet().stream()
+                .map(entry -> {
+                    Deal deal = deals.stream()
+                            .filter(d -> d.getAccount().getAccountId().equals(entry.getKey()))
+                            .findFirst()
+                            .orElseThrow(() -> new BadRequestException(ErrorCode.BAD_REQUEST));
+
+                    String bankImage = accountProductRepository.findByAccountName(deal.getAccount().getAccountName())
+                            .orElseThrow(() -> new BadRequestException(ErrorCode.BAD_REQUEST))
+                            .getBankImage();
+
+                    return new AccountSummaryResponse(
+                            entry.getKey(),
+                            bankImage,
+                            deal.getAccount().getAccountName(),
+                            entry.getValue()
+                    );
+                })
                 .collect(Collectors.toList());
     }
 }

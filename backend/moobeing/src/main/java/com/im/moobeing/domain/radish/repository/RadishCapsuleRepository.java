@@ -10,16 +10,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RadishCapsuleRepository extends JpaRepository<RadishCapsule, Long> {
-    @Query("SELECT r FROM radish_capsule r WHERE r.isHarvested = true AND r.member.id = :memberId AND r.createAt <= :endDate")
+    @Query("SELECT r FROM radish_capsule r WHERE r.isHarvested = true AND r.member.id = :memberId AND r.createAt <= :endDate " +
+            "ORDER BY r.createAt DESC")  // 역순 정렬 추가
     List<RadishCapsule> findHarvestedRadishByMemberAndBeforeDate(
             @Param("memberId") Long memberId,
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable);
-    List<RadishCapsule> findAllByIsHarvestedAndMemberId(boolean isHarvested, Long memberId, Pageable pageable);
+    List<RadishCapsule> findAllByIsHarvestedAndMemberIdOrderByCreateAtDesc(boolean isHarvested, Long memberId, Pageable pageable);
     @Query("SELECT rc FROM radish_capsule rc WHERE rc.member.id = :memberId " +
             "AND rc.isHarvested = false " +
             "AND rc.lat BETWEEN :latBottomLeft AND :latTopRight " +
-            "AND rc.lng BETWEEN :lngBottomLeft AND :lngTopRight")
+            "AND rc.lng BETWEEN :lngBottomLeft AND :lngTopRight " +
+            "ORDER BY rc.createAt DESC")  // 역순 정렬 추가
     List<RadishCapsule> findUnharvestedCapsulesInArea(@Param("memberId") Long memberId,
                                                       @Param("latBottomLeft") Double latBottomLeft,
                                                       @Param("latTopRight") Double latTopRight,
