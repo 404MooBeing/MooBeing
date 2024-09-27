@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import DropDownArrow from "../assets/dropdown/DropdownArrow.png";
+
+import ConfirmingPopUp from "../components/LoanPayment/ConfirmingPopUp";
 // import { getAccountInfo, postAccountLoan } from "../apis/AccountApi";
 
 const Container = styled.div`
@@ -480,15 +482,8 @@ const LoanPaymentPage = () => {
       </AlertContainer>
       {showPopup && (
         <>
-          <Backdrop onClick={handleBackdropClick} />
-          <PaymentPopup>
-            <PopupMessage>
-              <p><strong>{selectedLoan.displayName}</strong> 의 대출금</p>
-              <p><Highlight>{Number(repaymentAmount).toLocaleString()}</Highlight>원을 상환하시겠습니까?</p>
-            </PopupMessage>
-            {/* 상환 API 호출 버튼으로 바꾸기 */}
-            <PayButton onClick={handlePopupClose}>상환하기</PayButton>
-          </PaymentPopup>
+        <Backdrop onClick={handlePopupClose} />
+         <ConfirmingPopUp selectedLoan={selectedLoan.displayName} repaymentAmount={repaymentAmount} />
         </>
       )}
       <MainContent>
