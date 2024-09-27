@@ -10,44 +10,44 @@ const api = axios.create({
 
 console.log('Using BASE_URL:', BASE_URL);
 
-// 더미 데이터
+// 더미 데이터 수정
 const dummyAlarms = [
-  { id: 1, title: 'MooBTI 학인', message: '이번 달 소비내역 분석을 할 수 있어요', time: '15시간 전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
-  { id: 2, title: '금융 상식 퀴즈 생성', message: '오늘의 금융 상식 퀴즈를 맞춰보세요.', time: '17일전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
-  { id: 3, title: '금융 퀴즈 생성', message: '저번 달 소비에 대한 퀴즈를 맞춰보세요.', time: '2일전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
-  { id: 4, title: '타임 무 알림', message: '김나에서 심은 타임무를 수확할 시간이에요', time: '6일전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
-  { id: 1, title: 'MooBTI 학인', message: '이번 달 소비내역 분석을 할 수 있어요', time: '15시간 전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
-  { id: 2, title: '금융 상식 퀴즈 생성', message: '오늘의 금융 상식 퀴즈를 맞춰보세요.', time: '17일전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
-  { id: 3, title: '금융 퀴즈 생성', message: '저번 달 소비에 대한 퀴즈를 맞춰보세요.', time: '2일전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
-  { id: 4, title: '타임 무 알림', message: '김나에서 심은 타임무를 수확할 시간이에요', time: '6일전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
-  { id: 1, title: 'MooBTI 학인', message: '이번 달 소비내역 분석을 할 수 있어요', time: '15시간 전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
-  { id: 2, title: '금융 상식 퀴즈 생성', message: '오늘의 금융 상식 퀴즈를 맞춰보세요.', time: '17일전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
-  { id: 3, title: '금융 퀴즈 생성', message: '저번 달 소비에 대한 퀴즈를 맞춰보세요.', time: '2일전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
-  { id: 4, title: '타임 무 알림', message: '김나에서 심은 타임무를 수확할 시간이에요', time: '6일전', iconUrl: 'https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9' },
+  { id: 1, title: 'MooBTI 확인', message: '9월 소비내역 분석이 완료되었어요', time: '2024-09-27T09:30:00', iconName: 'MooBTI' },
+  { id: 2, title: '금융 상식 퀴즈 생성', message: '오늘의 금융 상식 퀴즈가 도착했어요', time: '2024-09-26T14:45:00', iconName: 'Quiz' },
+  { id: 3, title: '타임 무 알림', message: '김나에서 심은 타임무를 수확할 시간이에요', time: '2024-09-25T18:20:00', iconName: 'TimeWu' },
+  { id: 4, title: 'MooBTI 확인', message: '당신의 MooBTI에 맞는 금융 상품을 확인해보세요', time: '2024-09-24T10:00:00', iconName: 'MooBTI' },
+  { id: 5, title: '금융 퀴즈 생성', message: '지난 달 소비에 대한 퀴즈를 풀어보세요', time: '2024-09-23T20:15:00', iconName: 'Quiz' },
+  { id: 6, title: '타임 무 알림', message: '새로운 타임무를 심을 시간이에요', time: '2024-09-22T11:30:00', iconName: 'TimeWu' },
+  { id: 7, title: 'MooBTI 확인', message: '당신의 MooBTI가 업데이트되었어요', time: '2024-09-21T16:40:00', iconName: 'MooBTI' },
+  { id: 8, title: '금융 상식 퀴즈 생성', message: '오늘의 투자 상식 퀴즈에 도전해보세요', time: '2024-09-20T09:10:00', iconName: 'Quiz' },
+  { id: 9, title: '타임 무 알림', message: '타임무에 물을 줄 시간이에요', time: '2024-09-19T13:25:00', iconName: 'TimeWu' },
+  { id: 10, title: 'MooBTI 확인', message: '이번 주 MooBTI 챌린지에 참여해보세요', time: '2024-09-18T15:50:00', iconName: 'MooBTI' },
 ];
 
-// 모든 알림 가져오기
+// 모든 알림 가져오기 (더미 데이터 사용)
 export const getAllAlarms = async () => {
   try {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    console.log("모든 알림을 가져옵니다.");
-    return dummyAlarms;
+    // API 호출을 시뮬레이션하기 위해 setTimeout 사용
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(dummyAlarms);
+      }, 500); // 0.5초 지연
+    });
   } catch (error) {
     console.error("알림 정보 불러오기 실패:", error);
     throw error;
   }
 };
 
-// 특정 카테고리의 알림 가져오기
+// 특정 카테고리의 알림 가져오기 (더미 데이터 사용)
 export const getAlarmsByCategory = async (category) => {
   try {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    console.log(`${category} 카테고리의 알림을 가져옵니다.`);
-    return dummyAlarms.filter(alarm => {
-      if (category === '퀴즈') return alarm.title.includes('퀴즈');
-      if (category === '타임무') return alarm.title.includes('타임 무');
-      if (category === 'MooBTI') return alarm.title.includes('MooBTI');
-      return true; // '전체' 카테고리인 경우
+    // API 호출을 시뮬레이션하기 위해 setTimeout 사용
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const filteredAlarms = dummyAlarms.filter(alarm => alarm.title.includes(category));
+        resolve(filteredAlarms);
+      }, 500); // 0.5초 지연
     });
   } catch (error) {
     console.error("알림 정보 불러오기 실패:", error);
