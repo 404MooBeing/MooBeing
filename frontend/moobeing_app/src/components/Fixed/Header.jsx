@@ -30,7 +30,7 @@ const StyledHeader = styled.div`
     width: 28px;
     cursor: pointer;
     margin-left: 5%;
-    visibility: ${(props) => (props.$isAlarmVisible ? "visible" : "hidden")};
+    // visibility: ${(props) => (props.$isAlarmVisible ? "visible" : "hidden")};
   }
 
   & .auth {
@@ -40,7 +40,7 @@ const StyledHeader = styled.div`
   }
 `;
 
-const Header = ({ onAlarmClick, isAlarmVisible }) => {
+const Header = ({ isAlarmVisible }) => {
   const navigate = useNavigate();
 
   const handleHomeClick = () => {
@@ -51,16 +51,19 @@ const Header = ({ onAlarmClick, isAlarmVisible }) => {
     navigate("/user");
   };
 
+  const handleAlarmClick = () => {
+    navigate("/alarm");
+  };
+
   return (
-    <StyledHeader $isAlarmVisible={isAlarmVisible}>
+    <StyledHeader>
       <img className="logo" alt="logo" src={logo} onClick={handleHomeClick} />
       <div className="right-icons">
         <img
           className="alarm"
           alt="alarm"
           src={alarm}
-          onClick={onAlarmClick}
-          style={{ visibility: isAlarmVisible ? "visible" : "hidden" }}
+          onClick={handleAlarmClick}
         />
         <img
           className="auth"
