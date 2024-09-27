@@ -16,4 +16,13 @@ public interface RadishCapsuleRepository extends JpaRepository<RadishCapsule, Lo
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable);
     List<RadishCapsule> findAllByIsHarvestedAndMemberId(boolean isHarvested, Long memberId, Pageable pageable);
+    @Query("SELECT rc FROM radish_capsule rc WHERE rc.member.id = :memberId " +
+            "AND rc.isHarvested = false " +
+            "AND rc.lat BETWEEN :latBottomLeft AND :latTopRight " +
+            "AND rc.lng BETWEEN :lngBottomLeft AND :lngTopRight")
+    List<RadishCapsule> findUnharvestedCapsulesInArea(@Param("memberId") Long memberId,
+                                                      @Param("latBottomLeft") Double latBottomLeft,
+                                                      @Param("latTopRight") Double latTopRight,
+                                                      @Param("lngBottomLeft") Double lngBottomLeft,
+                                                      @Param("lngTopRight") Double lngTopRight);
 }

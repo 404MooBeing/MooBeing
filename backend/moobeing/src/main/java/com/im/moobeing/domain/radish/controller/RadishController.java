@@ -2,8 +2,10 @@ package com.im.moobeing.domain.radish.controller;
 
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.domain.radish.dto.request.CreateRadishCapsuleRequest;
+import com.im.moobeing.domain.radish.dto.request.RadishCapsuleAreaRequest;
 import com.im.moobeing.domain.radish.dto.response.CharactersResponse;
 import com.im.moobeing.domain.radish.dto.response.CreateRadishCapsuleResponse;
+import com.im.moobeing.domain.radish.dto.response.RadishCapsuleAreaResponse;
 import com.im.moobeing.domain.radish.dto.response.RadishCapsuleResponse;
 import com.im.moobeing.domain.radish.entity.RadishCapsule;
 import com.im.moobeing.domain.radish.repository.RadishCapsuleRepository;
@@ -52,5 +54,24 @@ public class RadishController {
             return ResponseEntity.ok(radishService.getAllRadishCapsules(member, page));
         }
         return ResponseEntity.ok(radishService.getRadishCapsuleByMonth(member, year, month, page));
+    }
+
+    @Operation(summary = "무 수확", description = "캡슐 아이디로 무를 수확합니다. 수확 가능 시간이 되어야 수확할 수 있습니다.")
+    @PostMapping("/harvest/{capsuleId}")
+    public ResponseEntity<RadishCapsuleResponse> harvestRadish(
+            @AuthenticationPrincipal Member member,
+            @PathVariable Long capsuleId
+    ) {
+        RadishCapsuleResponse response = radishService.harvestRadishCapsule(capsuleId, member);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "좌표 범위 내 수확되지 않은 무 조회", description = "좌표 범위 내에 수확되지 않은 무를 조회합니다.")
+    @PostMapping("/area")
+    public ResponseEntity<List<RadishCapsuleAreaResponse>> getUnharvestedCapsulesInArea(
+            @AuthenticationPrincipal Member member,
+            @RequestBody RadishCapsuleAreaRequest request) {
+        List<RadishCapsuleAreaResponse> responses = radishService.findUnharvestedCapsulesInArea(member, request);
+        return ResponseEntity.ok(responses);
     }
 }

@@ -2,6 +2,8 @@ package com.im.moobeing.domain.radish.entity;
 
 import com.im.moobeing.domain.deal.entity.Deal;
 import com.im.moobeing.domain.member.entity.Member;
+import com.im.moobeing.global.error.ErrorCode;
+import com.im.moobeing.global.error.exception.BadRequestException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -78,5 +80,12 @@ public class RadishCapsule {
         this.addressName = addressName;
         this.createAt = LocalDateTime.now();
         this.endAt = endAt;
+    }
+
+    public void harvest() {
+        if (isHarvested) {
+            throw new BadRequestException(ErrorCode.BAD_REQUEST);
+        }
+        isHarvested = true;
     }
 }

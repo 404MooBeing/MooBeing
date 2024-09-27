@@ -6,9 +6,12 @@ import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.domain.member.entity.MemberRadish;
 import com.im.moobeing.domain.member.repository.MemberRadishRepository;
 import com.im.moobeing.domain.radish.dto.request.CreateRadishCapsuleRequest;
+import com.im.moobeing.domain.radish.dto.request.RadishCapsuleAreaRequest;
 import com.im.moobeing.domain.radish.dto.response.CharactersResponse;
 import com.im.moobeing.domain.radish.dto.response.CreateRadishCapsuleResponse;
+import com.im.moobeing.domain.radish.dto.response.RadishCapsuleAreaResponse;
 import com.im.moobeing.domain.radish.dto.response.RadishCapsuleResponse;
+import com.im.moobeing.domain.radish.entity.CapsuleType;
 import com.im.moobeing.domain.radish.entity.RadishCapsule;
 import com.im.moobeing.domain.radish.repository.RadishCapsuleRepository;
 import com.im.moobeing.global.error.ErrorCode;
@@ -80,23 +83,8 @@ public class RadishService {
         List<RadishCapsule> capsules = radishCapsuleRepository.findAllByIsHarvestedAndMemberId(true, member.getId(), pageable);
 
         return capsules.stream()
-                .map(capsule -> new RadishCapsuleResponse(
-                        capsule.getId(),
-                        formatDate(capsule.getCreateAt().toLocalDate()), // 날짜 포맷팅
-                        capsule.getDeal().getTitle(),
-                        formatAmount(capsule.getDeal().getPrice()), // 금액 포맷팅
-                        capsule.getImgUrl(),
-                        capsule.getCharacter().getRadishImageUrl(),
-                        capsule.getDescription()))
+                .map(RadishCapsuleResponse::of)
                 .collect(Collectors.toList());
-    }
-
-    private String formatDate(LocalDate date) {
-        return String.format("%d월 %d일", date.getMonthValue(), date.getDayOfMonth());
-    }
-
-    private String formatAmount(Long amount) {
-        return String.format("%,d", amount);
     }
 
     public List<RadishCapsuleResponse> getRadishCapsuleByMonth(Member member, Integer year, Integer month, Integer page) {
@@ -108,16 +96,35 @@ public class RadishService {
 
         List<RadishCapsule> capsules = radishCapsuleRepository.findHarvestedRadishByMemberAndBeforeDate(member.getId(), endDate, pageable);
 
+        return capsules.stream()
+                .map(RadishCapsuleResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public RadishCapsuleResponse harvestRadishCapsule(Long capsuleId, Member member) {
+        RadishCapsule capsule = radishCapsuleRepository.findById(capsuleId)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.BAD_REQUEST));
+
+        if (!capsule.getMember().getId().equals(member.getId()) ||
+                capsule.getEndAt().isAfter(LocalDateTime.now()) ||
+                capsule.isHarvested()
+        ) {
+            throw new BadRequestException(ErrorCode.BAD_REQUEST);
+        }
+
+        // 수확 처리
+        capsule.harvest();
+        radishCapsuleRepository.save(capsule);
+
+        return RadishCapsuleResponse.of(capsule);
+    }
+
+    public List<RadishCapsuleAreaResponse> findUnharvestedCapsulesInArea(Member member, RadishCapsuleAreaRequest request) {
+        List<RadishCapsule> capsules = radishCapsuleRepository.findUnharvestedCapsulesInArea(
+                member.getId(), request.latBottomLeft(), request.latTopRight(), request.lngBottomLeft(), request.lngTopRight());
 
         return capsules.stream()
-                .map(capsule -> new RadishCapsuleResponse(
-                        capsule.getId(),
-                        formatDate(capsule.getCreateAt().toLocalDate()),
-                        capsule.getDeal().getTitle(),
-                        formatAmount(capsule.getDeal().getPrice()),
-                        capsule.getImgUrl(),
-                        capsule.getCharacter().getRadishImageUrl(),
-                        capsule.getDescription()))
+                .map(RadishCapsuleAreaResponse::of)
                 .collect(Collectors.toList());
     }
 }
