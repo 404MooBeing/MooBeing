@@ -70,7 +70,6 @@ const CustomDropdownList = styled.ul`
   list-style: none;
   background-color: white;
   border: 1px solid #ccc;
-  border-radius: 10px;
   overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
