@@ -18,7 +18,6 @@ const iconMapping = {
 
 const Category = styled.div`
   background-color: #f5fded;
-  height: 60vh;
   width: 100%;
   margin-top: 3vh;
   margin-bottom: 3vh;
@@ -27,8 +26,7 @@ const Category = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  box-sizing: border-box;
+  padding: 20px; 
 `;
 
 const CategoryItem = styled.div`

@@ -4,16 +4,16 @@ import smileRad from "../assets/radishes/smileRad.svg";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
-  margin-top: 15%;
   padding: 30px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: space-evenly;
 `;
 
 const Title = styled.h1`
   text-align: left;
-  font-size: 35px;
+  font-size: 30px;
   margin-bottom: 30px;
 `;
 
@@ -79,10 +79,10 @@ const ContentText = styled.p`
 `;
 
 const Radish = styled.img`
-  width: 50%;
+  width: 35%;
   height: auto;
   align-self: center;
-  margin: 20%;
+  margin: 10%;
 `;
 
 const StartButton = styled.button`
