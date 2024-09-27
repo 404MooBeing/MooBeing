@@ -23,4 +23,6 @@ public class AccountProduct {
     private String accountDescription;
     @Column(nullable = true)
     private String accountTypeUniqueNo;
+    @Column
+    private String bankImage;
 }

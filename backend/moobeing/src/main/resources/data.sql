@@ -294,7 +294,7 @@ INSERT IGNORE INTO loan_repayment_record (loan_repayment_record_id, create_at, m
 
 -- 7. Account 테이블에 데이터 삽입 (이미 존재할 경우 삽입 무시)
 INSERT IGNORE INTO account (account_id, account_num, member_id, account_balance, account_name) VALUES
-(1, '110-1234-5678', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 1000000, '신한 MY 통장'),
+(1, '110-1234-5678', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 7550750, '신한 MY 통장'),
 (2, '110-2345-6789', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 2000000, '신한 S 드림 적금'),
 (3, '110-3456-7890', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 3000000, '신한 S행복 적금'),
 (4, '110-4567-8901', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 4000000, '신한 주니어 저축예금'),
@@ -302,57 +302,51 @@ INSERT IGNORE INTO account (account_id, account_num, member_id, account_balance,
 
 
 -- 9. Expense 테이블에 더미 데이터 삽입 (이미 존재할 경우 삽입 무시)
-INSERT IGNORE INTO deal (deal_id, member_id, deal_category, title, price, created_date) VALUES
-                                                                                            (1, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '마트 장보기', 50000, '2024-08-01 10:00:00'),
-                                                                                            (2, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', '대출 상환금', 200000, '2024-08-02 12:00:00'),
-                                                                                            (3, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '영화 관람', 15000, '2024-08-03 15:00:00'),
-                                                                                            (4, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '술자리', 80000, '2024-08-04 20:00:00'),
-                                                                                            (5, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '택시 이용', 25000, '2024-08-05 08:00:00'),
-                                                                                            (6, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '병원 진료비', 70000, '2024-08-06 09:00:00');
+-- 초기 잔액을 10,000,000원으로 설정하고 모든 거래의 잔액 수정
 
--- 6월 더미 데이터 삽입
-INSERT IGNORE INTO deal (deal_id, member_id, deal_category, title, price, created_date) VALUES
-                                                                                            (7, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '마트 장보기', 65000, '2024-06-01 10:00:00'),
-                                                                                            (8, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '커피 구매', 4500, '2024-06-02 11:00:00'),
-                                                                                            (9, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '친구들과 저녁', 80000, '2024-06-02 20:00:00'),
-                                                                                            (10, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '지하철 이용', 1250, '2024-06-03 08:00:00'),
-                                                                                            (11, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', '대출 상환금', 200000, '2024-06-05 12:00:00'),
-                                                                                            (12, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '영화 관람', 15000, '2024-06-06 19:00:00'),
-                                                                                            (13, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '점심식사', 12000, '2024-06-07 12:00:00'),
-                                                                                            (14, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '책 구매', 15000, '2024-06-08 14:00:00'),
-                                                                                            (15, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '술자리', 90000, '2024-06-09 21:00:00'),
-                                                                                            (16, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '택시 이용', 18000, '2024-06-10 23:00:00'),
-                                                                                            (17, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '저녁식사', 25000, '2024-06-11 19:00:00'),
-                                                                                            (18, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '필라테스 수업', 60000, '2024-06-12 18:00:00'),
-                                                                                            (19, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', '대출 상환금', 200000, '2024-06-15 12:00:00'),
-                                                                                            (20, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '영화 관람', 13000, '2024-06-15 16:00:00'),
-                                                                                            (21, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '카페에서 친구 만나기', 18000, '2024-06-16 15:00:00'),
-                                                                                            (22, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '버스 이용', 1200, '2024-06-17 08:30:00'),
-                                                                                            (23, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '아침식사', 5000, '2024-06-18 08:00:00'),
-                                                                                            (24, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '병원 진료비', 50000, '2024-06-19 09:00:00'),
-                                                                                            (25, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', '대출 상환금', 200000, '2024-06-20 12:00:00'),
-                                                                                            (26, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '외식', 30000, '2024-06-21 19:00:00'),
-                                                                                            (27, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '뮤지컬 관람', 80000, '2024-06-22 20:00:00'),
-                                                                                            (28, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '친구들과 저녁', 70000, '2024-06-23 20:00:00'),
-                                                                                            (29, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '택시 이용', 24000, '2024-06-24 23:00:00'),
-                                                                                            (30, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '영양제 구매', 40000, '2024-06-25 10:00:00'),
-                                                                                            (31, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '점심식사', 12000, '2024-06-26 12:00:00'),
-                                                                                            (32, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '책 구매', 16000, '2024-06-27 14:00:00'),
-                                                                                            (33, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '술자리', 75000, '2024-06-28 21:00:00'),
-                                                                                            (34, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '지하철 이용', 1250, '2024-06-29 09:00:00'),
-                                                                                            (35, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '피부과 진료비', 70000, '2024-06-30 15:00:00');
-
--- 7월 더미 데이터 삽입
-INSERT IGNORE INTO deal (deal_id, member_id, deal_category, title, price, created_date) VALUES
-                                                                                            (36, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '마트 장보기', 68000, '2024-07-01 11:00:00'),
-                                                                                            (37, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '커피 구매', 5000, '2024-07-01 15:00:00'),
-                                                                                            (38, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '친구들과 저녁', 82000, '2024-07-02 20:00:00'),
-                                                                                            (39, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'TRANSPORT', '택시 이용', 21000, '2024-07-03 08:00:00'),
-                                                                                            (40, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'LOAN', '대출 상환금', 200000, '2024-07-04 12:00:00'),
-                                                                                            (41, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'HEALTH', '필라테스 수업', 60000, '2024-07-05 18:00:00'),
-                                                                                            (42, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'FOOD', '점심식사', 15000, '2024-07-06 13:00:00'),
-                                                                                            (43, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'CULTURE', '영화 관람', 14000, '2024-07-07 17:00:00'),
-                                                                                            (44, (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 'ENTERTAINMENT', '술자리', 90000, '2024-07-08 20:00:00');
+INSERT IGNORE INTO deal (deal_id, member_id, deal_category, title, price, created_date, remain_balance, account_id) VALUES
+(1, 1, 'FOOD', '마트 장보기', -68000, '2024-07-01 11:00:00', 9932000, 1),
+(2, 1, 'CULTURE', '커피 구매', -5000, '2024-07-01 15:00:00', 9927000, 1),
+(3, 1, 'ENTERTAINMENT', '친구들과 저녁', -82000, '2024-07-02 20:00:00', 9845000, 1),
+(4, 1, 'TRANSPORT', '택시 이용', -21000, '2024-07-03 08:00:00', 9824000, 1),
+(5, 1, 'LOAN', '대출 상환금', -200000, '2024-07-04 12:00:00', 9624000, 1),
+(6, 1, 'HEALTH', '필라테스 수업', -60000, '2024-07-05 18:00:00', 9564000, 1),
+(7, 1, 'FOOD', '점심식사', -15000, '2024-07-06 13:00:00', 9549000, 1),
+(8, 1, 'CULTURE', '영화 관람', -14000, '2024-07-07 17:00:00', 9535000, 1),
+(9, 1, 'ENTERTAINMENT', '술자리', -90000, '2024-07-08 20:00:00', 9445000, 1),
+(10, 1, 'FOOD', '마트 장보기', -50000, '2024-08-01 10:00:00', 9395000, 1),
+(11, 1, 'LOAN', '대출 상환금', -200000, '2024-08-02 12:00:00', 9195000, 1),
+(12, 1, 'CULTURE', '영화 관람', -15000, '2024-08-03 15:00:00', 9180000, 1),
+(13, 1, 'ENTERTAINMENT', '술자리', -80000, '2024-08-04 20:00:00', 9100000, 1),
+(14, 1, 'TRANSPORT', '택시 이용', -25000, '2024-08-05 08:00:00', 9075000, 1),
+(15, 1, 'HEALTH', '병원 진료비', -70000, '2024-08-06 09:00:00', 9005000, 1),
+(16, 1, 'FOOD', '마트 장보기', -68000, '2024-09-01 11:00:00', 8937000, 1),
+(17, 1, 'CULTURE', '커피 구매', -5000, '2024-09-01 15:00:00', 8932000, 1),
+(18, 1, 'ENTERTAINMENT', '친구들과 저녁', -82000, '2024-09-02 20:00:00', 8850000, 1),
+(19, 1, 'TRANSPORT', '택시 이용', -21000, '2024-09-03 08:00:00', 8829000, 1),
+(20, 1, 'LOAN', '대출 상환금', -200000, '2024-09-04 12:00:00', 8629000, 1),
+(21, 1, 'HEALTH', '필라테스 수업', -60000, '2024-09-05 18:00:00', 8569000, 1),
+(22, 1, 'FOOD', '점심식사', -15000, '2024-09-06 13:00:00', 8554000, 1),
+(23, 1, 'CULTURE', '영화 관람', -14000, '2024-09-07 17:00:00', 8540000, 1),
+(24, 1, 'ENTERTAINMENT', '술자리', -90000, '2024-09-08 20:00:00', 8450000, 1),
+(25, 1, 'TRANSPORT', '택시 이용', -25000, '2024-09-09 08:00:00', 8425000, 1),
+(26, 1, 'FOOD', '저녁식사', -40000, '2024-09-10 18:00:00', 8385000, 1),
+(27, 1, 'LOAN', '대출 상환금', -200000, '2024-09-11 12:00:00', 8185000, 1),
+(28, 1, 'CULTURE', '책 구매', -16000, '2024-09-12 14:00:00', 8169000, 1),
+(29, 1, 'ENTERTAINMENT', '친구들과 저녁', -70000, '2024-09-13 20:00:00', 8099000, 1),
+(30, 1, 'HEALTH', '병원 진료비', -50000, '2024-09-14 09:00:00', 8049000, 1),
+(31, 1, 'FOOD', '아침식사', -10000, '2024-09-15 08:00:00', 8039000, 1),
+(32, 1, 'TRANSPORT', '택시 이용', -25000, '2024-09-16 08:00:00', 8014000, 1),
+(33, 1, 'CULTURE', '뮤지컬 관람', -80000, '2024-09-17 20:00:00', 7934000, 1),
+(34, 1, 'ENTERTAINMENT', '술자리', -90000, '2024-09-18 21:00:00', 7844000, 1),
+(35, 1, 'TRANSPORT', '지하철 이용', -1250, '2024-09-19 09:00:00', 7842750, 1),
+(36, 1, 'HEALTH', '피부과 진료비', -70000, '2024-09-20 15:00:00', 7772750, 1),
+(37, 1, 'FOOD', '마트 장보기', -68000, '2024-09-21 10:00:00', 7704750, 1),
+(38, 1, 'CULTURE', '커피 구매', -5000, '2024-09-22 14:00:00', 7699750, 1),
+(39, 1, 'ENTERTAINMENT', '친구들과 저녁', -80000, '2024-09-23 19:00:00', 7619750, 1),
+(40, 1, 'TRANSPORT', '택시 이용', -18000, '2024-09-24 23:00:00', 7601750, 1),
+(41, 1, 'HEALTH', '영양제 구매', -40000, '2024-09-25 10:00:00', 7561750, 1),
+(42, 1, 'FOOD', '점심식사', -12000, '2024-09-26 12:00:00', 7550750, 1);
 
 -- 10. Quiz 테이블에 더미 데이터 삽입 (이미 존재할 경우 삽입 무시)
 INSERT IGNORE INTO quiz (quiz_id, created_date, modified_date, answer, ended_at, example, is_correct, status, member_id)
@@ -473,20 +467,27 @@ VALUES
 
 
 -- 12. test@gmail.com 회원에게 캡슐 추가
-INSERT INTO radish_capsule (member_id, deal_id, character_id, description, img_url, type, lat, lng, place_name, address_name, create_at, end_at, is_harvested)
+INSERT IGNORE INTO radish_capsule (member_id, deal_id, character_id, description, img_url, type, lat, lng, place_name, address_name, create_at, end_at, is_harvested) VALUES
+(1, 1, 1, '마트에서 장을 보고 무를 심었습니다.', 'https://s3.seungki-cho.lol/moobeing/D2992ECB-6473-44F3-9421-A1D8A26A59A5.jpg', 'SMALL_RADISH', 37.5665, 126.9780, '서울 마트', '서울시 중구 을지로', '2024-09-26 12:00:00', DATE_ADD('2024-09-26 12:00:00', INTERVAL 20 DAY), false),
+(1, 2, 2, '신한은행에서 대출 상환 후 무를 심었습니다.', 'https://s3.seungki-cho.lol/moobeing/F6F17FC7-8C5B-4323-A0C8-17CF3B561E76.jpg', 'SMALL_RADISH', 37.5665, 126.9780, '신한은행 본점', '서울시 중구 태평로', '2024-09-15 10:00:00', DATE_ADD('2024-09-15 10:00:00', INTERVAL 20 DAY), false),
+(1, 3, 3, '오늘 국립중앙박물관에서 경천사 십층 석탑을 관람하였습니다. 경천사 십층 석탑은 고려시대의 대표적인 석탑으로, 국보 제86호로 지정되어 있습니다. 이 석탑은 1348년에 완성되었으며, 석재를 조각하여 화려한 불교적 세계관을 표현한 것이 특징입니다. 당시의 건축 기술과 미적 감각을 엿볼 수 있는 귀중한 문화재입니다.', 'https://s3.seungki-cho.lol/moobeing/F5976E22-0564-4104-BF0C-155746D617DE%20(1).jpg', 'MEDIUM_RADISH', 37.5230, 126.9800, '국립중앙박물관', '서울시 용산구 서빙고로', '2024-09-20 14:00:00', DATE_ADD('2024-09-20 14:00:00', INTERVAL 40 DAY), false),
+(1, 10, 1, '마트에서 장을 보고 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5665, 126.9780, '서울 마트', '서울시 중구 을지로', '2024-07-01 10:00:00', DATE_ADD('2024-07-01 10:00:00', INTERVAL 20 DAY), true),
+(1, 11, 2, '친구와 함께 커피를 마시며 작은 무를 심었습니다.', 'https://picsum.photos/300/300', 'MEDIUM_RADISH', 37.5725, 126.9890, '서울 카페', '서울시 종로구 인사동', '2024-07-05 11:00:00', DATE_ADD('2024-07-05 11:00:00', INTERVAL 40 DAY), true),
+(1, 12, 3, '도서관에서 책을 읽으며 무를 심었습니다.', 'https://picsum.photos/300/300', 'LARGE_RADISH', 37.5770, 126.9820, '서울 도서관', '서울시 종로구 대학로', '2024-07-10 12:00:00', DATE_ADD('2024-07-10 12:00:00', INTERVAL 180 DAY), true),
+(1, 13, 4, '헬스장에서 운동 후 작은 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5790, 126.9950, '서울 헬스장', '서울시 성동구 성수동', '2024-07-15 13:00:00', DATE_ADD('2024-07-15 13:00:00', INTERVAL 20 DAY), true),
+(1, 14, 5, '영화관에서 무를 심었습니다.', 'https://picsum.photos/300/300', 'MEDIUM_RADISH', 37.5625, 126.9785, '서울 영화관', '서울시 중구 명동', '2024-07-20 14:00:00', DATE_ADD('2024-07-20 14:00:00', INTERVAL 40 DAY), true),
+(1, 15, 6, '산책을 하며 무를 심었습니다.', 'https://picsum.photos/300/300', 'LARGE_RADISH', 37.5650, 126.9765, '서울 공원', '서울시 중구 장충동', '2024-07-25 15:00:00', DATE_ADD('2024-07-25 15:00:00', INTERVAL 180 DAY), true),
+(1, 16, 7, '미술관에서 전시를 보며 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5680, 126.9920, '서울 미술관', '서울시 종로구 청운동', '2024-08-01 16:00:00', DATE_ADD('2024-08-01 16:00:00', INTERVAL 20 DAY), true),
+(1, 17, 8, '카페에서 휴식을 취하며 무를 심었습니다.', 'https://picsum.photos/300/300', 'MEDIUM_RADISH', 37.5730, 126.9800, '서울 카페', '서울시 종로구 삼청동', '2024-08-05 17:00:00', DATE_ADD('2024-08-05 17:00:00', INTERVAL 40 DAY), true),
+(1, 18, 9, '박물관에서 무를 심었습니다.', 'https://picsum.photos/300/300', 'LARGE_RADISH', 37.5750, 126.9785, '서울 국립중앙박물관', '서울시 용산구', '2024-08-10 18:00:00', DATE_ADD('2024-08-10 18:00:00', INTERVAL 180 DAY), true),
+(1, 19, 10, '독서 모임 후 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5660, 126.9770, '서울 독서 모임 장소', '서울시 서대문구 신촌', '2024-08-15 19:00:00', DATE_ADD('2024-08-15 19:00:00', INTERVAL 20 DAY), true);
+
+-- 13. Account Product 테이블에 상품 데이터 삽입
+INSERT IGNORE INTO Account_Product (id, bank_Code, account_Name, account_Description, account_Type_Unique_No, bank_image)
 VALUES
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 1, 1, '마트에서 장을 보고 무를 심었습니다.', 'https://s3.seungki-cho.lol/moobeing/D2992ECB-6473-44F3-9421-A1D8A26A59A5.jpg', 'SMALL_RADISH', 37.5665, 126.9780, '서울 마트', '서울시 중구 을지로', '2024-09-26 12:00:00', DATE_ADD('2024-09-26 12:00:00', INTERVAL 20 DAY), false),
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 2, 2, '신한은행에서 대출 상환 후 무를 심었습니다.', 'https://s3.seungki-cho.lol/moobeing/F6F17FC7-8C5B-4323-A0C8-17CF3B561E76.jpg', 'SMALL_RADISH', 37.5665, 126.9780, '신한은행 본점', '서울시 중구 태평로', '2024-09-15 10:00:00', DATE_ADD('2024-09-15 10:00:00', INTERVAL 20 DAY), false),
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 3, 3, '오늘 국립중앙박물관에서 경천사 십층 석탑을 관람하였습니다. 경천사 십층 석탑은 고려시대의 대표적인 석탑으로, 국보 제86호로 지정되어 있습니다. 이 석탑은 1348년에 완성되었으며, 석재를 조각하여 화려한 불교적 세계관을 표현한 것이 특징입니다. 당시의 건축 기술과 미적 감각을 엿볼 수 있는 귀중한 문화재입니다.', 'https://s3.seungki-cho.lol/moobeing/F5976E22-0564-4104-BF0C-155746D617DE%20(1).jpg', 'MEDIUM_RADISH', 37.5230, 126.9800, '국립중앙박물관', '서울시 용산구 서빙고로', '2024-09-20 14:00:00', DATE_ADD('2024-09-20 14:00:00', INTERVAL 40 DAY), false),
--- 수확된 무 데이터
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 10, 1, '마트에서 장을 보고 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5665, 126.9780, '서울 마트', '서울시 중구 을지로', '2024-07-01 10:00:00', DATE_ADD('2024-07-01 10:00:00', INTERVAL 20 DAY), true),
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 11, 2, '친구와 함께 커피를 마시며 작은 무를 심었습니다.', 'https://picsum.photos/300/300', 'MEDIUM_RADISH', 37.5725, 126.9890, '서울 카페', '서울시 종로구 인사동', '2024-07-05 11:00:00', DATE_ADD('2024-07-05 11:00:00', INTERVAL 40 DAY), true),
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 12, 3, '도서관에서 책을 읽으며 무를 심었습니다.', 'https://picsum.photos/300/300', 'LARGE_RADISH', 37.5770, 126.9820, '서울 도서관', '서울시 종로구 대학로', '2024-07-10 12:00:00', DATE_ADD('2024-07-10 12:00:00', INTERVAL 180 DAY), true),
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 13, 4, '헬스장에서 운동 후 작은 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5790, 126.9950, '서울 헬스장', '서울시 성동구 성수동', '2024-07-15 13:00:00', DATE_ADD('2024-07-15 13:00:00', INTERVAL 20 DAY), true),
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 14, 5, '영화관에서 무를 심었습니다.', 'https://picsum.photos/300/300', 'MEDIUM_RADISH', 37.5625, 126.9785, '서울 영화관', '서울시 중구 명동', '2024-07-20 14:00:00', DATE_ADD('2024-07-20 14:00:00', INTERVAL 40 DAY), true),
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 15, 6, '산책을 하며 무를 심었습니다.', 'https://picsum.photos/300/300', 'LARGE_RADISH', 37.5650, 126.9765, '서울 공원', '서울시 중구 장충동', '2024-07-25 15:00:00', DATE_ADD('2024-07-25 15:00:00', INTERVAL 180 DAY), true),
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 16, 7, '미술관에서 전시를 보며 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5680, 126.9920, '서울 미술관', '서울시 종로구 청운동', '2024-08-01 16:00:00', DATE_ADD('2024-08-01 16:00:00', INTERVAL 20 DAY), true),
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 17, 8, '카페에서 휴식을 취하며 무를 심었습니다.', 'https://picsum.photos/300/300', 'MEDIUM_RADISH', 37.5730, 126.9800, '서울 카페', '서울시 종로구 삼청동', '2024-08-05 17:00:00', DATE_ADD('2024-08-05 17:00:00', INTERVAL 40 DAY), true),
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 18, 9, '박물관에서 무를 심었습니다.', 'https://picsum.photos/300/300', 'LARGE_RADISH', 37.5750, 126.9785, '서울 국립중앙박물관', '서울시 용산구', '2024-08-10 18:00:00', DATE_ADD('2024-08-10 18:00:00', INTERVAL 180 DAY), true),
-    ((SELECT member_id FROM member WHERE email = 'test@gmail.com'), 19, 10, '독서 모임 후 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5660, 126.9770, '서울 독서 모임 장소', '서울시 서대문구 신촌', '2024-08-15 19:00:00', DATE_ADD('2024-08-15 19:00:00', INTERVAL 20 DAY), true)
-;
+    (1, '090', '카카오뱅크 자유입출금계좌', '카카오뱅크의 자유입출금 계좌로, 모바일에서 간편하게 관리할 수 있는 현대적인 계좌입니다.', '090-1-5673fb2930a740', 'https://s3.seungki-cho.lol/moobeing/kakao.png'),
+    (2, '003', 'IBK기업은행 자유입출금통장', 'IBK기업은행의 개인 및 소상공인을 위한 자유입출금 계좌입니다.', '003-1-c13adbc5193e4e', 'https://s3.seungki-cho.lol/moobeing/ibk.svg'),
+    (3, '004', 'KB국민은행 자유입출금통장', 'KB국민은행의 인기 있는 자유입출금 계좌로, 다양한 금융 서비스를 편리하게 이용할 수 있습니다.', '004-1-3e3de8b682fb43', 'https://s3.seungki-cho.lol/moobeing/kookmin.svg'),
+    (4, '020', '우리은행 자유입출금계좌', '우리은행의 기본 자유입출금 계좌로, 입출금이 자유롭고 다양한 혜택을 제공합니다.', '020-1-ed57896c14f04d', 'https://s3.seungki-cho.lol/moobeing/woori.svg'),
+    (5, '081', '하나은행 자유입출금계좌', '하나은행의 자유입출금 계좌로, 입출금이 자유롭고 다양한 금융 서비스를 제공합니다.', '081-1-8b171a6b846c4e', 'https://s3.seungki-cho.lol/moobeing/hana.svg'),
+    (6, '088', '신한은행 자유통장', '신한은행의 자유로운 입출금 계좌로, 편리한 금융 생활을 위한 필수 계좌입니다.', '088-1-ba3e624fcec04c', 'https://s3.seungki-cho.lol/moobeing/shinhan.svg');
