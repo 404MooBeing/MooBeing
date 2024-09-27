@@ -4,13 +4,14 @@ import Header from "./components/Fixed/Header";
 import Footer from "./components/Fixed/Footer";
 import Home from "./pages/HomePage";
 import Loading from "./pages/LoadingPage";
-import Login from "./pages/LoginPage"; 
+import Login from "./pages/LoginPage";
 import SignUp from "./pages/SignUpPage";
 import Alarm from "./pages/AlarmPage";
 import CapsuleChooseCharacter from "./pages/CapsuleChooseCharacterPage";
 import CapsuleChooseLocation from "./pages/CapsuleChooseLocationPage";
 import CapsuleHarvest from "./pages/CapsuleHarvestPage";
 import CapsuleIntro from "./pages/CapsuleIntroPage";
+import CapsuleCreate from "./pages/CapsuleCreatePage";
 import CapsulePlanting from "./pages/CapsulePlantingPage";
 import CapsuleSearch from "./pages/CapsuleSearchPage";
 import CoinExchange from "./pages/CoinExchangePage";
@@ -33,7 +34,7 @@ function Router() {
   const location = useLocation();
 
   // Header와 Footer를 표시하지 않을 경로 목록
-  const noHeaderFooterRoutes = ['/loading', '/login', '/signup'];
+  const noHeaderFooterRoutes = ["/loading", "/login", "/signup"];
 
   const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(
     location.pathname
@@ -60,6 +61,7 @@ function Router() {
           <Route path="/choose-location" element={<CapsuleChooseLocation />} />
           <Route path="/capsule-harvest" element={<CapsuleHarvest />} />
           <Route path="/capsule-intro" element={<CapsuleIntro />} />
+          <Route path="/capsule-create" element={<CapsuleCreate />} />
           <Route path="/capsule-planting" element={<CapsulePlanting />} />
           <Route path="/capsule-search" element={<CapsuleSearch />} />
           <Route path="/coin-exchange" element={<CoinExchange />} />
