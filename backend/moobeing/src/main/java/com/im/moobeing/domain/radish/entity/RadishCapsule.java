@@ -60,6 +60,9 @@ public class RadishCapsule {
     @Column(name = "end_at")
     private LocalDateTime endAt;
 
+    @Column(name = "is_harvested")
+    private boolean isHarvested;
+
     @Builder
     public RadishCapsule(Long id, Deal deal, Radish character, String description, String imgUrl, CapsuleType type,
                          Double lat, Double lng, String placeName, String addressName, LocalDateTime createAt, LocalDateTime endAt) {
