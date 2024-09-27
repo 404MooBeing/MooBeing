@@ -38,27 +38,19 @@ const TitleText = styled.div`
 `;
 
 const Moobti = styled.div`
-  border: 2px solid #348833;
-  height: 8vh;
+  border: 3px solid #348833;
   width: 90%;
-  margin-bottom: 5%;
   margin-top: 3vh;
   border-radius: 20px;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
   padding: 20px;
   box-sizing: border-box;
 `;
 
 const SpendSum = styled.span`
   font-weight: 700;
-  margin-left: 8px;
-
-  @media (min-width: 600px) {
-    margin-left: 10px;
-  }
 `;
 
 // 반짝이는 애니메이션 적용
@@ -68,6 +60,13 @@ const AnalyzeButton = styled.span`
   cursor: pointer;
   animation: ${sparkle} 1.5s infinite; /* 1.5초마다 반복 */
 `;
+
+const HorizontalText = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  margin-top: 5px;
+`
 
 const Toggle = styled.div`
   display: flex;
@@ -81,10 +80,20 @@ const ToggleItem = styled.div`
   padding: 10px;
   cursor: pointer;
   font-weight: 700;
-  color: ${(props) => (props.active ? "#AFAFAF" : "#24272D")};
+  color: ${(props) => (props.active ? "#24272D" : "#AFAFAF")};
   border-radius: 10px;
   margin: 0 5px;
   transition: all 0.3s ease;
+`;
+
+const MonthText = styled.span`
+  font-weight: 700;
+  font-size: 18px;
+  margin-right: 8px;
+
+  @media (min-width: 600px) {
+    margin-right: 10px;
+  }
 `;
 
 const PageTitle = ({ totalExpense, setViewMode, viewMode }) => {
@@ -102,6 +111,9 @@ const PageTitle = ({ totalExpense, setViewMode, viewMode }) => {
 
   const userName = dummyUserInfo.name ? dummyUserInfo.name : "사용자";
 
+  // 현재 날짜의 월을 가져옴
+  const currentMonth = dayjs().format("MM");
+
   return (
     <>
       <Title>
@@ -113,8 +125,11 @@ const PageTitle = ({ totalExpense, setViewMode, viewMode }) => {
       </Title>
 
       <Moobti>
-        <SpendSum>소비 무비티아이 검사</SpendSum>
-        <AnalyzeButton onClick={goToMoobtiPage}>시작하기</AnalyzeButton>
+        <MonthText>{currentMonth}월의</MonthText>
+        <HorizontalText>
+          <SpendSum>소비 무비티아이 검사</SpendSum>
+          <AnalyzeButton onClick={goToMoobtiPage}>시작하기</AnalyzeButton>
+        </HorizontalText>
       </Moobti>
 
       <Toggle>
