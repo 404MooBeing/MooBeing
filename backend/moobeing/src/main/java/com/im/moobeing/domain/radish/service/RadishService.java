@@ -74,10 +74,10 @@ public class RadishService {
     }
 
     public List<RadishCapsuleResponse> getAllRadishCapsules(Member member, Integer page) {
-        int pageSize = 10;
+        int pageSize = 5;
         Pageable pageable = PageRequest.of(page - 1, pageSize);
 
-        List<RadishCapsule> capsules = radishCapsuleRepository.findAllByMemberId(member.getId(), pageable);
+        List<RadishCapsule> capsules = radishCapsuleRepository.findAllByIsHarvestedAndMemberId(true, member.getId(), pageable);
 
         return capsules.stream()
                 .map(capsule -> new RadishCapsuleResponse(
@@ -100,13 +100,13 @@ public class RadishService {
     }
 
     public List<RadishCapsuleResponse> getRadishCapsuleByMonth(Member member, Integer year, Integer month, Integer page) {
-        int pageSize = 10;
+        int pageSize = 5;
         Pageable pageable = PageRequest.of(page - 1, pageSize);
 
         YearMonth yearMonth = YearMonth.of(year, month);
-        LocalDate endDate = yearMonth.atEndOfMonth();
+        LocalDateTime endDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
 
-        List<RadishCapsule> capsules = radishCapsuleRepository.findByMemberAndBeforeDate(member.getId(), endDate, pageable);
+        List<RadishCapsule> capsules = radishCapsuleRepository.findHarvestedRadishByMemberAndBeforeDate(member.getId(), endDate, pageable);
 
 
         return capsules.stream()
