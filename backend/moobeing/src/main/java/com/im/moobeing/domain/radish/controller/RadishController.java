@@ -49,7 +49,7 @@ public class RadishController {
             @RequestParam Integer page
     ) {
         if (year == null || month == null) {
-            ResponseEntity.ok(radishService.getAllRadishCapsules(member, page));
+            return ResponseEntity.ok(radishService.getAllRadishCapsules(member, page));
         }
         return ResponseEntity.ok(radishService.getRadishCapsuleByMonth(member, year, month, page));
     }
