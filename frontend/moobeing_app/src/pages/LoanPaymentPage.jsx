@@ -71,17 +71,25 @@ const CustomDropdownHeader = styled.div`
   background-repeat: no-repeat;
   background-position: right 6px center;
   background-size: 15px 10px;
+  font-size: 18px;
+  color: #348833;
+
 
   &:focus {
     border-bottom: 2px solid #4caf50;
   }
 `;
+
+
+
 const Wrapper = styled.div`
   width : 100%
 `;
 
 const Balance = styled.div`
-
+  text-align: right;
+  color: gray;
+  margin-top: 4px;
 `;
 
 const CustomDropdownList = styled.ul`
@@ -207,6 +215,42 @@ const fadeInOut = keyframes`
   100% { opacity: 0; }
 `;
 
+const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+  z-index: 99999; /* 팝업 바로 뒤 */
+`;
+
+const PaymentPopup = styled.div`
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  width: 80%;
+  height: 20%;
+  background-color: #F5FDED;
+  transform: translateX(-50%);
+  z-index: 100000;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  text-align: center;
+`;
+const PopupMessage = styled.div`
+  text-align: center;
+  font-size: 20px; 
+  margin: 30px 0;
+`
+
+const Highlight = styled.span`
+  color: #27ae60; 
+  font-weight: bold;
+  margin-right: 10px;
+`;
+
 const AlertContainer = styled.div`
   position: fixed;
   top: 80px; // Adjust this value based on your Header heights
@@ -241,6 +285,8 @@ const LoanPaymentPage = () => {
   const [isLoanDropdownOpen, setIsLoanDropdownOpen] = useState(false);
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+   // 팝업 관련 상태
+   const [showPopup, setShowPopup] = useState(false);
 
   // 남는돈 있다면 가져와서 표시
   useEffect(() => {
@@ -361,6 +407,16 @@ const LoanPaymentPage = () => {
     setIsAccountDropdownOpen(false);
   };
 
+    // 팝업 외부 클릭 시 닫기
+    const handleBackdropClick = () => {
+      setShowPopup(false); // 팝업 닫기
+    };
+  
+    // 팝업 내부 버튼 클릭 시 팝업 닫기
+    const handlePopupClose = () => {
+      setShowPopup(false); // 팝업 닫기
+    };
+
 
 
   const handleRepaymentInputChange = (e) => {
@@ -382,6 +438,10 @@ const LoanPaymentPage = () => {
     setTimeout(() => setAlertMessage(""), 2000);
   };
 
+  const handlePaymentBtn = () =>{
+    setShowPopup(true)
+  }
+
   const handlePayment = async () => {
     if (!selectedLoan || !selectedAccount || repaymentAmount <= 0) {
       showAlert("입력하지 않은 정보가 있습니다.");
@@ -389,18 +449,13 @@ const LoanPaymentPage = () => {
     }
 
     try {
-      const selectedAccountNum = accounts
-        .find((account) => account.id === parseInt(selectedAccount, 10))
-        ?.name.split("\n")[1]
-        .replace(/[()]/g, "");
-
-      if (!selectedAccountNum) {
+      if (!selectedAccount) {
         showAlert("유효한 계좌를 선택하세요.");
         return;
       }
 
       const requestBody = {
-        accountNum: String(selectedAccountNum),
+        accountNum: String(selectedAccount.accountNum),
         loanName: String(selectedLoan),
         money: Number(repaymentAmount),
       };
@@ -423,12 +478,25 @@ const LoanPaymentPage = () => {
       <AlertContainer>
         {alertMessage && <AlertMessage>{alertMessage}</AlertMessage>}
       </AlertContainer>
+      {showPopup && (
+        <>
+          <Backdrop onClick={handleBackdropClick} />
+          <PaymentPopup>
+            <PopupMessage>
+              <p><strong>{selectedLoan.displayName}</strong> 의 대출금</p>
+              <p><Highlight>{Number(repaymentAmount).toLocaleString()}</Highlight>원을 상환하시겠습니까?</p>
+            </PopupMessage>
+            {/* 상환 API 호출 버튼으로 바꾸기 */}
+            <PayButton onClick={handlePopupClose}>상환하기</PayButton>
+          </PaymentPopup>
+        </>
+      )}
       <MainContent>
         <h1>대출 상환</h1>
         <RepaymentComponent>
           <Row>
-          <Wrapper>
             <Label>대출상품</Label>
+          <Wrapper>
             <CustomDropdownContainer>
               <CustomDropdownHeader
                 onClick={() => setIsLoanDropdownOpen(!isLoanDropdownOpen)}
@@ -451,14 +519,14 @@ const LoanPaymentPage = () => {
               )}
             </CustomDropdownContainer>
             <Balance>
-              잔금 {selectedLoan.remainingBalance || '0'}원
+              잔금 {Number(selectedLoan.remainingBalance || 0).toLocaleString()}원
             </Balance>
            </Wrapper>
           </Row>
 
           <Row>
-            <Wrapper>
             <Label>출금계좌</Label>
+            <Wrapper>
             <CustomDropdownContainer>
               <CustomDropdownHeader
                 onClick={() => setIsAccountDropdownOpen(!isAccountDropdownOpen)}
@@ -473,7 +541,7 @@ const LoanPaymentPage = () => {
                     onClick={() => handleAccountSelect(account)}
                     selected={selectedAccount === account}
                   > 
-                    {account.displayName}{" "}
+                    {account.name}{" "}
                   </CustomDropdownItem>
                 ))}
                 
@@ -481,7 +549,7 @@ const LoanPaymentPage = () => {
               )}
             </CustomDropdownContainer>
             
-            <Balance>잔금 {selectedAccount.balance || '0'}원</Balance>
+            <Balance>잔액 {Number(selectedAccount.balance || 0).toLocaleString()}원</Balance>
 
             </Wrapper>
           </Row>
@@ -498,7 +566,6 @@ const LoanPaymentPage = () => {
               <CurrencyLabel>원</CurrencyLabel>
             </InputContainer>
           </Row>
-
           <AmountButtons>
             {[1, 5, 10, 100].map((amount) => (
               <AmountButton
@@ -512,7 +579,7 @@ const LoanPaymentPage = () => {
               정정
             </AmountButton>
           </AmountButtons>
-          <PayButton onClick={handlePayment}>상환하기</PayButton>
+          <PayButton onClick={handlePaymentBtn}>상환하기</PayButton>
         </RepaymentComponent>
       </MainContent>
     </Container>
