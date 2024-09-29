@@ -215,14 +215,14 @@ function LeftMoneyManage() {
   return (
     <Container>
       <SubHeader>
-        <SubTitle>이번 달 계좌 잔액 관리</SubTitle>
+        <SubTitle>남은 돈 관리하기</SubTitle>
       </SubHeader>
 
       <TextTag>
-        남은 돈 <MoneySpan>{remainingBalance?.toLocaleString()}원</MoneySpan>을
+        대출잔액은 <MoneySpan>{remainingBalance?.toLocaleString()}원</MoneySpan>이며,
         <br />
         <CustomDropdownContainer>
-          <CustomDropdownHeader
+        남은 돈 <MoneySpan>230,000원</MoneySpan>을<CustomDropdownHeader
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             {selectedLoan.length > 8
@@ -245,10 +245,10 @@ function LeftMoneyManage() {
             </CustomDropdownList>
           )}
         </CustomDropdownContainer>{" "}
-        에 상환하면,
+        에
         <br />
         <LastLine>
-          이자 <MoneySpan>{interestBalance.toLocaleString()}원</MoneySpan>을
+          상환하면 이자 <MoneySpan>{interestBalance.toLocaleString()}원</MoneySpan>을
           아낄 수 있어요
         </LastLine>
       </TextTag>

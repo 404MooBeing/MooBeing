@@ -18,7 +18,7 @@ const RadishContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  margin-bottom: 150px; // 여기에 마진을 추가했습니다
+  margin-bottom: 130px; // 80px + 50px
 `;
 
 const PotRadish = styled.img`

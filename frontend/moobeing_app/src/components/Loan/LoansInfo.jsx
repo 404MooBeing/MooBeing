@@ -1,24 +1,40 @@
 import { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import LoanList from "./LoanList";
 import goToJourney from "../../assets/button/goToJourney.svg";
 import { getLoanSort } from "../../apis/LoanApi.js";
 import basicRad from "../../assets/radishes/basicRad.svg"; // basicRad 이미지 임포트
 
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
 const Container = styled.div`
   background-color: #f5fded;
   border-radius: 20px;
-  height: 900px;
+  height: 280px; // 높이를 280px로 줄임
   width: 90%;
   margin-bottom: 5%;
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: flex-start;
-  padding: 8% 5% 5% 8%;
+  padding: 20px; // 패딩 조정
   box-sizing: border-box;
-  margin-top: 5%;
+  animation: ${(props) =>
+    props.$isclosing
+      ? css`
+          ${fadeOut} 0.5s ease-out forwards
+        `
+      : "none"};
+  transition: opacity 0.5s ease-out;
 `;
 
 const SubHeader = styled.div`
@@ -26,16 +42,16 @@ const SubHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5%;
+  margin-bottom: 10px; // 마진 줄임
 `;
 
 const SubTitle = styled.div`
   margin: 0;
-  font-size: 22px;
+  font-size: 18px; // 폰트 크기 줄임
   font-weight: 700;
 
   @media (min-width: 600px) {
-    font-size: 27px;
+    font-size: 22px;
   }
 `;
 
@@ -88,17 +104,14 @@ const NavigateButton = styled.button`
 `;
 
 const NavigateImage = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 18px; // 이미지 크기 줄임
+  height: 18px;
 `;
 
 const LoanListContainer = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 150px; // 최대 높이 설정
 `;
 
 const NoLoansContainer = styled.div`

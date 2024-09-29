@@ -7,7 +7,7 @@ import goToJourney from "../../assets/button/goToJourney.svg";
 const Container = styled.div`
   background-color: #f5fded;
   border-radius: 20px;
-  height: 500px;
+  height: 250px;
   width: 90%;
   margin-bottom: 5%;
   display: flex;
@@ -41,31 +41,31 @@ const LoanBalance = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: center;
   gap: 5px;
   margin-top: 10px;
   font-size: 20px;
   font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: flex;
-  margin: 0 2px 10px;
-  flex-shrink: 1;
-  min-width: 0;
-  flex-grow: 1;
 
   @media (min-width: 600px) {
     font-size: 25px;
   }
 `;
 
+const AmountWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const NavigateButton = styled.button`
-  margin-left: 5px;
-  margin-top: 4px;
   cursor: pointer;
   background-color: transparent;
   border: none;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 0;
 `;
 
 const NavigateImage = styled.img`
@@ -105,7 +105,9 @@ function MonthlyLoanPayment() {  // 여기를 'MonthlyLoanPayment'로 변경
         <SubTitle>이번 달 상환 예정 금액</SubTitle>
       </SubHeader>
       <LoanBalance>
-        {loanSum.monthlyLoanAmount.toLocaleString()} 원
+        <AmountWrapper>
+          {loanSum.monthlyLoanAmount.toLocaleString()} 원
+        </AmountWrapper>
         <NavigateButton onClick={handleSpendPage}>
           <NavigateImage src={goToJourney} alt="여정지도" />
         </NavigateButton>
