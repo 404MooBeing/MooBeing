@@ -7,7 +7,7 @@ import goToJourney from "../../assets/button/goToJourney.svg";
 const Container = styled.div`
   background-color: #f5fded;
   border-radius: 20px;
-  height: 250px;
+  height: 150px;
   width: 90%;
   margin-bottom: 5%;
   display: flex;
