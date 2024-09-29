@@ -1,13 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
+import MoobtiCard from '../components/Moobti/MoobtiCard';
+
+const Screen = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
 
 const PageContainer = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
   padding: 20px;
-  background-color: #f0f0f0;
-  min-height: 100vh;
+  padding-bottom: 150px; // Footer 공간 확보
+  background-color: #ffffff;
 `;
 
 const ContentWrapper = styled.div`
@@ -16,14 +27,24 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 150px; // 하단 마진 150px 추가
+`;
+
+const TitleBox = styled.div`
+  background-color: #e8f5e9;
+  border-radius: 20px;
+  padding: 20px;
+  width: 90%;
+  max-width: 300px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  text-align: center;
 `;
 
 const Title = styled.h1`
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
+  margin: 0;
+  color: #333;
 `;
 
 const Card = styled.div`
@@ -104,66 +125,32 @@ const InnerCard = styled.div`
 `;
 
 const MoobtiPage = () => {
-  const characterImageUrl = "https://example.com/radish_character.png"; // 실제 이미지 URL로 교체해주세요
+  const character = {
+    imageUrl: "https://github.com/user-attachments/assets/1cdb8313-6a26-4186-8000-3acbd93903df",
+    type: "소비 유형",
+    name: "플렉스 (돈많아)",
+    description: "주변에 배품머 친구가 많은 분입니다. 즐거운 분위기를 좋아하시겠네요!"
+  };
+
+  const traits = [
+    { category: "식비", left: "소비형", middle: "존트", right: "존돈형", percentage: 60, color: "#FF9999" },
+    { category: "의료", left: "의욕형", middle: "건강", right: "아파형", percentage: 20, color: "#FFFF99" },
+    { category: "맛집", left: "조용형", middle: "맛집", right: "맛집형", percentage: 90, color: "#99FF99" },
+    { category: "대출", left: "대출형", middle: "관", right: "필요형", percentage: 40, color: "#99CCFF" },
+    { category: "유흥", left: "유흥형", middle: "차", right: "필방형", percentage: 30, color: "#CC99FF" }
+  ];
 
   return (
-    <PageContainer>
-      <ContentWrapper>
-        <Title>제갈파피님의<br />8월 MooBTI</Title>
-        <OuterCard>
-          <OuterCardContent>
-            <InnerCard>
-              <CharacterImage src={characterImageUrl} alt="무 캐릭터" />
-              <CharacterName>소비 유형<br />플렉스 (돈많아)</CharacterName>
-              <Description>주변에 배품머 친구가 많은 분입니다. 즐거운 분위기를 좋아하시겠네요!</Description>
-            </InnerCard>
-            <InnerCard>
-              <h3>성향</h3>
-              <StatusLabel>
-                <span>소비형</span>
-                <span>60% 존트</span>
-                <span>존돈형</span>
-              </StatusLabel>
-              <StatusBar>
-                <StatusFill percentage={60} color="#FF9999" />
-              </StatusBar>
-              <StatusLabel>
-                <span>의욕형</span>
-                <span>20% 건강</span>
-                <span>아파형</span>
-              </StatusLabel>
-              <StatusBar>
-                <StatusFill percentage={20} color="#FFFF99" />
-              </StatusBar>
-              <StatusLabel>
-                <span>조용형</span>
-                <span>90% 맛집</span>
-                <span>맛집형</span>
-              </StatusLabel>
-              <StatusBar>
-                <StatusFill percentage={90} color="#99FF99" />
-              </StatusBar>
-              <StatusLabel>
-                <span>대출형</span>
-                <span>40% 관</span>
-                <span>필요형</span>
-              </StatusLabel>
-              <StatusBar>
-                <StatusFill percentage={40} color="#99CCFF" />
-              </StatusBar>
-              <StatusLabel>
-                <span>유흥형</span>
-                <span>30% 차</span>
-                <span>필방형</span>
-              </StatusLabel>
-              <StatusBar>
-                <StatusFill percentage={30} color="#CC99FF" />
-              </StatusBar>
-            </InnerCard>
-          </OuterCardContent>
-        </OuterCard>
-      </ContentWrapper>
-    </PageContainer>
+    <Screen>
+      <PageContainer>
+        <ContentWrapper>
+          <TitleBox>
+            <Title>제갈파피님의<br />8월 MooBTI</Title>
+          </TitleBox>
+          <MoobtiCard character={character} traits={traits} />
+        </ContentWrapper>
+      </PageContainer>
+    </Screen>
   );
 };
 
