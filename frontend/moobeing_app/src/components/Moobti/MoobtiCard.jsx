@@ -26,7 +26,7 @@ const CharacterImage = styled.img`
 `;
 
 const CharacterName = styled.h2`
-  font-size: 18px;
+  font-size: 24px;
   font-weight: bold;
   margin-bottom: 8px;
 
