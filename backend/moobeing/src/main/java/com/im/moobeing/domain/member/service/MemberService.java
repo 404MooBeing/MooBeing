@@ -60,6 +60,7 @@ public class MemberService {
                 .name(memberCreateRequest.getName())
                 .birthday(birthDay)
                 .gender(gender)
+                .selectedRadishId(1L)
                 .build();
 
 //        //todo exception 설정 필요
