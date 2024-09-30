@@ -117,7 +117,7 @@ public class AccountService {
 			beforeYear = beforeYear - 1;
 		}
 
-		Long remainder = member.getMonthAver() - dealRepository.findTotalPriceByYearAndMonth(beforeYear, beforeMonth);
+		Long remainder = member.getMonthAver() - dealRepository.findTotalPriceByMemberAndYearAndMonth(member, beforeYear, beforeMonth);
 
 		// 만약 지난달에 초과 지출하거나,
 		if (remainder < 0){
@@ -263,4 +263,6 @@ public class AccountService {
 			throw new RuntimeException("Failed to increment sequence");
 		}
 	}
+
+
 }

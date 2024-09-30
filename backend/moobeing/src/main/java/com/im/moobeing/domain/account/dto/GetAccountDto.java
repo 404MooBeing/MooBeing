@@ -7,12 +7,14 @@ import lombok.Getter;
 @Getter
 @Builder
 public class GetAccountDto {
+	private Long id;
 	private String accountName;
 	private String accountNum;
 	private Long balance;
 
 	public static GetAccountDto of(Account account) {
 		return GetAccountDto.builder()
+				.id(account.getAccountId())
 				.accountNum(account.getAccountNum())
 				.accountName(account.getAccountName())
 				.balance(account.getAccountBalance())

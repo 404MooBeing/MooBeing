@@ -1,9 +1,7 @@
 package com.im.moobeing.domain.account.controller;
 
-import com.im.moobeing.domain.account.dto.request.CreateAccountProductRequest;
-import com.im.moobeing.domain.account.dto.request.DepositRequest;
-import com.im.moobeing.domain.account.dto.request.SendAccountRequest;
-import com.im.moobeing.domain.account.dto.request.TransferRequest;
+import com.im.moobeing.domain.account.dto.request.*;
+import com.im.moobeing.domain.account.dto.response.GetAccountResponse;
 import com.im.moobeing.domain.account.service.AccountService;
 import com.im.moobeing.domain.member.entity.Member;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +25,7 @@ public class AccountController {
 
 	@Operation(summary = "맴버의 계좌 조회", description = "맴버의 계좌를 정해야 한다.")
 	@GetMapping
-	public ResponseEntity<?> getAccount(@AuthenticationPrincipal Member member) {
+	public ResponseEntity<GetAccountResponse> getAccount(@AuthenticationPrincipal Member member) {
 		return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccount(member));
 	}
 

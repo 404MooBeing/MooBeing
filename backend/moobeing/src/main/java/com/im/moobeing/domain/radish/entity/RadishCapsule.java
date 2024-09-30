@@ -1,14 +1,15 @@
 package com.im.moobeing.domain.radish.entity;
 
 import com.im.moobeing.domain.deal.entity.Deal;
+import com.im.moobeing.domain.member.entity.Member;
+import com.im.moobeing.global.error.ErrorCode;
+import com.im.moobeing.global.error.exception.BadRequestException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.im.moobeing.global.entity.BaseTimeEntity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "radish_capsule")
@@ -20,6 +21,10 @@ public class RadishCapsule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "radish_capsule_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deal_id")
@@ -57,6 +62,9 @@ public class RadishCapsule {
     @Column(name = "end_at")
     private LocalDateTime endAt;
 
+    @Column(name = "is_harvested")
+    private boolean isHarvested;
+
     @Builder
     public RadishCapsule(Long id, Deal deal, Radish character, String description, String imgUrl, CapsuleType type,
                          Double lat, Double lng, String placeName, String addressName, LocalDateTime createAt, LocalDateTime endAt) {
@@ -72,5 +80,12 @@ public class RadishCapsule {
         this.addressName = addressName;
         this.createAt = LocalDateTime.now();
         this.endAt = endAt;
+    }
+
+    public void harvest() {
+        if (isHarvested) {
+            throw new BadRequestException(ErrorCode.BAD_REQUEST);
+        }
+        isHarvested = true;
     }
 }
