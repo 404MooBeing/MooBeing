@@ -1,6 +1,8 @@
-import React from "react";
-import styled, { keyframes } from "styled-components";
+import React, { useState, useEffect } from "react";
+import styled, { keyframes, css } from "styled-components";
 import plantingRad from "../assets/radishes/PlantingRad.svg";
+import Planting from "../components/CapsulePlanting/Planting";
+import Planted from "../components/CapsulePlanting/Planted";
 
 const Container = styled.div`
   display: flex;
@@ -9,11 +11,7 @@ const Container = styled.div`
   height: 100vh;
   position: relative;
   margin-bottom: 20vh;
-`;
-
-const Title = styled.h1`
-  text-align: center;
-  margin-top: 20%;
+  background-color: #d2ebee;
 `;
 
 const RadishInSoil = styled.img`
@@ -27,8 +25,8 @@ const RadishInSoil = styled.img`
 
 const ZContainer = styled.div`
   position: absolute;
-  bottom: 400px;
-  left: 50%;
+  bottom: 43%;
+  left: 73%;
   gap: 15%;
   transform: translateX(-50%) rotate(-20deg);
   display: flex;
@@ -41,11 +39,16 @@ const fadeInOut = keyframes`
 `;
 
 const ZText = styled.span`
-  font-weight: 800;
-  transform: rotate(-35deg);
+  font-weight: 1000;
   opacity: 0;
-  animation: ${fadeInOut} 3s ease-in-out infinite;
+  animation: ${({ isAnimating }) =>
+    isAnimating
+      ? css`
+          ${fadeInOut} 3s ease-in-out infinite
+        `
+      : "none"};
   animation-delay: ${(props) => props.delay}s;
+  color: #5e5054;
 `;
 
 const Z1 = styled(ZText)`
@@ -61,18 +64,36 @@ const Z3 = styled(ZText)`
 `;
 
 function CapsulePlanting() {
+  const [showPlanted, setShowPlanted] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPlanted(true);
+      setIsAnimating(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <Container>
-      <Title>
-        무가 심어지고 <br /> 있습니다.
-      </Title>
-      <RadishInSoil src={plantingRad} alt="Radish in soil" />
-      <ZContainer>
-        <Z1 delay={0}>Z</Z1>
-        <Z2 delay={0.5}>Z</Z2>
-        <Z3 delay={1}>Z</Z3>
-      </ZContainer>
-    </Container>
+    <>
+      <Container>
+        {!showPlanted ? <Planting /> : <Planted />}
+        <RadishInSoil src={plantingRad} alt="Radish in soil" />
+        <ZContainer>
+          <Z1 delay={0} isAnimating={isAnimating}>
+            Z
+          </Z1>
+          <Z2 delay={0.5} isAnimating={isAnimating}>
+            Z
+          </Z2>
+          <Z3 delay={1} isAnimating={isAnimating}>
+            Z
+          </Z3>
+        </ZContainer>
+      </Container>
+    </>
   );
 }
 
