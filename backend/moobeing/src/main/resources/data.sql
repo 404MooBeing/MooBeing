@@ -485,13 +485,23 @@ INSERT IGNORE INTO radish_capsule (member_id, deal_id, character_id, description
 -- 13. Account Product 테이블에 상품 데이터 삽입
 INSERT IGNORE INTO Account_Product (id, bank_Code, account_Name, account_Description, account_Type_Unique_No, bank_image)
 VALUES
-    (1, '090', '카카오뱅크 자유입출금계좌', '카카오뱅크의 자유입출금 계좌로, 모바일에서 간편하게 관리할 수 있는 현대적인 계좌입니다.', '090-1-5673fb2930a740', 'https://s3.seungki-cho.lol/moobeing/kakao.png'),
-    (2, '003', 'IBK기업은행 자유입출금통장', 'IBK기업은행의 개인 및 소상공인을 위한 자유입출금 계좌입니다.', '003-1-c13adbc5193e4e', 'https://s3.seungki-cho.lol/moobeing/ibk.svg'),
-    (3, '004', 'KB국민은행 자유입출금통장', 'KB국민은행의 인기 있는 자유입출금 계좌로, 다양한 금융 서비스를 편리하게 이용할 수 있습니다.', '004-1-3e3de8b682fb43', 'https://s3.seungki-cho.lol/moobeing/kookmin.svg'),
-    (4, '020', '우리은행 자유입출금계좌', '우리은행의 기본 자유입출금 계좌로, 입출금이 자유롭고 다양한 혜택을 제공합니다.', '020-1-ed57896c14f04d', 'https://s3.seungki-cho.lol/moobeing/woori.svg'),
-    (5, '081', '하나은행 자유입출금계좌', '하나은행의 자유입출금 계좌로, 입출금이 자유롭고 다양한 금융 서비스를 제공합니다.', '081-1-8b171a6b846c4e', 'https://s3.seungki-cho.lol/moobeing/hana.svg'),
-    (6, '088', '신한은행 자유통장', '신한은행의 자유로운 입출금 계좌로, 편리한 금융 생활을 위한 필수 계좌입니다.', '088-1-ba3e624fcec04c', 'https://s3.seungki-cho.lol/moobeing/shinhan.svg');
--- 14. Point Transaction 목데이터 삽입 (초기 0원 잔액부터 시작)INSERT INTO point_transaction (member_id, amount, remain_balance, create_at) VALUES(1, 1000, 1000, DATE_SUB(NOW(), INTERVAL 15 DAY)),(1, -200, 800, DATE_SUB(NOW(), INTERVAL 14 DAY)),(1, 500, 1300, DATE_SUB(NOW(), INTERVAL 13 DAY)),(1, -300, 1000, DATE_SUB(NOW(), INTERVAL 12 DAY)),(1, 200, 1200, DATE_SUB(NOW(), INTERVAL 11 DAY)),(1, 1500, 2700, DATE_SUB(NOW(), INTERVAL 10 DAY)),(1, -500, 2200, DATE_SUB(NOW(), INTERVAL 9 DAY)),(1, 100, 2300, DATE_SUB(NOW(), INTERVAL 8 DAY)),(1, -1000, 1300, DATE_SUB(NOW(), INTERVAL 7 DAY)),(1, 2000, 3300, DATE_SUB(NOW(), INTERVAL 6 DAY)),(1, -700, 2600, DATE_SUB(NOW(), INTERVAL 5 DAY)),(1, 300, 2900, DATE_SUB(NOW(), INTERVAL 4 DAY)),(1, 400, 3300, DATE_SUB(NOW(), INTERVAL 3 DAY)),(1, -200, 3100, DATE_SUB(NOW(), INTERVAL 2 DAY)),(1, 500, 3600, DATE_SUB(NOW(), INTERVAL 1 DAY)),(1, -300, 3300, NOW());-- 14. Point Transaction 목데이터 삽입 (초기 0원 잔액부터 시작)INSERT INTO point_transaction (member_id, amount, remain_balance, create_at) VALUES(1, 1000, 1000, DATE_SUB(NOW(), INTERVAL 15 DAY)),(1, -200, 800, DATE_SUB(NOW(), INTERVAL 14 DAY)),(1, 500, 1300, DATE_SUB(NOW(), INTERVAL 13 DAY)),(1, -300, 1000, DATE_SUB(NOW(), INTERVAL 12 DAY)),(1, 200, 1200, DATE_SUB(NOW(), INTERVAL 11 DAY)),(1, 1500, 2700, DATE_SUB(NOW(), INTERVAL 10 DAY)),(1, -500, 2200, DATE_SUB(NOW(), INTERVAL 9 DAY)),(1, 100, 2300, DATE_SUB(NOW(), INTERVAL 8 DAY)),(1, -1000, 1300, DATE_SUB(NOW(), INTERVAL 7 DAY)),(1, 2000, 3300, DATE_SUB(NOW(), INTERVAL 6 DAY)),(1, -700, 2600, DATE_SUB(NOW(), INTERVAL 5 DAY)),(1, 300, 2900, DATE_SUB(NOW(), INTERVAL 4 DAY)),(1, 400, 3300, DATE_SUB(NOW(), INTERVAL 3 DAY)),(1, -200, 3100, DATE_SUB(NOW(), INTERVAL 2 DAY)),(1, 500, 3600, DATE_SUB(NOW(), INTERVAL 1 DAY)),(1, -300, 3300, NOW());-- 14. Point Transaction 목데이터 삽입 (초기 0원 잔액부터 시작)INSERT INTO point_transaction (member_id, amount, remain_balance, create_at) VALUES(1, 1000, 1000, DATE_SUB(NOW(), INTERVAL 15 DAY)),(1, -200, 800, DATE_SUB(NOW(), INTERVAL 14 DAY)),(1, 500, 1300, DATE_SUB(NOW(), INTERVAL 13 DAY)),(1, -300, 1000, DATE_SUB(NOW(), INTERVAL 12 DAY)),(1, 200, 1200, DATE_SUB(NOW(), INTERVAL 11 DAY)),(1, 1500, 2700, DATE_SUB(NOW(), INTERVAL 10 DAY)),(1, -500, 2200, DATE_SUB(NOW(), INTERVAL 9 DAY)),(1, 100, 2300, DATE_SUB(NOW(), INTERVAL 8 DAY)),(1, -1000, 1300, DATE_SUB(NOW(), INTERVAL 7 DAY)),(1, 2000, 3300, DATE_SUB(NOW(), INTERVAL 6 DAY)),(1, -700, 2600, DATE_SUB(NOW(), INTERVAL 5 DAY)),(1, 300, 2900, DATE_SUB(NOW(), INTERVAL 4 DAY)),(1, 400, 3300, DATE_SUB(NOW(), INTERVAL 3 DAY)),(1, -200, 3100, DATE_SUB(NOW(), INTERVAL 2 DAY)),(1, 500, 3600, DATE_SUB(NOW(), INTERVAL 1 DAY)),(1, -300, 3300, NOW());-- 14. Point Transaction 목데이터 삽입 (초기 0원 잔액부터 시작)
+(1, '090', '카카오뱅크 자유입출금계좌', '카카오뱅크의 자유입출금 계좌로, 모바일에서 간편하게 관리할 수 있는 현대적인 계좌입니다.', '090-1-5673fb2930a740', 'https://s3.seungki-cho.lol/moobeing/kakao.png'),
+(2, '003', 'IBK기업은행 자유입출금통장', 'IBK기업은행의 개인 및 소상공인을 위한 자유입출금 계좌입니다.', '003-1-c13adbc5193e4e', 'https://s3.seungki-cho.lol/moobeing/ibk.svg'),
+(3, '004', 'KB국민은행 자유입출금통장', 'KB국민은행의 인기 있는 자유입출금 계좌로, 다양한 금융 서비스를 편리하게 이용할 수 있습니다.', '004-1-3e3de8b682fb43', 'https://s3.seungki-cho.lol/moobeing/kookmin.svg'),
+(4, '020', '우리은행 자유입출금계좌', '우리은행의 기본 자유입출금 계좌로, 입출금이 자유롭고 다양한 혜택을 제공합니다.', '020-1-ed57896c14f04d', 'https://s3.seungki-cho.lol/moobeing/woori.svg'),
+(5, '081', '하나은행 자유입출금계좌', '하나은행의 자유입출금 계좌로, 입출금이 자유롭고 다양한 금융 서비스를 제공합니다.', '081-1-8b171a6b846c4e', 'https://s3.seungki-cho.lol/moobeing/hana.svg'),
+(6, '088', '신한은행 자유통장', '신한은행의 자유로운 입출금 계좌로, 편리한 금융 생활을 위한 필수 계좌입니다.', '088-1-ba3e624fcec04c', 'https://s3.seungki-cho.lol/moobeing/shinhan.svg');
+
+INSERT IGNORE INTO alarm (member_id, icon_name, title, message, created_at) VALUES
+(1, 'MOOBTI', 'MooBTI 확인', '이번 달 소비내역 분석을 할 수 있어요', DATE_SUB(NOW(), INTERVAL 15 HOUR)),
+(1, 'QUIZ', '금융 상식 퀴즈 생성', '오늘의 금융 상식 퀴즈를 맞춰보세요', DATE_SUB(NOW(), INTERVAL 17 HOUR)),
+(1, 'QUIZ', '금융 퀴즈 생성', '저번 달 소비에 대한 퀴즈를 맞춰보세요.', DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(1, 'TIME', '타임 무 알림', '강남에서 심은 타임무를 수확할 시간이에요', DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(1, 'MOOBTI', 'MooBTI 확인', '이번 달 소비내역 분석을 할 수 있어요', DATE_SUB(NOW(), INTERVAL 15 HOUR)),
+(1, 'QUIZ', '금융 상식 퀴즈 생성', '오늘의 금융 상식 퀴즈를 맞춰보세요', DATE_SUB(NOW(), INTERVAL 17 HOUR)),
+(1, 'QUIZ', '금융 퀴즈 생성', '저번 달 소비에 대한 퀴즈를 맞춰보세요.', DATE_SUB(NOW(), INTERVAL 2 DAY));
+
+
 -- 14. Point Transaction 목데이터 삽입 (초기 0원 잔액부터 시작)
 INSERT INTO point_transaction (member_id, amount, remain_balance, create_at) VALUES
 (1, 1000, 1000, DATE_SUB(NOW(), INTERVAL 15 DAY)),
