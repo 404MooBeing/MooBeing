@@ -491,3 +491,22 @@ VALUES
     (4, '020', '우리은행 자유입출금계좌', '우리은행의 기본 자유입출금 계좌로, 입출금이 자유롭고 다양한 혜택을 제공합니다.', '020-1-ed57896c14f04d', 'https://s3.seungki-cho.lol/moobeing/woori.svg'),
     (5, '081', '하나은행 자유입출금계좌', '하나은행의 자유입출금 계좌로, 입출금이 자유롭고 다양한 금융 서비스를 제공합니다.', '081-1-8b171a6b846c4e', 'https://s3.seungki-cho.lol/moobeing/hana.svg'),
     (6, '088', '신한은행 자유통장', '신한은행의 자유로운 입출금 계좌로, 편리한 금융 생활을 위한 필수 계좌입니다.', '088-1-ba3e624fcec04c', 'https://s3.seungki-cho.lol/moobeing/shinhan.svg');
+-- 14. Point Transaction 목데이터 삽입 (초기 0원 잔액부터 시작)INSERT INTO point_transaction (member_id, amount, remain_balance, create_at) VALUES(1, 1000, 1000, DATE_SUB(NOW(), INTERVAL 15 DAY)),(1, -200, 800, DATE_SUB(NOW(), INTERVAL 14 DAY)),(1, 500, 1300, DATE_SUB(NOW(), INTERVAL 13 DAY)),(1, -300, 1000, DATE_SUB(NOW(), INTERVAL 12 DAY)),(1, 200, 1200, DATE_SUB(NOW(), INTERVAL 11 DAY)),(1, 1500, 2700, DATE_SUB(NOW(), INTERVAL 10 DAY)),(1, -500, 2200, DATE_SUB(NOW(), INTERVAL 9 DAY)),(1, 100, 2300, DATE_SUB(NOW(), INTERVAL 8 DAY)),(1, -1000, 1300, DATE_SUB(NOW(), INTERVAL 7 DAY)),(1, 2000, 3300, DATE_SUB(NOW(), INTERVAL 6 DAY)),(1, -700, 2600, DATE_SUB(NOW(), INTERVAL 5 DAY)),(1, 300, 2900, DATE_SUB(NOW(), INTERVAL 4 DAY)),(1, 400, 3300, DATE_SUB(NOW(), INTERVAL 3 DAY)),(1, -200, 3100, DATE_SUB(NOW(), INTERVAL 2 DAY)),(1, 500, 3600, DATE_SUB(NOW(), INTERVAL 1 DAY)),(1, -300, 3300, NOW());-- 14. Point Transaction 목데이터 삽입 (초기 0원 잔액부터 시작)INSERT INTO point_transaction (member_id, amount, remain_balance, create_at) VALUES(1, 1000, 1000, DATE_SUB(NOW(), INTERVAL 15 DAY)),(1, -200, 800, DATE_SUB(NOW(), INTERVAL 14 DAY)),(1, 500, 1300, DATE_SUB(NOW(), INTERVAL 13 DAY)),(1, -300, 1000, DATE_SUB(NOW(), INTERVAL 12 DAY)),(1, 200, 1200, DATE_SUB(NOW(), INTERVAL 11 DAY)),(1, 1500, 2700, DATE_SUB(NOW(), INTERVAL 10 DAY)),(1, -500, 2200, DATE_SUB(NOW(), INTERVAL 9 DAY)),(1, 100, 2300, DATE_SUB(NOW(), INTERVAL 8 DAY)),(1, -1000, 1300, DATE_SUB(NOW(), INTERVAL 7 DAY)),(1, 2000, 3300, DATE_SUB(NOW(), INTERVAL 6 DAY)),(1, -700, 2600, DATE_SUB(NOW(), INTERVAL 5 DAY)),(1, 300, 2900, DATE_SUB(NOW(), INTERVAL 4 DAY)),(1, 400, 3300, DATE_SUB(NOW(), INTERVAL 3 DAY)),(1, -200, 3100, DATE_SUB(NOW(), INTERVAL 2 DAY)),(1, 500, 3600, DATE_SUB(NOW(), INTERVAL 1 DAY)),(1, -300, 3300, NOW());-- 14. Point Transaction 목데이터 삽입 (초기 0원 잔액부터 시작)INSERT INTO point_transaction (member_id, amount, remain_balance, create_at) VALUES(1, 1000, 1000, DATE_SUB(NOW(), INTERVAL 15 DAY)),(1, -200, 800, DATE_SUB(NOW(), INTERVAL 14 DAY)),(1, 500, 1300, DATE_SUB(NOW(), INTERVAL 13 DAY)),(1, -300, 1000, DATE_SUB(NOW(), INTERVAL 12 DAY)),(1, 200, 1200, DATE_SUB(NOW(), INTERVAL 11 DAY)),(1, 1500, 2700, DATE_SUB(NOW(), INTERVAL 10 DAY)),(1, -500, 2200, DATE_SUB(NOW(), INTERVAL 9 DAY)),(1, 100, 2300, DATE_SUB(NOW(), INTERVAL 8 DAY)),(1, -1000, 1300, DATE_SUB(NOW(), INTERVAL 7 DAY)),(1, 2000, 3300, DATE_SUB(NOW(), INTERVAL 6 DAY)),(1, -700, 2600, DATE_SUB(NOW(), INTERVAL 5 DAY)),(1, 300, 2900, DATE_SUB(NOW(), INTERVAL 4 DAY)),(1, 400, 3300, DATE_SUB(NOW(), INTERVAL 3 DAY)),(1, -200, 3100, DATE_SUB(NOW(), INTERVAL 2 DAY)),(1, 500, 3600, DATE_SUB(NOW(), INTERVAL 1 DAY)),(1, -300, 3300, NOW());-- 14. Point Transaction 목데이터 삽입 (초기 0원 잔액부터 시작)
+-- 14. Point Transaction 목데이터 삽입 (초기 0원 잔액부터 시작)
+INSERT INTO point_transaction (member_id, amount, remain_balance, create_at) VALUES
+(1, 1000, 1000, DATE_SUB(NOW(), INTERVAL 15 DAY)),
+(1, -200, 800, DATE_SUB(NOW(), INTERVAL 14 DAY)),
+(1, 500, 1300, DATE_SUB(NOW(), INTERVAL 13 DAY)),
+(1, -300, 1000, DATE_SUB(NOW(), INTERVAL 12 DAY)),
+(1, 200, 1200, DATE_SUB(NOW(), INTERVAL 11 DAY)),
+(1, 1500, 2700, DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(1, -500, 2200, DATE_SUB(NOW(), INTERVAL 9 DAY)),
+(1, 100, 2300, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(1, -1000, 1300, DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(1, 2000, 3300, DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(1, -700, 2600, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(1, 300, 2900, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(1, 400, 3300, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(1, -200, 3100, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(1, 500, 3600, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(1, -300, 3300, NOW());
