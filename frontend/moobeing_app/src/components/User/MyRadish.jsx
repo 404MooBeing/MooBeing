@@ -422,7 +422,7 @@ const MyRadish = () => {
           <Container>
             <TitleContainer>
               {/* <Subtitle>무 컬렉션</Subtitle> */}
-              <SortButtonContainer>
+              {/* <SortButtonContainer>
                 <SortButton
                   onClick={() => setSortBy("radishCreateTime")}
                   isselected={sortBy === "radishCreateTime"}
@@ -436,7 +436,7 @@ const MyRadish = () => {
                 >
                   랭킹순
                 </SortButton>
-              </SortButtonContainer>
+              </SortButtonContainer> */}
             </TitleContainer>
             <ChooseButtonContainer>
               <ChooseButton

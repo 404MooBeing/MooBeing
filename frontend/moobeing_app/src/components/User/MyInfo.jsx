@@ -15,12 +15,14 @@ const Container = styled.div`
 `;
 
 const PasswordChangeButton = styled.button`
-  margin: 0;
+  margin-top: 200px;
   font-size: 12px;
-  padding: 8px;
+  padding: 8px 14px;
   cursor: pointer;
   border: none;
-  font-weight: 500;
+  font-weight: 900;
+  font: 14px;
+
   background-color: ${(props) =>
     props.isactive === "true" ? "#348833" : "#e0eed2"};
   color: ${(props) => (props.isactive === "true" ? "#ffffff" : "#24272D")};
@@ -115,7 +117,7 @@ const MyInfo = ({userInfo}) => {
         </InfoRow>
       </Contents>
       <PasswordChangeButton onClick={onPasswordChangeClick}>
-          비밀번호 변경
+          비밀번호 변경하기
     </PasswordChangeButton>
     </Container>
   );
