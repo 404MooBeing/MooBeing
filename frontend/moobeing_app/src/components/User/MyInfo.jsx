@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import styled from "styled-components";
-// import useUserStore from "../../store/UserStore";
+// import { useUserStore } from "../../store/UserStore";
 // import { getUserInfo } from "../../apis/UserApi";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
