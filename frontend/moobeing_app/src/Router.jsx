@@ -34,7 +34,7 @@ function Router() {
   const location = useLocation();
 
   // Header와 Footer를 표시하지 않을 경로 목록
-  const noHeaderFooterRoutes = ["/loading", "/login", "/signup"];
+  const noHeaderFooterRoutes = ["/loading", "/login", "/signup", "/welcome"];
 
   const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(
     location.pathname
