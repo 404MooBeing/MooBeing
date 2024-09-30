@@ -1,7 +1,6 @@
 import axios from "axios";
 
-// CRA와 Vite 모두에서 동작하도록 환경 변수 접근
-const BASE_URL = process.env.REACT_APP_BASE_URL || import.meta.env?.VITE_APP_BASE_URL || 'http://localhost:3000';
+const BASE_URL = import.meta.env?.REACT_APP_BASE_URL || 'http://localhost:3000';
 
 const api = axios.create({
   baseURL: BASE_URL,
