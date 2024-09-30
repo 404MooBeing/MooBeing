@@ -483,7 +483,7 @@ INSERT IGNORE INTO radish_capsule (member_id, deal_id, character_id, description
 (1, 19, 10, '독서 모임 후 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5660, 126.9770, '서울 독서 모임 장소', '서울시 서대문구 신촌', '2024-08-15 19:00:00', DATE_ADD('2024-08-15 19:00:00', INTERVAL 20 DAY), true);
 
 -- 13. Account Product 테이블에 상품 데이터 삽입
-INSERT IGNORE INTO Account_Product (id, bank_Code, account_Name, account_Description, account_Type_Unique_No, bank_image)
+INSERT IGNORE INTO account_product (id, bank_Code, account_Name, account_Description, account_Type_Unique_No, bank_image)
 VALUES
 (1, '090', '카카오뱅크 자유입출금계좌', '카카오뱅크의 자유입출금 계좌로, 모바일에서 간편하게 관리할 수 있는 현대적인 계좌입니다.', '090-1-5673fb2930a740', 'https://s3.seungki-cho.lol/moobeing/kakao.png'),
 (2, '003', 'IBK기업은행 자유입출금통장', 'IBK기업은행의 개인 및 소상공인을 위한 자유입출금 계좌입니다.', '003-1-c13adbc5193e4e', 'https://s3.seungki-cho.lol/moobeing/ibk.svg'),
