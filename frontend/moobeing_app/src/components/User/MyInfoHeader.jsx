@@ -10,11 +10,11 @@ const SubHeader = styled.div`
   height: 14vh;
   width: 90%;
   margin-bottom: 5%;
-  margin-top: 40px;
+  margin-top: 20px;
   border-radius: 20px;
   justify-content: space-between;
   align-items: center;
-  padding: 30px 15px 20px 25px;
+  padding: 30px 15px 20px 30px;
   box-sizing: border-box;
   font-size : 20px;
 `;
@@ -28,6 +28,7 @@ const Value = styled.div`
 `;
 
 const RadishCoin = styled.div`
+    margin-top: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -63,7 +64,7 @@ const MyInfoHeader = ({userInfo}) => {
 
     return (
     <SubHeader>
-    <div>{userInfo.name || "사용자"} 님</div>
+    <div><strong>{userInfo.name || "사용자"} 님</strong></div>
     <RadishCoin>
         <img src={RadishCoinImg}></img>
         <Label>무 코인</Label>
