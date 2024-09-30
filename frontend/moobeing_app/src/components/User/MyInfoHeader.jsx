@@ -69,8 +69,8 @@ const MyInfoHeader = ({userInfo}) => {
         <img src={RadishCoinImg}></img>
         <Label>무 코인</Label>
         <Value>{userInfo.coin}개</Value>
-        <img src={RightArrowBtn} height="20px"/>
-        <RadishCoinBtn>송금하기</RadishCoinBtn>
+        <img src={RightArrowBtn} height="20px" onClick={radishCoinClickHandler}/>
+        <RadishCoinBtn onClick={() => {navigate('/coin-exchange')}}>송금하기</RadishCoinBtn>
     </RadishCoin>
   </SubHeader>);
 };

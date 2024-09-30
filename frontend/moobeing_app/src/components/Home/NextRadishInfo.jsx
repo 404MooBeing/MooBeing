@@ -91,8 +91,14 @@ const LoanInfo = () => {
         end: targetDate,
       });
 
-      // duration 객체를 사용해 한국어 형식으로 직접 문자열 만들기
-      const formattedDuration = `${duration.days}일 ${duration.hours}시간 ${duration.minutes}분 ${duration.seconds}초`;
+      // undefined 방지를 위해 기본값을 설정
+      const days = duration.days || 0;
+      const hours = duration.hours || 0;
+      const minutes = duration.minutes || 0;
+      const remainingSeconds = secondsLeft % 60;
+
+      // 한국어 형식으로 문자열 만들기
+      const formattedDuration = `${days}일 ${hours}시간 ${minutes}분 ${remainingSeconds}초`;
       return formattedDuration;
     } else {
       return "시간이 만료되었습니다!";
@@ -105,7 +111,7 @@ const LoanInfo = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  });
+  }, []);
 
   return (
     <Container>
@@ -122,6 +128,6 @@ const LoanInfo = () => {
       </CountdownContainer>
     </Container>
   );
-}
+};
 
 export default LoanInfo;

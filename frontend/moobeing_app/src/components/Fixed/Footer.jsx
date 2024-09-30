@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import HomeIcon from "../../assets/button/HomeButton.svg";
 import JourneyIcon from "../../assets/button/JourneyButton.svg";
 import ConsumeIcon from "../../assets/button/ConsumeButton.svg";
-import RadishIcon from "../../assets/button/RadishButton.svg";
+import MapIcon from "../../assets/button/MapButton.svg";
+import AllMenuIcon from "../../assets/button/AllMenuButton.svg";
 
 const StyledFooter = styled.div`
   display: flex;
@@ -74,14 +75,17 @@ const Footer = () => {
   const handleHomeClick = () => {
     navigate("/");
   };
-  const handleJourneyClick = () => {
-    navigate("/loan-journey");
+  const handleLoanClick = () => {
+    navigate("/loan");
   };
   const handleSpendClick = () => {
     navigate("/spend");
   };
-  const handleRadishClick = () => {
-    navigate("/get-radishcharacter");
+  const handleMapClick = () => {
+    navigate("/capsule-intro");
+  };
+  const handleAllMenuClick = () => {
+    navigate("/menu");
   };
 
   return (
@@ -90,17 +94,21 @@ const Footer = () => {
         <img className="footer-icon" alt="home" src={HomeIcon} />
         <div className="text-wrapper">홈</div>
       </div>
-      <div className="footer-item" onClick={handleJourneyClick}>
-        <img className="footer-icon" alt="journey" src={JourneyIcon} />
-        <div className="text-wrapper">여정</div>
+      <div className="footer-item" onClick={handleLoanClick}>
+        <img className="footer-icon" alt="loan" src={JourneyIcon} />
+        <div className="text-wrapper">대출</div>
       </div>
       <div className="footer-item" onClick={handleSpendClick}>
         <img className="footer-icon" alt="consume" src={ConsumeIcon} />
         <div className="text-wrapper">소비</div>
       </div>
-      <div className="footer-item" onClick={handleRadishClick}>
-        <img className="footer-icon" alt="radish" src={RadishIcon} />
-        <div className="text-wrapper">무들</div>
+      <div className="footer-item" onClick={handleMapClick}>
+        <img className="footer-icon" alt="map" src={MapIcon} />
+        <div className="text-wrapper">지도 </div>
+      </div>
+      <div className="footer-item" onClick={handleAllMenuClick}>
+        <img className="footer-icon" alt="radish" src={AllMenuIcon} />
+        <div className="text-wrapper">전체</div>
       </div>
     </StyledFooter>
   );

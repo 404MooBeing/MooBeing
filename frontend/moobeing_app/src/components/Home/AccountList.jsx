@@ -146,24 +146,28 @@ const AccountList = () => {
         accountName: "하나은행 일반 계좌",
         remainingBalance: 1000000,
         interestRate: 1.5,
+        accountNum: '1003-2293-332-1',
       },
       {
         bankImageUrl: NongHyup,
         accountName: "농협은행 정기예금",
         remainingBalance: 500000,
         interestRate: 2.0,
+        accountNum: '3244-2293-332-1',
       },
       {
         bankImageUrl: ShinHan,
         accountName: "신한은행 적금",
         remainingBalance: 750000,
         interestRate: 1.8,
+        accountNum: '3324-33435-333-1',
       },
       {
         bankImageUrl: WooRi,
         accountName: "우리은행 주택청약",
         remainingBalance: 300000,
         interestRate: 1.2,
+        accountNum: '3324-3838-333-1',
       },
     ];
 
@@ -184,8 +188,11 @@ const AccountList = () => {
     });
   };
 
-  const navigateToSpend = (accountName) => {
-    navigate(`/transaction-history/${accountName}`);
+  const navigateToSpend = (account) => {
+    const encodedAccountName = encodeURIComponent(account.accountName);
+    navigate(`/transaction-history/${encodedAccountName}`, {
+      state: { account, accounts },
+    });
   };
 
   const visibleAccounts = accounts.slice(currentIndex, currentIndex + accountsPerPage);
@@ -199,7 +206,7 @@ const AccountList = () => {
             visibleAccounts.map((account, index) => (
               <AccountItem
                 key={index}
-                onClick={() => navigateToSpend(account.accountName)}
+                onClick={() => navigateToSpend(account)}
               >
                 <BankLogo src={account.bankImageUrl} alt="로고" />
                 <AccountInfo>
