@@ -25,7 +25,7 @@ public class Deal extends BaseTimeEntity {
 	private Member member;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "deal_category")
+	@Column(name = "deal_category", nullable = true)
 	private DealCategory dealCategory;
 
 	@Column
