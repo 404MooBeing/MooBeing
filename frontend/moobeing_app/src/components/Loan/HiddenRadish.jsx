@@ -10,6 +10,19 @@ import pot6th from "../../assets/pot/pot6th.svg";
 import GrayChatBubble from "../../assets/GrayChatBubble.svg";
 import { getLoanSum } from "../../apis/LoanApi";
 
+// 더미 데이터 함수 추가
+const getDummyLoanSum = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        completedCnt: 6, // 상환 완료된 대출 개수
+        allLoanCnt: 6,   // 총 대출 개수 (6으로 고정)
+        showButton: false // 버튼 표시 여부
+      });
+    }, 500);
+  });
+};
+
 const RadishContainer = styled.div`
   height: 250px;
   width: 100%;
@@ -18,7 +31,7 @@ const RadishContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  margin-bottom: 150px; // 여기에 마진을 추가했습니다
+  margin-bottom: 130px; // 80px + 50px
 `;
 
 const PotRadish = styled.img`
@@ -50,13 +63,24 @@ const ChatBubble = styled.img`
 
 const ChatText = styled.p`
   position: absolute;
-  top: 40%;
-  left: 55%;
-  transform: translate(-50%, -50%);
+  top: 50%;
+  left: calc(50% + 2px); // 여기를 수정했습니다
+  transform: translate(-50%, calc(-50% - 10px));
   margin: 0;
   text-align: center;
   font-size: 13px;
   color: #333;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const NumberText = styled.span`
+  font-size: 26px;
+  font-weight: bold;
+  margin-top: 5px;
 `;
 
 const PullRadishButton = styled.button`
@@ -107,7 +131,8 @@ function HiddenRadish() {
   useEffect(() => {
     async function fetchLoanNum() {
       try {
-        const data = await getLoanSum();
+        // getLoanSum() 대신 getDummyLoanSum() 사용
+        const data = await getDummyLoanSum();
         console.log("Loan data:", data);
         setPaidLoanNum(data.completedCnt);
         setTotalLoanNum(data.allLoanCnt);
@@ -168,7 +193,8 @@ function HiddenRadish() {
       <ChatBubbleContainer>
         <ChatBubble src={GrayChatBubble} alt="Chat bubble" />
         <ChatText>
-          {`${totalLoanNum} / ${paidLoanNum}`}개 <br /> 상환{" "}
+          만나기까지
+          <NumberText>{`${paidLoanNum} / ${totalLoanNum}`}</NumberText>
         </ChatText>
       </ChatBubbleContainer>
       <PotRadish src={getPotImage()} alt="Radish pot" />
