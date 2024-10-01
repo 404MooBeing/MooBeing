@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import useCapsuleStore from "../store/Capsule";
 
 const Container = styled.div`
   display: flex;
@@ -133,9 +134,19 @@ function CapsuleMessage() {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
+  const {
+    transactionName,
+    transactionAmount,
+    transactionDate,
+    updateImgAndDescription,
+  } = useCapsuleStore();
+
   const handleNext = () => {
+    updateImgAndDescription(image, text);
+    console.log(useCapsuleStore.getState());
     navigate("/choose-character");
   };
+
   const handleTextChange = (e) => {
     if (e.target.value.length <= 100) {
       setText(e.target.value);
@@ -157,10 +168,10 @@ function CapsuleMessage() {
     <Container>
       <TransactionBox>
         <TransactionInfo>
-          <TransactionName>거래명</TransactionName>
-          <TransactionAmount>10,000원</TransactionAmount>
+          <TransactionName>{transactionName}</TransactionName>
+          <TransactionAmount>{transactionAmount}원</TransactionAmount>
         </TransactionInfo>
-        <TransactionTime>2023.05.25</TransactionTime>
+        <TransactionTime>{transactionDate}</TransactionTime>
       </TransactionBox>
 
       <ImgForm>

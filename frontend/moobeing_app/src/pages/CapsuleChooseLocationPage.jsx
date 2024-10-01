@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import LocationSearch from "../components/CapsuleChooseLocation/LocationSearch";
 import radish from "../assets/radishes/basicRad.svg";
+import useCapsuleStore from "../store/Capsule";
 
 const MapContainer = styled.div`
   width: 100%;
@@ -63,7 +65,10 @@ function Map() {
   const [marker, setMarker] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
+  const navigate = useNavigate();
   const mapRef = useRef(null);
+
+  const { updateLocationInfo } = useCapsuleStore();
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -192,9 +197,17 @@ function Map() {
 
   const handleDecision = () => {
     if (selectedPlace) {
-      console.log("Decision made for:", selectedPlace);
-      // 여기에 결정 시 실행할 로직 추가
+      console.log("사용자가 결정한 위치는요!!:", selectedPlace);
+
+      updateLocationInfo(
+        selectedPlace.y,
+        selectedPlace.x,
+        selectedPlace.address_name,
+        selectedPlace.place_name
+      );
     }
+    console.log(useCapsuleStore.getState());
+    navigate("/capsule-planting");
   };
 
   return (

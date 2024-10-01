@@ -8,6 +8,7 @@ import rainbowRad from "../assets/radishes/rainbowRad.svg";
 import musinsaRad from "../assets/radishes/musinsaRad.svg";
 import basicRad from "../assets/radishes/basicRad.svg";
 import { getUserRadishCollection } from "../apis/RadishApi";
+import useCapsuleStore from "../store/Capsule";
 
 const Container = styled.div`
   margin-top: 10%;
@@ -141,17 +142,19 @@ function ChooseCharacter() {
   const navigate = useNavigate();
 
   const [characters, setCharacters] = useState([
-    { radishName: "기본무", radishImageUrl: basicRad },
-    { radishName: "부끄렁무", radishImageUrl: blushRad },
-    { radishName: "무신사", radishImageUrl: musinsaRad },
-    { radishName: "무지개", radishImageUrl: rainbowRad },
+    { radishName: "기본무", radishImageUrl: basicRad, radishId: 1 },
+    { radishName: "부끄렁무", radishImageUrl: blushRad, radishId: 2 },
+    { radishName: "무신사", radishImageUrl: musinsaRad, radishId: 3 },
+    { radishName: "무지개", radishImageUrl: rainbowRad, radishId: 4 },
   ]);
 
   const sizes = [
-    { name: "작은무", day: 20 },
-    { name: "중간무", day: 40 },
-    { name: "큰무", day: 60 },
+    { name: "작은무", day: 20, value: "SMALL_RADISH" },
+    { name: "중간무", day: 40, value: "MEDIUM_RADISH" },
+    { name: "큰무", day: 60, value: "LARGE_RADISH" },
   ];
+
+  const { updateRadishInfo } = useCapsuleStore();
 
   // useEffect(() => {
   //   const fetchRadishCollection = async () => {
@@ -165,6 +168,18 @@ function ChooseCharacter() {
 
   //   fetchRadishCollection();
   // }, []);
+
+  const handleNext = () => {
+    const harvestDate = getHarvestDate(sizes[currentSize].day);
+    updateRadishInfo(
+      sizes[currentSize].value,
+      characters[currentCharacter].radishId,
+      harvestDate
+    );
+    console.log(useCapsuleStore.getState());
+
+    navigate("/choose-location");
+  };
 
   const nextCharacter = () => {
     setCurrentCharacter((prev) => (prev + 1) % characters.length);
@@ -221,7 +236,7 @@ function ChooseCharacter() {
           {getHarvestDate(sizes[currentSize].day)}에 수확가능해요!
         </DateInfo>
       )}
-      <NextButton onClick={() => navigate("/choose-location")}>다음</NextButton>
+      <NextButton onClick={handleNext}>다음</NextButton>
     </Container>
   );
 }
