@@ -13,9 +13,11 @@ public class RadishCapsuleAreaResponse {
     private Long id;
     private String radishImage;
     private long remainingDays;
+    private Double lat;
+    private Double lng;
 
     public static RadishCapsuleAreaResponse of(RadishCapsule capsule) {
         long remainingDays = Duration.between(LocalDateTime.now(), capsule.getEndAt()).toDays();
-        return new RadishCapsuleAreaResponse(capsule.getId(), capsule.getCharacter().getRadishImageUrl(), remainingDays);
+        return new RadishCapsuleAreaResponse(capsule.getId(), capsule.getCharacter().getRadishImageUrl(), remainingDays, capsule.getLat(), capsule.getLng());
     }
 }

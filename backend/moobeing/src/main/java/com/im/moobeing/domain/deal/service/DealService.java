@@ -244,14 +244,14 @@ public class DealService {
                             .findFirst()
                             .orElseThrow(() -> new BadRequestException(ErrorCode.BAD_REQUEST));
 
-                    String bankImage = accountProductRepository.findByAccountName(deal.getAccount().getAccountName())
+                    String bankImage = accountProductRepository.findByAccountName(deal.getAccount().getAccountProduct().getAccountName())
                             .orElseThrow(() -> new BadRequestException(ErrorCode.BAD_REQUEST))
                             .getBankImage();
 
                     return new AccountSummaryResponse(
                             entry.getKey(),
                             bankImage,
-                            deal.getAccount().getAccountName(),
+                            deal.getAccount().getAccountProduct().getAccountName(),
                             entry.getValue()
                     );
                 })

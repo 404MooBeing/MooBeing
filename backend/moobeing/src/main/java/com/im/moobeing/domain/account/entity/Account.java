@@ -20,9 +20,6 @@ public class Account {
 	@Column(name = "account_id")
 	private Long accountId;
 
-	@Column(name = "account_name")
-	private String accountName;
-
 	@Column(name = "account_num")
 	private String accountNum;
 
@@ -36,12 +33,17 @@ public class Account {
 	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Deal> deals;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "account_product_id")
+	private AccountProduct accountProduct;
+
 	@Builder
-	public Account(Long accountId, String accountNum, Member member, Long accountBalance) {
+	public Account(Long accountId, String accountNum, Member member, Long accountBalance, AccountProduct accountProduct) {
 		this.accountId = accountId;
 		this.accountNum = accountNum;
 		this.accountBalance = accountBalance;
 		this.member = member;
+		this.accountProduct = accountProduct;
 	}
 
 	public void setAccountBalance(Long accountBalance) {
