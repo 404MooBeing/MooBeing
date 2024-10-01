@@ -49,17 +49,11 @@ public class AccountService {
 	private final AccountSequenceRepository accountSequenceRepository;
 
 	public GetAccountResponse getAccount(Member member) {
-		List<Account> accountList =  accountRepository.findByMemberId(member.getId());
+		var accountList = accountRepository.findByMemberId(member.getId()).stream()
+				.map(GetAccountDto::of)
+				.toList();
 
-		List<GetAccountDto> getAccountDtoList = new ArrayList<>();
-
-		for (Account account : accountList) {
-			getAccountDtoList.add(
-				GetAccountDto.of(account)
-			);
-		}
-
-		return GetAccountResponse.of(getAccountDtoList);
+		return GetAccountResponse.of(accountList);
 	}
 
 	@Transactional
