@@ -28,6 +28,7 @@ import MyMap from "./pages/MyMap";
 import User from "./pages/MyPage";
 import PasswordChange from "./pages/PasswordChangePage";
 import Quiz from "./pages/QuizPage";
+import QuizResult from "./pages/QuizResultPage";
 import Spend from "./pages/SpendPage";
 import TransactionHistory from "./pages/TransactionHistoryPage";
 import Welcome from "./pages/WelcomePage";
@@ -50,7 +51,6 @@ function Router() {
       navigate("/login");
     }
   }, [userInfo, navigate]);
-  
 
   // Header와 Footer를 표시하지 않을 경로 목록
   const noHeaderFooterRoutes = ["/loading", "/login", "/signup", "/welcome"];
@@ -96,6 +96,7 @@ function Router() {
           <Route path="/user" element={<User />} />
           <Route path="/password-change" element={<PasswordChange />} />
           <Route path="/quiz" element={<Quiz />} />
+          <Route path="/quiz/result/:quizId" element={<QuizResult />} />
           <Route path="/spend" element={<Spend />} />
           <Route
             path="/transaction-history/:accountId"

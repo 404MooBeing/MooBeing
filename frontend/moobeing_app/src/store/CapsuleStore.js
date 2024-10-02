@@ -25,10 +25,10 @@ const useCapsuleStore = create((set) => ({
     })),
 
   // 그룹 2: 이미지 파일 및 설명 업데이트 함수
-  updateImgAndDescription: (file, desc) =>
-    set((state) => ({
-      imgFile: file,
-      description: desc,
+  updateImgAndDescription: (imgFile, description) =>
+    set(() => ({
+      imgFile,
+      description,
     })),
 
   // 그룹 3: 타입 및 수확 정보 업데이트 함수

@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Map from "../components/CapsuleMap/Map";
 import LocationSearch from "../components/CapsuleChooseLocation/LocationSearch";
-import useCapsuleStore from "../store/Capsule";
+import useCapsuleStore from "../store/CapsuleStore";
 import { postPlantCapsule } from "../apis/CapsuleApi";
+import useRadishStore from "../store/RadishStore";
+
 const OverlayContainer = styled.div`
   position: fixed;
   bottom: 100px;
@@ -58,7 +60,8 @@ function CapsuleChooseLocationPage() {
   const [userLocation, setUserLocation] = useState(null);
   const [kakaoLoaded, setKakaoLoaded] = useState(false); // API 로드 상태
   const navigate = useNavigate();
-  const { updateLocationInfo } = useCapsuleStore();
+  const { updateLocationInfo, dealId, description, type, imgFile, radishId } =
+    useCapsuleStore();
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -122,7 +125,7 @@ function CapsuleChooseLocationPage() {
     setSelectedPlace(place);
   };
 
-  const handleDecision = () => {
+  const handleDecision = async () => {
     if (selectedPlace) {
       updateLocationInfo(
         selectedPlace.y,
@@ -130,7 +133,46 @@ function CapsuleChooseLocationPage() {
         selectedPlace.address_name,
         selectedPlace.place_name
       );
-      navigate("/capsule-planting");
+
+      try {
+        const formData = new FormData();
+
+        // integer($int64)
+        formData.append("dealId", dealId); // 정수값 그대로 전송
+
+        // string($binary)
+        formData.append("imgFile", imgFile);
+
+        // string
+        formData.append("description", description);
+        formData.append("type", type);
+
+        // number($double)
+        formData.append("lat", selectedPlace.y); // 숫자값 그대로 전송
+        formData.append("lng", selectedPlace.x); // 숫자값 그대로 전송
+
+        // string
+        formData.append("addressName", selectedPlace.address_name);
+        formData.append("placeName", selectedPlace.place_name);
+
+        // integer($int64)
+        formData.append("radishId", radishId); // 정수값 그대로 전송
+
+        // 디버깅을 위한 로그
+        for (let [key, value] of formData.entries()) {
+          console.log(`${key}: ${value}`);
+        }
+
+        const response = await postPlantCapsule(formData);
+        console.log("서버 응답:", response);
+        navigate("/capsule-planting");
+      } catch (error) {
+        console.error("캡슐 심기 실패:", error);
+        if (error.response) {
+          console.error("서버 응답 데이터:", error.response.data);
+        }
+        alert("캡슐 심기에 실패했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
