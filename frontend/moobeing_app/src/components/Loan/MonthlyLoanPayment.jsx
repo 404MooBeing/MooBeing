@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { getLoanMonthly } from "../../apis/LoanApi";
 import goToJourney from "../../assets/button/goToJourney.svg";
+import { getLoanMonthly } from "../../apis/LoanApi.js";
 
 const Container = styled.div`
   background-color: #f5fded;
@@ -73,31 +73,36 @@ const NavigateImage = styled.img`
   height: 20px;
 `;
 
-function MonthlyLoanPayment() {  // 여기를 'MonthlyLoanPayment'로 변경
-  const [loanSum, setLoanSum] = useState({ monthlyLoanAmount: 0 }); // 기본값을 0으로 설정
-  const [error, setError] = useState(null); // 에러 상태 추가
+function MonthlyLoanPayment() {
+  const [loanSum, setLoanSum] = useState({ monthlyLoanAmount: 0 });
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchLoanSum = async () => {
-      try {
-        const data = await getLoanMonthly(); // API 호출
-        setLoanSum(data);
-      } catch (error) {
-        setError(
-          "대출 정보를 불러오는 데 실패했습니다. 나중에 다시 시도해 주세요."
-        ); // 사용자에게 보여줄 에러 메시지 설정
-        setLoanSum({ monthlyLoanAmount: 0 }); // 에러 발생 시 기본값 0으로 설정
-      }
-    };
+    fetchMonthlyLoanData();
+  }, []); // 빈 배열을 넣어 컴포넌트가 마운트될 때만 실행
 
-    fetchLoanSum();
-  }, []);
-
-  const navigate = useNavigate();
+  const fetchMonthlyLoanData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getLoanMonthly();
+      setLoanSum(response);
+      console.log(loanSum)
+    } catch (error) {
+      console.error("월별 대출 정보 불러오기 실패:", error);
+      setLoanSum({ monthlyLoanAmount: 0 });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSpendPage = () => {
     navigate("/spend");
   };
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <Container>
