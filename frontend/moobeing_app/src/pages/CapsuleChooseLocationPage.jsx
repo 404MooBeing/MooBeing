@@ -1,16 +1,10 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import Map from "../components/CapsuleMap/Map";
 import LocationSearch from "../components/CapsuleChooseLocation/LocationSearch";
-import radish from "../assets/radishes/basicRad.svg";
 import useCapsuleStore from "../store/Capsule";
-
-const MapContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  position: relative;
-`;
-
+import { postPlantCapsule } from "../apis/CapsuleApi";
 const OverlayContainer = styled.div`
   position: fixed;
   bottom: 100px;
@@ -58,167 +52,102 @@ const DecisionButton = styled.button`
   font-size: 16px;
 `;
 
-function Map() {
-  const [kakao, setKakao] = useState(null);
-  const [map, setMap] = useState(null);
+function CapsuleChooseLocationPage() {
   const [places, setPlaces] = useState([]);
-  const [marker, setMarker] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
+  const [kakaoLoaded, setKakaoLoaded] = useState(false); // API 로드 상태
   const navigate = useNavigate();
-  const mapRef = useRef(null);
-
   const { updateLocationInfo } = useCapsuleStore();
 
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_MAP_APP_KEY}&libraries=services&autoload=false`;
-    script.async = true;
-
-    script.onload = () => {
-      window.kakao.maps.load(() => {
-        setKakao(window.kakao);
-      });
-    };
-
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (kakao && mapRef.current && !map) {
-      const options = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3,
-      };
-      const newMap = new kakao.maps.Map(mapRef.current, options);
-      setMap(newMap);
-    }
-  }, [kakao, map]);
-
-  useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setUserLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("사용자 위치를 가져오는 데 실패했습니다:", error);
+          alert("사용자의 위치 정보에 접근할 수 없습니다.");
+        }
+      );
     } else {
-      alert("내 위치 설정이 현 브라우저에서 작동하지 않습니다.");
+      alert("사용자의 브라우저가 위치 서비스를 지원하지 않습니다.");
     }
   }, []);
 
   const searchPlaces = useCallback(
     (keyword) => {
-      if (!kakao || !map || !userLocation) {
-        console.error("Kakao Maps SDK is not fully loaded");
+      if (!window.kakao || !window.kakao.maps) {
+        alert("Kakao Maps API가 완전히 로드되지 않았습니다.");
         return;
       }
 
-      const ps = new kakao.maps.services.Places();
+      if (!userLocation) {
+        alert("사용자의 위치 정보가 없습니다.");
+        return;
+      }
+
+      const ps = new window.kakao.maps.services.Places();
       const searchOption = {
-        location: new kakao.maps.LatLng(userLocation.lat, userLocation.lng),
+        location: new window.kakao.maps.LatLng(
+          userLocation.lat,
+          userLocation.lng
+        ),
         radius: 10000,
-        sort: kakao.maps.services.SortBy.DISTANCE,
+        sort: window.kakao.maps.services.SortBy.DISTANCE,
       };
 
       ps.keywordSearch(
         keyword,
         (data, status) => {
-          if (status === kakao.maps.services.Status.OK) {
-            const filteredData = data.filter(
-              (place) =>
-                place.place_name
-                  .toLowerCase()
-                  .includes(keyword.toLowerCase()) ||
-                place.address_name.toLowerCase().includes(keyword.toLowerCase())
-            );
-
-            setPlaces(filteredData);
-            setSelectedPlace(null);
-
-            const bounds = new kakao.maps.LatLngBounds();
-            filteredData.forEach((place) => {
-              bounds.extend(new kakao.maps.LatLng(place.y, place.x));
-            });
-            map.setBounds(bounds);
-          } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+          if (status === window.kakao.maps.services.Status.OK) {
+            setPlaces(data);
+          } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
             alert("검색 결과가 존재하지 않습니다.");
-          } else if (status === kakao.maps.services.Status.ERROR) {
-            alert("검색 결과 중 오류가 발생했습니다.");
+          } else if (status === window.kakao.maps.services.Status.ERROR) {
+            alert("검색 중 오류가 발생했습니다.");
           }
         },
         searchOption
       );
     },
-    [kakao, map, userLocation]
+    [userLocation]
   );
 
-  const moveToLocation = useCallback(
-    (lat, lng, place) => {
-      if (kakao && map) {
-        const moveLatLon = new kakao.maps.LatLng(lat, lng);
-        map.setCenter(moveLatLon);
-        map.setLevel(2);
-
-        // 기존 마커 제거
-        if (marker) {
-          marker.setMap(null);
-        }
-
-        // 새 마커 생성
-        const imageSrc = radish;
-        const imageSize = new kakao.maps.Size(64, 69);
-        const imageOption = { offset: new kakao.maps.Point(27, 69) };
-
-        const markerImage = new kakao.maps.MarkerImage(
-          imageSrc,
-          imageSize,
-          imageOption
-        );
-        const newMarker = new kakao.maps.Marker({
-          position: moveLatLon,
-          image: markerImage,
-        });
-
-        newMarker.setMap(map);
-        setMarker(newMarker);
-
-        setPlaces([]);
-        setSelectedPlace(place);
-      }
-    },
-    [kakao, map, marker]
-  );
+  const handleSelectPlace = (place) => {
+    setSelectedPlace(place);
+  };
 
   const handleDecision = () => {
     if (selectedPlace) {
-      console.log("사용자가 결정한 위치는요!!:", selectedPlace);
-
       updateLocationInfo(
         selectedPlace.y,
         selectedPlace.x,
         selectedPlace.address_name,
         selectedPlace.place_name
       );
+      navigate("/capsule-planting");
     }
-    console.log(useCapsuleStore.getState());
-    navigate("/capsule-planting");
   };
 
   return (
-    <MapContainer>
+    <>
       <LocationSearch
         onSearch={searchPlaces}
         places={places}
-        onSelectPlace={(lat, lng, place) => moveToLocation(lat, lng, place)}
+        onSelectPlace={handleSelectPlace}
+        kakaoLoaded={kakaoLoaded}
       />
-      <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
-      {!map && <div>지도를 불러오는 중...</div>}
+      <Map
+        places={places}
+        userLocation={userLocation}
+        onSelectPlace={handleSelectPlace}
+        setKakaoLoaded={setKakaoLoaded} // API 로드 상태 전달
+      />
       {selectedPlace && (
         <OverlayContainer>
           <LocationInfo>
@@ -229,13 +158,17 @@ function Map() {
                   selectedPlace.category_name.split(" > ")[0]}
               </CategoryName>
             </PlaceName>
-            <AddressName>{selectedPlace.address_name}</AddressName>
+            <AddressName>
+              {selectedPlace.address_name
+                ? selectedPlace.address_name
+                : "없지롱"}
+            </AddressName>
           </LocationInfo>
           <DecisionButton onClick={handleDecision}>결정</DecisionButton>
         </OverlayContainer>
       )}
-    </MapContainer>
+    </>
   );
 }
 
-export default Map;
+export default CapsuleChooseLocationPage;

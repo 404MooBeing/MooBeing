@@ -54,7 +54,7 @@ function LocationSearch({ onSearch, places, onSelectPlace }) {
   };
 
   const handleSelectPlace = (place) => {
-    onSelectPlace(place.y, place.x, place);
+    onSelectPlace(place);
   };
 
   return (

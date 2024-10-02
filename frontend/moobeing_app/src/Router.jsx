@@ -23,6 +23,7 @@ import LoanPayment from "./pages/LoanPaymentPage";
 import Menu from "./pages/MenuPage";
 import Moobti from "./pages/MoobtiPage";
 import MyCapsule from "./pages/MyCapsulePage";
+import MyMap from "./pages/MyMap";
 import User from "./pages/MyPage";
 import PasswordChange from "./pages/PasswordChangePage";
 import Quiz from "./pages/QuizPage";
@@ -73,6 +74,7 @@ function Router() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/moobti" element={<Moobti />} />
           <Route path="/my-capsule" element={<MyCapsule />} />
+          <Route path="/my-map" element={<MyMap />} />
           <Route path="/user" element={<User />} />
           <Route path="/password-change" element={<PasswordChange />} />
           <Route path="/quiz" element={<Quiz />} />
