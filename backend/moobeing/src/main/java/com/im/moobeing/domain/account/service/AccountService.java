@@ -258,5 +258,11 @@ public class AccountService {
 		}
 	}
 
-
+	public Long sumBalance(Member member) {
+		return getAccount(member)
+				.getGetAccountDtoList()
+				.stream()
+				.mapToLong(GetAccountDto::getRemainingBalance)
+				.sum();
+	}
 }
