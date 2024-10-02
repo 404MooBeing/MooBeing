@@ -20,6 +20,7 @@ import com.im.moobeing.global.error.ErrorCode;
 import com.im.moobeing.global.error.exception.AuthenticationException;
 import com.im.moobeing.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -195,14 +196,16 @@ public class MemberService {
         return MemberCheckEmailResponse.of(true);
     }
 
+    @Transactional
     public MemberRadishSelectResponse selectMemberRadish(Member member, MemberRadishSelectRequest memberRadishSelectRequest) {
         Radish radish = radishRepository.findByRadishName(memberRadishSelectRequest.getRadishName())
                 .orElseThrow(() -> new IllegalArgumentException("Radish not found with name: " + memberRadishSelectRequest.getRadishName()));
-
         member.setMemberRadishId(radish.getId());
-        memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
+        Radish savedRadish = radishRepository.findById(savedMember.getSelectedRadishId())
+                .orElseThrow(() -> new IllegalArgumentException("Radish not found with name: " + memberRadishSelectRequest.getRadishName()));
 
-        return MemberRadishSelectResponse.of(radish.getRadishName(), radish.getRadishRank(), radish.getRadishImageUrl());
+        return MemberRadishSelectResponse.of(savedRadish.getRadishName(), savedRadish.getRadishRank(), savedRadish.getRadishImageUrl());
     }
 
     @Transactional
