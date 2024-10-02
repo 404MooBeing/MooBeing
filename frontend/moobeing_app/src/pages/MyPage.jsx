@@ -3,6 +3,7 @@ import styled from "styled-components";
 import MyInfo from "../components/User/MyInfo";
 import MyRadish from "../components/User/MyRadish";
 import MyInfoHeader from "../components/User/MyInfoHeader";
+import { getUserInfo } from "../apis/UserApi";
 
 
 const Container = styled.div`
@@ -53,14 +54,14 @@ const MyPage = () => {
     birthday: "980321",
     email: "mooch@ssafy.edu",
     gender: "M",
-    id : "ssafy11",
-    coin : 10000
+    id : "ssafy11"
   })
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const userData = await getUserInfo(); // 사용자 정보 가져오기
+        const userData = await getUserInfo(); // 사용자 정보 가져오기
+        console.log(userData.email + "!!")
          // Zustand 스토어에 저장
       } catch (error) {
         console.error("데이터 가져오기 실패:", error);

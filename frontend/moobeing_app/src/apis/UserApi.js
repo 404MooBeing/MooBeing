@@ -103,3 +103,15 @@ export const getStreamCnt = async () => {
     throw error;
   }
 };
+
+
+// 연속으로 무를 받았는지 체크하기
+export const getCoin = async () => {
+  try {
+    const response = await api.get("/point/my");
+    return response.data;
+  } catch (error) {
+    console.error("무코인 가져오기 실패,", error);
+    throw error;
+  }
+};
