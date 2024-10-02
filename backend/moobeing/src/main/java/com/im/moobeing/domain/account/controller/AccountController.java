@@ -48,12 +48,6 @@ public class AccountController {
 		return ResponseEntity.status(HttpStatus.OK).body(accountService.profitMargin(member));
 	}
 
-	@Operation(summary = "계좌 생성하기", description = "")
-	@PutMapping
-	public ResponseEntity<?> createAccount(@AuthenticationPrincipal Member member, @RequestParam Long productId) {
-		return ResponseEntity.ok(accountService.makeAccount(member, productId));
-	}
-
 	@Operation(summary = "모든 자유입출금 상품 확인하기", description = "여기에 있는 상품을 토대로 계좌를 생성해야 합니다.")
 	@GetMapping("/product")
 	public ResponseEntity<?> getAccountProduct() {
@@ -94,6 +88,7 @@ public class AccountController {
 					}
 			)
 	)
+
 	@PostMapping("/deposit")
 	public ResponseEntity<?> depositFunds(@AuthenticationPrincipal Member member, @RequestBody DepositRequest depositRequest) {
 		accountService.depositFunds(member, depositRequest);

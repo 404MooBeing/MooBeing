@@ -21,4 +21,9 @@ public class AccountSequence {
 
     @Column(name = "next_val")
     private Long nextVal;
+
+    public AccountSequence(String seqName, Long nextVal) {
+        this.seqName = seqName;
+        this.nextVal = nextVal;
+    }
 }
