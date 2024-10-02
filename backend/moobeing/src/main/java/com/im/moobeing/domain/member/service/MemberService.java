@@ -1,5 +1,6 @@
 package com.im.moobeing.domain.member.service;
 
+import com.im.moobeing.domain.account.service.AccountService;
 import com.im.moobeing.domain.member.dto.request.*;
 import com.im.moobeing.domain.member.dto.response.*;
 import com.im.moobeing.domain.member.entity.Member;
@@ -37,6 +38,7 @@ public class MemberService {
     private final MemberRadishRepository memberRadishRepository;
     private final RadishTimeRepository radishTimeRepository;
     private final NicknameRepository nicknameRepository;
+    private final AccountService accountService;
 
     @Transactional
     public MemberCreateResponse createMember(MemberCreateRequest memberCreateRequest) {
@@ -45,9 +47,7 @@ public class MemberService {
         });
 
         String birthDay = memberCreateRequest.getHumanNumber().substring(0, 6);
-
         String gender;
-
         int checkGender = Integer.parseInt(memberCreateRequest.getHumanNumber().substring(6,7));
 
         if (checkGender == 1 || checkGender == 3) {
@@ -57,8 +57,6 @@ public class MemberService {
         } else{
             throw new RuntimeException("둘다 아니다. 넌 누구냐");
         }
-
-
 
         Member member = Member.builder()
                 .email(memberCreateRequest.getEmail())
@@ -70,12 +68,6 @@ public class MemberService {
                 .selectedRadishId(1L)
                 .build();
 
-//        //todo exception 설정 필요
-//        GetUserKeyResponse getUserKeyResponse = shinhanClient.getUserKey(new GetUserKeyRequest(apiKeyConfig.getApiKey(), member.getEmail()));
-//
-//        member.setMemberUserKey(getUserKeyResponse.getUserKey());
-
-        // method 화 필요함.
         Radish radish = radishRepository.findById(1L)
                 .orElseThrow(() -> new IllegalArgumentException("Radish not found with id: " + 1L));
 
@@ -88,6 +80,8 @@ public class MemberService {
         member.addMemberRadish(newMemberRadish);
 
         member = memberRepository.save(member); // 데이터베이스에 멤버 저장
+
+        accountService.makeAccount(member);
 
         return MemberCreateResponse.of(member); // 저장된 멤버 정보를 바탕으로 응답 생성
     }
