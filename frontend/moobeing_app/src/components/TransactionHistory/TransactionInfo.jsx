@@ -3,6 +3,7 @@ import styled from "styled-components";
 import DropDownArrow from "../../assets/dropdown/DropdownArrow.png";
 import CopyButton from "../../assets/button/copyButton.svg";
 import SortTransaction from "./SortTransaction";
+import useTransactionStore from "../../store/TransactionStore";
 
 const AccountHeader = styled.div`
   background-color: #F5F8F3;
@@ -32,7 +33,7 @@ const AccountBox = styled.div`
 
 const CustomDropdownContainer = styled.div`
   position: relative;
-  width: 170px;
+  width: 200px;
   max-width: 300px;
   display: inline-block;
   margin: 10px 0;
@@ -96,6 +97,7 @@ const AccountNumContainer = styled.div`
   display: flex;
   align-items: center;
   margin-top: 5px;
+  margin-left: 5px;
 `;
 
 const AccountNum = styled.div`
@@ -162,28 +164,27 @@ const RadishButton = styled.button`
   font-family: 'mainFont';
 `;
 
-const TransactionInfo = ({ 
-  account, 
-  accounts, 
-  isRadishSelected, 
-  toggleRadishSelection, 
-  onAccountChange, 
-  onSortSelect, 
-  sortCriteria }) => {
-  const [selectedAccount, setSelectedAccount] = useState(account || {});
+const TransactionInfo = () => {
+  const {
+    account: selectedAccount,
+    accounts,
+    isRadishSelected,
+    toggleRadishSelection,
+    setAccount,
+    sortCriteria,
+    setSortCriteria,
+  } = useTransactionStore(); // Zustand에서 상태와 함수 가져오기
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSortPopupOpen, setIsSortPopupOpen] = useState(false);
 
-  useEffect(() => {
-    setSelectedAccount(account); // 상위 컴포넌트로부터 변경된 계좌 반영
-  }, [account]);
-
+  // 계좌 선택 함수
   const handleAccountChange = (selectedAcc) => {
-    setSelectedAccount(selectedAcc);
+    setAccount(selectedAcc); // Zustand 상태 변경 함수 호출
     setIsDropdownOpen(false);
-    onAccountChange(selectedAcc); // 상위 컴포넌트에 계좌 변경 알림
   };
 
+  // 계좌번호 복사 함수
   const handleCopyAccountNum = () => {
     if (selectedAccount?.accountNum) {
       navigator.clipboard.writeText(selectedAccount.accountNum)
@@ -192,12 +193,14 @@ const TransactionInfo = ({
     }
   };
 
+  // 정렬 기준 변경 팝업 토글
   const toggleSortPopup = () => {
     setIsSortPopupOpen(!isSortPopupOpen);
   };
 
+  // 정렬 기준 선택 함수
   const handleSortSelect = (selectedSort) => {
-    onSortSelect(selectedSort);  // 상위 컴포넌트로 정렬 기준 전달
+    setSortCriteria(selectedSort);  // Zustand 상태 변경 함수 호출
     setIsSortPopupOpen(false);
   };
 
@@ -206,14 +209,14 @@ const TransactionInfo = ({
       <AccountBox>
         <CustomDropdownContainer>
           <CustomDropdownHeader onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-            {selectedAccount.accountName || "계좌 선택"}
+            {selectedAccount?.accountName || "계좌 선택"}
           </CustomDropdownHeader>
           {isDropdownOpen && (
             <CustomDropdownList>
               {accounts?.map((acc, index) => (
                 <CustomDropdownItem
                   key={index}
-                  selected={acc.accountName === selectedAccount.accountName}
+                  selected={acc.accountName === selectedAccount?.accountName}
                   onClick={() => handleAccountChange(acc)}
                 >
                   {acc.accountName}

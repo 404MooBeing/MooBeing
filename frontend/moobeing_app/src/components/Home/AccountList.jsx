@@ -7,11 +7,8 @@ import leftButton from "../../assets/button/leftButton.svg";
 import rightButton from "../../assets/button/rightButton.svg";
 import leftButtonBlack from "../../assets/button/leftButtonBlack.svg";
 import rightButtonBlack from "../../assets/button/rightButtonBlack.svg";
-import NongHyup from "../../assets/banks/금융아이콘_SVG_농협.svg";
-import ShinHan from "../../assets/banks/금융아이콘_SVG_신한.svg";
-import WooRi from "../../assets/banks/금융아이콘_SVG_우리.svg";
-import Hana from "../../assets/banks/금융아이콘_SVG_하나.svg";
 import basicRad from "../../assets/radishes/basicRad.svg";
+import useTransactionStore from "../../store/TransactionStore";
 
 const BankLogo = styled.img`
   width: 40px;
@@ -135,7 +132,8 @@ const NoAccountText = styled.p`
 `;
 
 const AccountList = () => {
-  const [accounts, setAccounts] = useState([]);
+  const { accounts, setAccounts } = useTransactionStore();
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const accountsPerPage = 3;
   const totalPages = Math.ceil(accounts.length / accountsPerPage);
@@ -167,7 +165,7 @@ const AccountList = () => {
     };
 
     fetchAccountInfo(); // 함수 실행
-  }, []); // 컴포넌트 마운트 시 한 번만 실행
+  }, [setAccounts]); // 컴포넌트 마운트 시 한 번만 실행
 
   const handleScrollNext = () => {
     setCurrentIndex((prevIndex) => {
@@ -183,17 +181,15 @@ const AccountList = () => {
     });
   };
 
-  const navigateToSpend = (account) => {
+  const navigateToTransaction = (account) => {
     const encodedAccountName = encodeURIComponent(account.accountName);
     navigate(`/transaction-history/${encodedAccountName}`, {
-      state: { account, accounts },
+      state: { account },
     });
   };
 
   const visibleAccounts = accounts.slice(currentIndex, currentIndex + accountsPerPage);
   const currentPage = Math.floor(currentIndex / accountsPerPage) + 1;
-
-  console.log('여기 확인!!!!!!!', accounts)
 
   return (
     <>
@@ -203,7 +199,7 @@ const AccountList = () => {
             visibleAccounts.map((account, index) => (
               <AccountItem
                 key={index}
-                onClick={() => navigateToSpend(account)}
+                onClick={() => navigateToTransaction(account)}
               >
                 <BankLogo src={account.bankImageUrl || basicRad} alt="로고" />
                 <AccountInfo>
@@ -213,7 +209,7 @@ const AccountList = () => {
                       <NavigateImage src={goToJourney} alt="계좌상세" />
                     </NavigateButton>
                   </AccountName>
-                  <div>{account.remainingBalance.toLocaleString()} 원</div>
+                  <div>{account.remainingBalance.toLocaleString() || 0} 원</div>
                 </AccountInfo>
               </AccountItem>
             ))
