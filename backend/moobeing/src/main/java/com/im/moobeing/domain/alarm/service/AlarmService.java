@@ -27,8 +27,6 @@ public class AlarmService {
                 .map(AlarmResponse::of)
                 .toList();
 
-        alarmRepository.deleteAllByMember(member);
-
         return responses;
     }
 
@@ -43,5 +41,10 @@ public class AlarmService {
                 .build();
 
         alarmRepository.save(alarm);
+    }
+
+    @Transactional
+    public void deleteAllAlarm(Member member) {
+        alarmRepository.deleteAllByMember(member);
     }
 }

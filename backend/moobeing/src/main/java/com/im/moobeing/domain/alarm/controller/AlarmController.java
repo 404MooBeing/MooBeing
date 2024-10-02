@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.management.Notification;
 import java.time.LocalDateTime;
@@ -51,5 +48,11 @@ public class AlarmController {
         alarmRepository.saveAll(alarms);
 
         return ResponseEntity.ok("완료");
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAllAlarm(@AuthenticationPrincipal Member member) {
+        alarmService.deleteAllAlarm(member);
+        return ResponseEntity.ok().build();
     }
 }
