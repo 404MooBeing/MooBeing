@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import CategoryList from "./DailyCategoryList";
 import useDateStore from "../../store/DateStore"; // Zustand의 date store 가져오기
 import dayjs from "dayjs"; // 날짜 비교를 위해 dayjs 사용
+import useSpendStore from "../../store/SpendStore";
 
 const Container = styled.div`
   background-color: #f5fded;
@@ -48,7 +49,8 @@ const LoanSort = styled.button`
   }
 `;
 
-const DailyCategory = ({ spendData }) => {
+const DailyCategory = () => {
+  const spendData = useSpendStore((state) => state.spendData);
   const { selectedDate } = useDateStore(); // Zustand로부터 date 가져오기
   const [filteredHistory, setFilteredHistory] = useState([]); // 기본적으로 전체 데이터를 설정
   const [showLoansOnly, setShowLoansOnly] = useState(false);

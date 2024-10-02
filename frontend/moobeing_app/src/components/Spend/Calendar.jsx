@@ -8,6 +8,7 @@ import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";  // 로케일 임포트
 import useDateStore from "../../store/DateStore";
+import useSpendStore from "../../store/SpendStore";
 
 dayjs.locale('ko');  // dayjs 로케일을 한국어로 설정
 
@@ -26,7 +27,7 @@ const CalendarContainer = styled.div`
     width: 95%;
     max-width: 100%;
     height: auto;
-    min-height: 450px;
+    min-height: 400px;
   }
   .MuiDayCalendar-header {
     margin-top: 8px;
@@ -144,14 +145,15 @@ function CustomDay({ day, monthlySpendData = [], ...other }) {
       <span>{day.date()}</span>
       {spendingData?.totalSpend && (
         <span className="spend-amount">
-          -{spendingData.totalSpend.toLocaleString()}
+          {spendingData.totalSpend.toLocaleString()}
         </span>
       )}
     </CustomPickersDay>
   );
 }
 
-const Calendar = ({ spendData }) => {
+const Calendar = () => {
+  const spendData = useSpendStore((state) => state.spendData);
   const { selectedDate, setSelectedDate } = useDateStore();
 
   const handleDateChange = (newDate) => {

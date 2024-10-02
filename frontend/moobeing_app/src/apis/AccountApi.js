@@ -42,7 +42,7 @@ export const getAccountSum = async () => {
     console.error("대출금 총합 조회 실패:", error);
     throw error;
   }
-};
+};  
 
 // 계좌 거래 내역 조회
 export const postAccountHistory = async (accountHistoryData) => {
@@ -52,10 +52,22 @@ export const postAccountHistory = async (accountHistoryData) => {
       months: accountHistoryData.months,
       transactionType: accountHistoryData.transactionType,
       page: accountHistoryData.page,
-    });
+    });  
     return response.data;
   } catch (error) {
     console.error("계좌 내역 조회 실패:", error);
+    throw error;
+  }  
+};  
+
+
+// 계좌별 날짜 합계 조회
+export const getSpendSummary = async (year, month, day) => {
+  try {
+    const response = await api.get(`/expense/account-summary?year=${year}&month=${month}&day=${day}`);
+    return response.data;
+  } catch (error) {
+    console.error("계좌별 날짜 합계 불러오기 실패:", error);
     throw error;
   }
 };
@@ -65,13 +77,13 @@ export const postAccountHistory = async (accountHistoryData) => {
 // export const postAccountLoan = async (accountData) => {
 //   try {
 //     const response = await api.post('/account', {
-//       accountNum: accountData.accountNum,
+//       accountNum: accountData.accountNum,  
 //       loanName: accountData.loanName,
 //       money: accountData.money,
 //     });
 //     return response.data;
 //   } catch (error) {
-//     console.error("상환 실패:", error);
+//     console.error("상환 실패:", error);  
 //     throw error;
 //   }
 // };
@@ -86,13 +98,13 @@ export const postAccountLoan = async (requestBody) => {
         dummyAccountInfo.loanAmount -= amount;
         dummyAccountInfo.balance -= amount;
         resolve({ success: true, message: `${amount}원이 성공적으로 상환되었습니다.` });
-      }, 500);
-    });
+      }, 500);  
+    });  
   } catch (error) {
     console.error("대출금 상환 실패:", error);
     throw error;
-  }
-};
+  }  
+};  
 
 // 대출금 상환시 얻을 수 있는 이익 계산
 export const getAccountBenefit = async () => {
@@ -101,10 +113,10 @@ export const getAccountBenefit = async () => {
       setTimeout(() => {
         const benefit = Math.floor(dummyAccountInfo.loanAmount * dummyAccountInfo.interestRate / 100);
         resolve({ benefit });
-      }, 500);
-    });
+      }, 500);  
+    });  
   } catch (error) {
     console.error("대출금 상환시 얻을 수 있는 이익 계산 실패:", error);
     throw error;
-  }
-};
+  }  
+};  

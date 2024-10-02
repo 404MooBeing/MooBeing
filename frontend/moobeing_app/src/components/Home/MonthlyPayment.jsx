@@ -1,7 +1,17 @@
 import { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import goToJourney from "../../assets/button/goToJourney.svg";
+
+// 반짝이는 애니메이션 정의
+const sparkle = keyframes`
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+`;
 
 const Container = styled.div`
   background-color: #f5fded;
@@ -79,13 +89,13 @@ const TextContainer = styled.div`
 `
 
 const ComparisonText = styled.div`
-  background-color: #c0dda6;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 15px;
-  border-radius: 20px;
+  color: #348833;
+  padding: 5px 10px;
+  font-size: 18px;
+  border-radius: 10px;
+  font-weight: 700;
   font-family: 'mainFont';
+  animation: ${sparkle} 1.5s infinite; /* 1.5초마다 반복 */
 `;
 
 const MonthlyPayment = () => {
@@ -112,7 +122,7 @@ const MonthlyPayment = () => {
         {paymentSum.monthlyPaymentAmount.toLocaleString()} 원
       </PaymentSum>
       <TextContainer>
-        <ComparisonText>{compareText}</ComparisonText>
+        <ComparisonText>"{compareText}"</ComparisonText>
       </TextContainer>
     </Container>
   );
