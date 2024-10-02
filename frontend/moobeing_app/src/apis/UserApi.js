@@ -105,7 +105,7 @@ export const getStreamCnt = async () => {
 };
 
 
-// 연속으로 무를 받았는지 체크하기
+// 무 코인 개수 받아오기
 export const getCoin = async () => {
   try {
     const response = await api.get("/point/my");
