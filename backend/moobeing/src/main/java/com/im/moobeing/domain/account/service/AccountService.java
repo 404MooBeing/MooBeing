@@ -9,9 +9,11 @@ import com.im.moobeing.domain.account.dto.request.TransferRequest;
 import com.im.moobeing.domain.account.dto.response.*;
 import com.im.moobeing.domain.account.entity.Account;
 import com.im.moobeing.domain.account.entity.AccountProduct;
+import com.im.moobeing.domain.account.entity.AccountSequence;
 import com.im.moobeing.domain.account.repository.AccountProductRepository;
 import com.im.moobeing.domain.account.repository.AccountRepository;
 import com.im.moobeing.domain.account.repository.AccountSequenceRepository;
+import com.im.moobeing.domain.deal.entity.Deal;
 import com.im.moobeing.domain.deal.repository.DealRepository;
 import com.im.moobeing.domain.loan.entity.LoanProduct;
 import com.im.moobeing.domain.loan.entity.LoanRepaymentRecord;
@@ -32,6 +34,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @Transactional(readOnly = true)
@@ -46,17 +49,11 @@ public class AccountService {
 	private final AccountSequenceRepository accountSequenceRepository;
 
 	public GetAccountResponse getAccount(Member member) {
-		List<Account> accountList =  accountRepository.findByMemberId(member.getId());
+		var accountList = accountRepository.findByMemberId(member.getId()).stream()
+				.map(GetAccountDto::of)
+				.toList();
 
-		List<GetAccountDto> getAccountDtoList = new ArrayList<>();
-
-		for (Account account : accountList) {
-			getAccountDtoList.add(
-				GetAccountDto.of(account)
-			);
-		}
-
-		return GetAccountResponse.of(getAccountDtoList);
+		return GetAccountResponse.of(accountList);
 	}
 
 	@Transactional
@@ -113,7 +110,7 @@ public class AccountService {
 			beforeYear = beforeYear - 1;
 		}
 
-		Long remainder = member.getMonthAver() - dealRepository.findTotalPriceByYearAndMonth(beforeYear, beforeMonth);
+		Long remainder = member.getMonthAver() - dealRepository.findTotalPriceByMemberAndYearAndMonth(member, beforeYear, beforeMonth);
 
 		// 만약 지난달에 초과 지출하거나,
 		if (remainder < 0){
@@ -187,13 +184,33 @@ public class AccountService {
 	}
 
 	@Transactional(readOnly = false)
-	public Account makeAccount(Member member, Long productId) {
+	public Account makeAccount(Member member) {
+		List<AccountProduct> allProducts = accountProductRepository.findAll();
+		Random random = new Random();
+		int index = random.nextInt(allProducts.size());
+
+		AccountProduct accountProduct = allProducts.get(index);
+		Account account = makeAccount(member, accountProduct.getId(), accountProduct.getBankCode());
+
+		depositFunds(member, new DepositRequest(account.getAccountNum(), 10_000_000L, "로또 당첨"));
+        return accountRepository.save(account);
+	}
+
+	@Transactional
+	public Account makeAccount(Member member, Long productId, String bankCode) {
 		AccountProduct accountProduct = accountProductRepository.findById(productId)
 				.orElseThrow(() -> new BadRequestException(ErrorCode.AC_INVALID_PRODUCT_CODE));
 
-		Account account = makeAccount(member, productId, accountProduct.getBankCode());
+		String accountNum = generateAccountNumber(member, bankCode);
 
-        return accountRepository.save(account);
+		Account account = Account.builder()
+				.accountProduct(accountProduct)
+				.accountNum(accountNum)
+				.member(member)
+				.accountBalance(0L)
+				.build();
+
+		return accountRepository.save(account);
 	}
 
 	@Transactional(readOnly = false)
@@ -216,29 +233,25 @@ public class AccountService {
 	public void depositFunds(Member member, DepositRequest depositRequest) {
 		Account account = accountRepository.findByMemberIdAndAccountNum(member.getId(), depositRequest.getAccountNo())
 				.orElseThrow(() -> new BadRequestException(ErrorCode.AC_INVALID_ACCOUNT_NUM));
+
 		account.updateBalance(depositRequest.getTransactionBalance());
-	}
 
-	@Transactional
-	public Account makeAccount(Member member, Long productId, String bankCode) {
-		AccountProduct accountProduct = accountProductRepository.findById(productId)
-				.orElseThrow(() -> new BadRequestException(ErrorCode.AC_INVALID_PRODUCT_CODE));
-
-		String accountNum = generateAccountNumber(member, bankCode);
-
-		Account account = Account.builder()
-				.accountNum(accountNum)
+		Deal deal = Deal.builder()
+				.account(account)
 				.member(member)
-				.accountBalance(0L)
+				.title("로또 당첨")
+				.price(depositRequest.getTransactionBalance())
+				.remainBalance(depositRequest.getTransactionBalance() + account.getAccountBalance())
 				.build();
 
-		return accountRepository.save(account);
+		dealRepository.save(deal);
+		accountRepository.save(account);
 	}
 
 	private String generateAccountNumber(Member member, String bankCode) {
 		String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
-		incrementAccountSequence("account_sequence_" + bankCode); // 각 은행별로 시퀀스 관리
-		Long sequenceNumber = accountSequenceRepository.getNextVal("account_sequence_" + bankCode);
+		incrementAccountSequence(bankCode); // 각 은행별로 시퀀스 관리
+		Long sequenceNumber = accountSequenceRepository.getNextVal(bankCode);
 
 		return bankCode + date + String.format("%06d", sequenceNumber);
 	}
@@ -247,7 +260,15 @@ public class AccountService {
 	public void incrementAccountSequence(String seqName) {
 		int updatedRows = accountSequenceRepository.incrementSequence(seqName);
 		if (updatedRows == 0) {
-			throw new RuntimeException("Failed to increment sequence");
+			accountSequenceRepository.save(new AccountSequence(seqName, 1L));
 		}
+	}
+
+	public Long sumBalance(Member member) {
+		return getAccount(member)
+				.getGetAccountDtoList()
+				.stream()
+				.mapToLong(GetAccountDto::getRemainingBalance)
+				.sum();
 	}
 }

@@ -36,7 +36,7 @@ public class SwaggerConfig {
 
 		Server testServer = new Server();
 		testServer.setDescription("server");
-		testServer.setUrl("http://j11a404.p.ssafy.io:8081/api");
+		testServer.setUrl("https://j11a404.p.ssafy.io/api");
 
 		return new OpenAPI()
 			.info(info)

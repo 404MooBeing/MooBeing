@@ -6,20 +6,27 @@ import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.domain.member.entity.MemberRadish;
 import com.im.moobeing.domain.member.repository.MemberRadishRepository;
 import com.im.moobeing.domain.radish.dto.request.CreateRadishCapsuleRequest;
-import com.im.moobeing.domain.radish.dto.response.CharactersResponse;
-import com.im.moobeing.domain.radish.dto.response.CreateRadishCapsuleResponse;
+import com.im.moobeing.domain.radish.dto.request.RadishCapsuleAreaRequest;
+import com.im.moobeing.domain.radish.dto.response.*;
+import com.im.moobeing.domain.radish.entity.CapsuleType;
 import com.im.moobeing.domain.radish.entity.RadishCapsule;
 import com.im.moobeing.domain.radish.repository.RadishCapsuleRepository;
 import com.im.moobeing.global.error.ErrorCode;
 import com.im.moobeing.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RadishService {
@@ -30,7 +37,9 @@ public class RadishService {
     private final MemberRadishRepository memberRadishRepository;
 
     public CreateRadishCapsuleResponse createRadishCapsule(Member member, CreateRadishCapsuleRequest requestDto) {
-        MemberRadish memberRadish = memberRadishRepository.findByMemberIdAndRadishId(member.getId(), requestDto.getRadishId());
+        MemberRadish memberRadish = memberRadishRepository.findByMemberIdAndRadishId(member.getId(), requestDto.getRadishId())
+                .orElseThrow(() -> new BadRequestException(ErrorCode.RD_NO_RADISH));
+
         memberRadish.minusRadishNumber();
         if (memberRadish.getRadishNumber() == 0) {
             memberRadishRepository.delete(memberRadish);
@@ -57,14 +66,80 @@ public class RadishService {
 
         radishCapsuleRepository.save(radishCapsule);
 
-        return new CreateRadishCapsuleResponse(radishCapsule.getEndAt(), radishCapsule.getLat(), radishCapsule.getLng());
+        return new CreateRadishCapsuleResponse(radishCapsule.getEndAt(), radishCapsule.getLat(), radishCapsule.getLng(), radishCapsule.getImgUrl());
     }
 
-    public List<CharactersResponse> characters(Member member) {
+    public List<CharactersResponse> characters(Member member, boolean isIncludeBaby) {
         return memberRadishRepository.findByMemberId(member.getId())
                 .stream()
                 .filter(memberRadish -> !Objects.isNull(memberRadish.getRadishNumber()) && memberRadish.getRadishNumber() > 0)
                 .map(mr -> CharactersResponse.of(mr.getRadish(), mr.getRadishNumber()))
+                .filter(charactersResponse -> isIncludeBaby || charactersResponse.radishId() != 3L)
+                .sorted((o1, o2) -> o1.radishId() < o2.radishId() ? -1 : 1)
                 .toList();
+    }
+
+    public List<RadishCapsuleResponse> getAllRadishCapsules(Member member, Integer page) {
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+
+        List<RadishCapsule> capsules = radishCapsuleRepository.findAllByIsHarvestedAndMemberIdOrderByCreateAtDesc(true, member.getId(), pageable);
+
+        return capsules.stream()
+                .map(RadishCapsuleResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<RadishCapsuleResponse> getRadishCapsuleByMonth(Member member, Integer year, Integer month, Integer page) {
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+
+        LocalDateTime startDate = YearMonth.of(year, month).atDay(1).atStartOfDay();
+        LocalDateTime endDate = YearMonth.of(year, month).atEndOfMonth().atTime(23, 59, 59);
+
+        List<RadishCapsule> capsules = radishCapsuleRepository.findHarvestedRadishByMemberAndDateRange(member.getId(), startDate, endDate, pageable);
+
+        return capsules.stream()
+                .map(RadishCapsuleResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public RadishCapsuleResponse harvestRadishCapsule(Long capsuleId, Member member) {
+        RadishCapsule capsule = radishCapsuleRepository.findById(capsuleId)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.BAD_REQUEST));
+
+        if (!capsule.getMember().getId().equals(member.getId()) ||
+                capsule.getEndAt().isAfter(LocalDateTime.now()) ||
+                capsule.isHarvested()
+        ) {
+            throw new BadRequestException(ErrorCode.BAD_REQUEST);
+        }
+
+        // 수확 처리
+        capsule.harvest();
+        radishCapsuleRepository.save(capsule);
+
+        return RadishCapsuleResponse.of(capsule);
+    }
+
+    public List<RadishCapsuleAreaResponse> findUnharvestedCapsulesInArea(Member member, RadishCapsuleAreaRequest request) {
+        List<RadishCapsule> capsules = radishCapsuleRepository.findUnharvestedCapsulesInArea(
+                member.getId(), request.latBottomLeft(), request.latTopRight(), request.lngBottomLeft(), request.lngTopRight());
+
+        return capsules.stream()
+                .map(RadishCapsuleAreaResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public CapsuleSummaryResponse getRadishSummary(Member member) {
+        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
+        List<RadishCapsule> capsules = radishCapsuleRepository.findAllByIsHarvestedAndMemberIdOrderByCreateAtDesc(false, member.getId(), pageable);
+        int count = capsules.size();
+        LocalDateTime time = capsules.stream()
+                .map(RadishCapsule::getEndAt)
+                .sorted()
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException(ErrorCode.INTERNAL_SERVER_ERROR));
+        return new CapsuleSummaryResponse(time, count);
     }
 }

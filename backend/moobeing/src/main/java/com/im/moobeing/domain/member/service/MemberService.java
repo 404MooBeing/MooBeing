@@ -1,11 +1,15 @@
 package com.im.moobeing.domain.member.service;
 
+import com.im.moobeing.domain.account.service.AccountService;
 import com.im.moobeing.domain.member.dto.request.*;
 import com.im.moobeing.domain.member.dto.response.*;
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.domain.member.entity.MemberRadish;
+import com.im.moobeing.domain.member.entity.Nickname;
 import com.im.moobeing.domain.member.repository.MemberRadishRepository;
 import com.im.moobeing.domain.member.repository.MemberRepository;
+import com.im.moobeing.domain.member.repository.NicknameRepository;
+import com.im.moobeing.domain.member.repository.NicknameWordRepository;
 import com.im.moobeing.domain.radish.entity.Radish;
 import com.im.moobeing.domain.radish.entity.RadishTime;
 import com.im.moobeing.domain.radish.repository.RadishRepository;
@@ -14,12 +18,15 @@ import com.im.moobeing.global.client.ShinhanClient;
 import com.im.moobeing.global.config.ApiKeyConfig;
 import com.im.moobeing.global.error.ErrorCode;
 import com.im.moobeing.global.error.exception.AuthenticationException;
+import com.im.moobeing.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -29,10 +36,10 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final RadishRepository radishRepository;
-    private final ShinhanClient shinhanClient;
-    private final ApiKeyConfig apiKeyConfig;
     private final MemberRadishRepository memberRadishRepository;
     private final RadishTimeRepository radishTimeRepository;
+    private final NicknameRepository nicknameRepository;
+    private final AccountService accountService;
 
     @Transactional
     public MemberCreateResponse createMember(MemberCreateRequest memberCreateRequest) {
@@ -41,9 +48,7 @@ public class MemberService {
         });
 
         String birthDay = memberCreateRequest.getHumanNumber().substring(0, 6);
-
         String gender;
-
         int checkGender = Integer.parseInt(memberCreateRequest.getHumanNumber().substring(6,7));
 
         if (checkGender == 1 || checkGender == 3) {
@@ -60,15 +65,10 @@ public class MemberService {
                 .name(memberCreateRequest.getName())
                 .birthday(birthDay)
                 .gender(gender)
+                .nickname(getNewNickname())
                 .selectedRadishId(1L)
                 .build();
 
-//        //todo exception 설정 필요
-//        GetUserKeyResponse getUserKeyResponse = shinhanClient.getUserKey(new GetUserKeyRequest(apiKeyConfig.getApiKey(), member.getEmail()));
-//
-//        member.setMemberUserKey(getUserKeyResponse.getUserKey());
-
-        // method 화 필요함.
         Radish radish = radishRepository.findById(1L)
                 .orElseThrow(() -> new IllegalArgumentException("Radish not found with id: " + 1L));
 
@@ -82,7 +82,18 @@ public class MemberService {
 
         member = memberRepository.save(member); // 데이터베이스에 멤버 저장
 
+        accountService.makeAccount(member);
+
         return MemberCreateResponse.of(member); // 저장된 멤버 정보를 바탕으로 응답 생성
+    }
+
+    private String getNewNickname() {
+        String name = NicknameWordRepository.getRandomNickname();
+        Optional<Nickname> optionalNickname = nicknameRepository.findByNickname(name);
+        long sequence = optionalNickname.map(value -> value.getNextSequence() + 1).orElse(1L);
+        Nickname nickname = new Nickname(name, sequence);
+        nicknameRepository.save(nickname);
+        return nickname.getNickname();
     }
 
     public Member loginMember(MemberLoginRequest memberLoginRequest) {
@@ -107,7 +118,10 @@ public class MemberService {
     }
 
     public MemberGetResponse getMember(Member member) {
-        return MemberGetResponse.of(member);
+        Radish radish = radishRepository.findById(member.getSelectedRadishId())
+                .orElseThrow(() -> new IllegalArgumentException("Radish not found with id: " + member.getSelectedRadishId()));
+
+        return MemberGetResponse.of(member, radish.getRadishImageUrl());
     }
 
     @Transactional
@@ -182,14 +196,16 @@ public class MemberService {
         return MemberCheckEmailResponse.of(true);
     }
 
+    @Transactional
     public MemberRadishSelectResponse selectMemberRadish(Member member, MemberRadishSelectRequest memberRadishSelectRequest) {
         Radish radish = radishRepository.findByRadishName(memberRadishSelectRequest.getRadishName())
                 .orElseThrow(() -> new IllegalArgumentException("Radish not found with name: " + memberRadishSelectRequest.getRadishName()));
-
         member.setMemberRadishId(radish.getId());
-        memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
+        Radish savedRadish = radishRepository.findById(savedMember.getSelectedRadishId())
+                .orElseThrow(() -> new IllegalArgumentException("Radish not found with name: " + memberRadishSelectRequest.getRadishName()));
 
-        return MemberRadishSelectResponse.of(radish.getRadishName(), radish.getRadishRank(), radish.getRadishImageUrl());
+        return MemberRadishSelectResponse.of(savedRadish.getRadishName(), savedRadish.getRadishRank(), savedRadish.getRadishImageUrl());
     }
 
     @Transactional
@@ -244,7 +260,8 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("Radish not found with id: " + babyMooRadishId));
 
         // member와 radish를 기준으로 memberRadish 엔티티를 찾습니다.
-        MemberRadish memberRadish = memberRadishRepository.findByMemberIdAndRadishId(member.getId(), radish.getId());
+        MemberRadish memberRadish = memberRadishRepository.findByMemberIdAndRadishId(member.getId(), radish.getId())
+                .orElseThrow(() -> new BadRequestException(ErrorCode.RD_NO_RADISH));
 
         if (memberRadish.getRadishNumber() > 5) {
             // radishNumber가 5 초과일 경우 5를 감소시킵니다.

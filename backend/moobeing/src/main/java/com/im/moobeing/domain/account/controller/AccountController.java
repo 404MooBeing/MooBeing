@@ -1,9 +1,7 @@
 package com.im.moobeing.domain.account.controller;
 
-import com.im.moobeing.domain.account.dto.request.CreateAccountProductRequest;
-import com.im.moobeing.domain.account.dto.request.DepositRequest;
-import com.im.moobeing.domain.account.dto.request.SendAccountRequest;
-import com.im.moobeing.domain.account.dto.request.TransferRequest;
+import com.im.moobeing.domain.account.dto.request.*;
+import com.im.moobeing.domain.account.dto.response.GetAccountResponse;
 import com.im.moobeing.domain.account.service.AccountService;
 import com.im.moobeing.domain.member.entity.Member;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,8 +25,14 @@ public class AccountController {
 
 	@Operation(summary = "맴버의 계좌 조회", description = "맴버의 계좌를 정해야 한다.")
 	@GetMapping
-	public ResponseEntity<?> getAccount(@AuthenticationPrincipal Member member) {
+	public ResponseEntity<GetAccountResponse> getAccount(@AuthenticationPrincipal Member member) {
 		return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccount(member));
+	}
+
+	@Operation(summary = "예원의 계좌 잔액 총 합 조회", description = "리스트를 돌며 sum을 한다.")
+	@GetMapping("/sum")
+	public ResponseEntity<Long> getBalance(@AuthenticationPrincipal Member member) {
+		return ResponseEntity.ok(accountService.sumBalance(member));
 	}
 
 	@Operation(summary = "대출금 상납", description = "대출금 상납하기")
@@ -42,12 +46,6 @@ public class AccountController {
 	@GetMapping("/benefit")
 	public ResponseEntity<?> profitMargin(@AuthenticationPrincipal Member member) {
 		return ResponseEntity.status(HttpStatus.OK).body(accountService.profitMargin(member));
-	}
-
-	@Operation(summary = "계좌 생성하기", description = "")
-	@PutMapping
-	public ResponseEntity<?> createAccount(@AuthenticationPrincipal Member member, @RequestParam Long productId) {
-		return ResponseEntity.ok(accountService.makeAccount(member, productId));
 	}
 
 	@Operation(summary = "모든 자유입출금 상품 확인하기", description = "여기에 있는 상품을 토대로 계좌를 생성해야 합니다.")
@@ -90,6 +88,7 @@ public class AccountController {
 					}
 			)
 	)
+
 	@PostMapping("/deposit")
 	public ResponseEntity<?> depositFunds(@AuthenticationPrincipal Member member, @RequestBody DepositRequest depositRequest) {
 		accountService.depositFunds(member, depositRequest);

@@ -1,5 +1,8 @@
 package com.im.moobeing.domain.member.controller;
 
+import com.im.moobeing.domain.account.service.AccountService;
+import com.im.moobeing.domain.member.dto.response.MemberCreateResponse;
+import com.im.moobeing.domain.member.dto.response.MemberGetResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,8 +36,8 @@ public class MemberController {
 
     @Operation(summary = "회원가입", description = "회원가입 합니다.")
     @PostMapping("/signup")
-    public ResponseEntity<?> createMember(@RequestBody MemberCreateRequest memberCreateRequest){
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.createMember(memberCreateRequest));
+    public ResponseEntity<MemberCreateResponse> createMember(@RequestBody MemberCreateRequest memberCreateRequest){
+        return ResponseEntity.ok(memberService.createMember(memberCreateRequest));
     }
 
     @Operation(summary = "로그인", description = "로그인 합니다.")
@@ -53,7 +56,7 @@ public class MemberController {
 
     @Operation(summary = "맴버 정보 가져오기", description = "맴버 정보 가져오기.")
     @GetMapping
-    public ResponseEntity<?> getMember(@AuthenticationPrincipal Member member) {
+    public ResponseEntity<MemberGetResponse> getMember(@AuthenticationPrincipal Member member) {
         return ResponseEntity.status(HttpStatus.OK).body(memberService.getMember(member));
     }
 

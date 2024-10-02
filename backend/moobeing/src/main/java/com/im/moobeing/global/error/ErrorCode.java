@@ -61,8 +61,10 @@ public enum ErrorCode {
 	// Loan
 	LN_CREDIT_SCORE_TOO_LOW(HttpStatus.FORBIDDEN, "LN001", "신용등급이 낮아 대출이 거절되었습니다."),
 	LN_ALREADY_EXISTS_PRODUCT(HttpStatus.TOO_MANY_REQUESTS, "LN002", "이미 대출 상품이 존재합니다."),
-	LN_INVALID_PRODUCT_CODE(HttpStatus.BAD_REQUEST, "LN003", "잘못된 상품 코드입니다.");
+	LN_INVALID_PRODUCT_CODE(HttpStatus.BAD_REQUEST, "LN003", "잘못된 상품 코드입니다."),
 
+	// Radish
+	RD_NO_RADISH(HttpStatus.BAD_REQUEST, "RD001", "없는 무로 캡슐을 만들 수 없습니다.");
 
 	private final HttpStatus status;
 	private final String code;

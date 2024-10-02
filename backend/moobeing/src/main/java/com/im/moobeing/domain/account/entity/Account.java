@@ -1,11 +1,14 @@
 package com.im.moobeing.domain.account.entity;
 
+import com.im.moobeing.domain.deal.entity.Deal;
 import com.im.moobeing.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity(name = "account")
 @Getter
@@ -17,9 +20,6 @@ public class Account {
 	@Column(name = "account_id")
 	private Long accountId;
 
-	@Column(name = "account_name")
-	private String accountName;
-
 	@Column(name = "account_num")
 	private String accountNum;
 
@@ -30,12 +30,20 @@ public class Account {
 	@Column(name = "account_balance")
 	private Long accountBalance;
 
+	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Deal> deals;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "account_product_id")
+	private AccountProduct accountProduct;
+
 	@Builder
-	public Account(Long accountId, String accountNum, Member member, Long accountBalance) {
+	public Account(Long accountId, String accountNum, Member member, Long accountBalance, AccountProduct accountProduct) {
 		this.accountId = accountId;
 		this.accountNum = accountNum;
 		this.accountBalance = accountBalance;
 		this.member = member;
+		this.accountProduct = accountProduct;
 	}
 
 	public void setAccountBalance(Long accountBalance) {

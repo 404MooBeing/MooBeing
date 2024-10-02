@@ -19,6 +19,9 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(name = "nickname")
+    private String nickname;
+
     @Column(name = "email", nullable = false, length = 40)
     private String email;
 
@@ -54,7 +57,7 @@ public class Member extends BaseTimeEntity {
     @Column
     private Boolean isGoodMember;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<MemberRadish> memberRadishes = new ArrayList<>();
 
     @Column
@@ -62,7 +65,7 @@ public class Member extends BaseTimeEntity {
     private List<Account> accounts = new ArrayList<>();
 
     @Builder
-    public Member(Long id, String email, String password, Long totalPoints, String name, String gender, String birthday, String userKey, Long selectedRadishId) {
+    public Member(Long id, String email, String password, Long totalPoints, String name, String gender, String birthday, String userKey, Long selectedRadishId, String nickname) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -72,6 +75,7 @@ public class Member extends BaseTimeEntity {
         this.birthday = birthday;
         this.userKey = userKey;
         this.selectedRadishId = selectedRadishId;
+        this.nickname = nickname;
     }
 
     public void changeMember(MemberChangeRequest memberChangeRequest){

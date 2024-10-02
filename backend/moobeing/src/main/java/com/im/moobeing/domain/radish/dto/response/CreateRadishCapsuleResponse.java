@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public record CreateRadishCapsuleResponse(
         LocalDateTime harvestAt,
         Double lat,
-        Double lng
+        Double lng,
+        String imageUrl
 ) {
 }

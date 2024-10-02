@@ -1,25 +1,28 @@
 package com.im.moobeing.domain.deal.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.im.moobeing.domain.deal.dto.response.PaymentSummaryResponse;
+import com.im.moobeing.domain.account.repository.AccountProductRepository;
 import com.im.moobeing.domain.deal.dto.request.DealCreateRequest;
+import com.im.moobeing.domain.deal.dto.request.TransactionHistoryRequest;
+import com.im.moobeing.domain.deal.dto.response.*;
 import com.im.moobeing.global.error.exception.BusinessException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.im.moobeing.domain.deal.dto.GetCategoryListDto;
 import com.im.moobeing.domain.deal.dto.GetDrawPiChartDto;
-import com.im.moobeing.domain.deal.dto.response.DealCategoryResponse;
-import com.im.moobeing.domain.deal.dto.response.DealDateResponse;
-import com.im.moobeing.domain.deal.dto.response.DealHistoryResponse;
-import com.im.moobeing.domain.deal.dto.response.GetDrawPiChartResponse;
 import com.im.moobeing.domain.deal.entity.Deal;
 import com.im.moobeing.domain.deal.entity.DealCategory;
 import com.im.moobeing.domain.deal.repository.DealRepository;
 import com.im.moobeing.domain.loan.entity.LoanRepaymentRecord;
 import com.im.moobeing.domain.loan.entity.MemberLoan;
-import com.im.moobeing.domain.loan.repository.LoanProductRepository;
 import com.im.moobeing.domain.loan.repository.LoanRepaymentRecordRepository;
 import com.im.moobeing.domain.loan.repository.MemberLoanRepository;
 import com.im.moobeing.domain.member.entity.Member;
@@ -37,6 +40,7 @@ public class DealService {
     private final DealRepository dealRepository;
     private final MemberLoanRepository memberLoanRepository;
     private final LoanRepaymentRecordRepository loanRepaymentRecordRepository;
+    private final AccountProductRepository accountProductRepository;
 
     public List<DealCategoryResponse> getDealCategory(Member member, Integer year, Integer month) {
         validateDate(year, month);
@@ -132,13 +136,14 @@ public class DealService {
 
     public GetDrawPiChartResponse drawPiChart(Member member, Integer year, Integer month) {
         validateDate(year, month);
-
-        List<Deal> deals = dealRepository.findAllByMemberAndYearAndMonth(member, year, month);
+        LocalDateTime start = YearMonth.of(year, month).atDay(1).atStartOfDay();
+        LocalDateTime end = YearMonth.of(year, month).atEndOfMonth().atTime(23, 59, 59);
+        List<Deal> deals = dealRepository.findAllExpenseByMemberAndDateRange(member, start, end);
 
         Map<DealCategory, Long> totalAmountsByCategory = deals.stream()
                 .collect(Collectors.groupingBy(
                         Deal::getDealCategory,
-                        Collectors.summingLong(Deal::getPrice)
+                        Collectors.summingLong(Deal::getAbsPrice)
                 ));
 
         List<GetDrawPiChartDto> getDrawPiChartDtoList = totalAmountsByCategory.entrySet().stream()
@@ -146,7 +151,7 @@ public class DealService {
                     DealCategory category = entry.getKey();
                     Long totalAmount = entry.getValue();
                     String color = getCategoryColor(category);  // Helper function to get category color
-                    return GetDrawPiChartDto.of(category.name(), category.getDescription(), totalAmount, color);
+                    return GetDrawPiChartDto.of(category.getDescription(), category.getDescription(), totalAmount, color);
                 })
                 .collect(Collectors.toList());
 
@@ -187,7 +192,7 @@ public class DealService {
         // 오늘을 포함시킬 경우 거래 내용에 변경이 생길 수 있다.
         LocalDate today = LocalDate.now().minusDays(1);
         LocalDate from = LocalDate.now().minusDays(7);
-        List<Deal> deals = dealRepository.findAllDealByCreatedDateBetween(from.atStartOfDay(), today.atStartOfDay());
+        List<Deal> deals = dealRepository.findAllByMemberAndDateRange(member, from.atStartOfDay(), today.atStartOfDay());
 
         Map<String, Long> totalDealsByCategory = deals.stream()
                 .collect(Collectors.groupingBy(
@@ -201,5 +206,82 @@ public class DealService {
                         .totalPrice(entry.getValue())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public List<TransactionHistoryResponse> getTransactionHistory(TransactionHistoryRequest request, Member member) {
+        int pageSize = 10;
+
+        LocalDateTime startDate = LocalDateTime.now().minusMonths(Objects.isNull(request.months()) ? 9999 : request.months()); // month 없이 요청하면 다 가져오기
+        LocalDateTime endDate = LocalDateTime.now();
+        Pageable pageable = PageRequest.of(request.page() - 1, pageSize);
+
+        List<Deal> deals = dealRepository.findAllByAccountAndDateRange(
+                request.accountId(),
+                member.getId(),
+                startDate,
+                endDate,
+                request.transactionType(),
+                pageable
+        );
+
+        return deals.stream()
+                .map(TransactionHistoryResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<AccountSummaryResponse> getAccountSummary(Member member, Integer year, Integer month, Integer day) {
+        List<Deal> deals = dealRepository.findAllByMemberAndYearAndMonthAndDay(member, year, month, day);
+
+        Map<Long, Long> totalAmountByAccount = deals.stream()
+                .collect(Collectors.groupingBy(
+                        deal -> deal.getAccount().getAccountId(),
+                        Collectors.summingLong(Deal::getPrice)
+                ));
+
+        return totalAmountByAccount.entrySet().stream()
+                .map(entry -> {
+                    Deal deal = deals.stream()
+                            .filter(d -> d.getAccount().getAccountId().equals(entry.getKey()))
+                            .findFirst()
+                            .orElseThrow(() -> new BadRequestException(ErrorCode.BAD_REQUEST));
+
+                    String bankImage = accountProductRepository.findByAccountName(deal.getAccount().getAccountProduct().getAccountName())
+                            .orElseThrow(() -> new BadRequestException(ErrorCode.BAD_REQUEST))
+                            .getBankImage();
+
+                    return new AccountSummaryResponse(
+                            entry.getKey(),
+                            bankImage,
+                            deal.getAccount().getAccountProduct().getAccountName(),
+                            entry.getValue()
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+
+    public PaymentSummaryResponse getPaymentSummary(Member member) {
+        LocalDateTime beforeStart = YearMonth.now().minusMonths(1).atDay(1).atStartOfDay();
+        LocalDateTime beforeEnd = LocalDate.now().minusMonths(1).plusDays(1).atStartOfDay();
+        LocalDateTime afterStart = YearMonth.now().atDay(1).atStartOfDay();
+
+        Long lastMonthSum = dealRepository.findAllExpenseByMemberAndDateRange(member, beforeStart, afterStart)
+                .stream().mapToLong(Deal::getPrice).sum();
+        long lastSum = dealRepository.findAllExpenseByMemberAndDateRange(member, beforeStart, beforeEnd)
+                .stream().mapToLong(Deal::getPrice).sum();
+        long nowSum = dealRepository.findAllExpenseByMemberAndDateRange(member, afterStart, LocalDateTime.now())
+                .stream().mapToLong(Deal::getPrice).sum();
+
+        long difference = nowSum - lastSum;
+
+        String message;
+        if (difference < 0) {
+            message = "지난 달보다 " + Math.abs(difference) + "원 더 썼어요!";
+        } else if (difference > 0) {
+            message = "지난 달보다 " + Math.abs(difference) + "원 덜 썼어요!";
+        } else {
+            message = "지난 달과 같은 금액을 썼어요!";
+        }
+
+        return new PaymentSummaryResponse(lastMonthSum, message, lastSum < nowSum);
     }
 }
