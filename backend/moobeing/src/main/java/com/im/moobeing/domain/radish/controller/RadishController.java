@@ -28,10 +28,16 @@ public class RadishController {
     private final RadishService radishService;
     private final RadishCapsuleRepository radishCapsuleRepository;
 
-    @Operation(summary = "나의 무들 확인", description = "캡슐 심기 전 보유 중인 무를 반환합니다. 이후 radishId를 함께 요청")
+    @Operation(summary = "나의 무들 확인", description = "보유 중인 무를 반환합니다. 이후 radishId를 함께 요청")
     @GetMapping("/characters")
     public ResponseEntity<List<CharactersResponse>> getCharacters(@AuthenticationPrincipal Member member) {
-        return ResponseEntity.ok(radishService.characters(member));
+        return ResponseEntity.ok(radishService.characters(member, true));
+    }
+
+    @Operation(summary = "나의 무들 확인 아기 무 없음", description = "캡슐 심기 전 보유 중인 무를 반환합니다. 이후 radishId를 함께 요청")
+    @GetMapping("/growncharacters")
+    public ResponseEntity<List<CharactersResponse>> getGrownCharacters(@AuthenticationPrincipal Member member) {
+        return ResponseEntity.ok(radishService.characters(member, false));
     }
 
     @Operation(summary = "무 심기", description = "무를 심습니다. 수확일자, 위치 반환")
