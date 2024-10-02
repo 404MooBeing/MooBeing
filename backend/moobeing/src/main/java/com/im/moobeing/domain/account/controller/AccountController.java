@@ -30,7 +30,7 @@ public class AccountController {
 	}
 
 	@Operation(summary = "예원의 계좌 잔액 총 합 조회", description = "리스트를 돌며 sum을 한다.")
-	@GetMapping
+	@GetMapping("/sum")
 	public ResponseEntity<Long> getBalance(@AuthenticationPrincipal Member member) {
 		return ResponseEntity.ok(accountService.sumBalance(member));
 	}
