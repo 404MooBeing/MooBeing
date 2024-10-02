@@ -4,8 +4,11 @@ import com.im.moobeing.domain.member.dto.request.*;
 import com.im.moobeing.domain.member.dto.response.*;
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.domain.member.entity.MemberRadish;
+import com.im.moobeing.domain.member.entity.Nickname;
 import com.im.moobeing.domain.member.repository.MemberRadishRepository;
 import com.im.moobeing.domain.member.repository.MemberRepository;
+import com.im.moobeing.domain.member.repository.NicknameRepository;
+import com.im.moobeing.domain.member.repository.NicknameWordRepository;
 import com.im.moobeing.domain.radish.entity.Radish;
 import com.im.moobeing.domain.radish.entity.RadishTime;
 import com.im.moobeing.domain.radish.repository.RadishRepository;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -30,10 +34,9 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final RadishRepository radishRepository;
-    private final ShinhanClient shinhanClient;
-    private final ApiKeyConfig apiKeyConfig;
     private final MemberRadishRepository memberRadishRepository;
     private final RadishTimeRepository radishTimeRepository;
+    private final NicknameRepository nicknameRepository;
 
     @Transactional
     public MemberCreateResponse createMember(MemberCreateRequest memberCreateRequest) {
@@ -55,12 +58,16 @@ public class MemberService {
             throw new RuntimeException("둘다 아니다. 넌 누구냐");
         }
 
+
+
         Member member = Member.builder()
                 .email(memberCreateRequest.getEmail())
                 .password(memberCreateRequest.getPassword())
                 .name(memberCreateRequest.getName())
                 .birthday(birthDay)
                 .gender(gender)
+                .nickname(getNewNickname())
+                .selectedRadishId(1L)
                 .build();
 
 //        //todo exception 설정 필요
@@ -85,6 +92,15 @@ public class MemberService {
         return MemberCreateResponse.of(member); // 저장된 멤버 정보를 바탕으로 응답 생성
     }
 
+    private String getNewNickname() {
+        String name = NicknameWordRepository.getRandomNickname();
+        Optional<Nickname> optionalNickname = nicknameRepository.findByNickname(name);
+        long sequence = optionalNickname.map(value -> value.getNextSequence() + 1).orElse(1L);
+        Nickname nickname = new Nickname(name, sequence);
+        nicknameRepository.save(nickname);
+        return nickname.getNickname();
+    }
+
     public Member loginMember(MemberLoginRequest memberLoginRequest) {
         // 사용자 정보 조회
         Member member = memberRepository.findByEmail(memberLoginRequest.getEmail())
@@ -107,7 +123,10 @@ public class MemberService {
     }
 
     public MemberGetResponse getMember(Member member) {
-        return MemberGetResponse.of(member);
+        Radish radish = radishRepository.findById(member.getSelectedRadishId())
+                .orElseThrow(() -> new IllegalArgumentException("Radish not found with id: " + member.getSelectedRadishId()));
+
+        return MemberGetResponse.of(member, radish.getRadishImageUrl());
     }
 
     @Transactional
