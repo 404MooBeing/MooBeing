@@ -1,8 +1,8 @@
 -- 1. 맴버 생성
 INSERT IGNORE INTO member
-(member_id, email, password, total_points, name, gender, birthday, user_key, selected_radish_id, month_aver, month_complete, is_good_member)
+(member_id, email, nickname, password, total_points, name, gender, birthday, user_key, selected_radish_id, month_aver, month_complete, is_good_member)
 VALUES
-    (1, 'test@gmail.com', 'test', 0, '김몰리', 'M', '000101', 'user_key_123', 1, 2000000, FALSE, false);
+    (1, 'test@gmail.com', '귀여운 무신사' , 'test', 0, '김몰리', 'M', '000101', 'user_key_123', 1, 2000000, FALSE, false);
 
 
 -- 1.5. Account Product 테이블에 상품 데이터 삽입
