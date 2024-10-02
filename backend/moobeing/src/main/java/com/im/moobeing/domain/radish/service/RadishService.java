@@ -7,10 +7,7 @@ import com.im.moobeing.domain.member.entity.MemberRadish;
 import com.im.moobeing.domain.member.repository.MemberRadishRepository;
 import com.im.moobeing.domain.radish.dto.request.CreateRadishCapsuleRequest;
 import com.im.moobeing.domain.radish.dto.request.RadishCapsuleAreaRequest;
-import com.im.moobeing.domain.radish.dto.response.CharactersResponse;
-import com.im.moobeing.domain.radish.dto.response.CreateRadishCapsuleResponse;
-import com.im.moobeing.domain.radish.dto.response.RadishCapsuleAreaResponse;
-import com.im.moobeing.domain.radish.dto.response.RadishCapsuleResponse;
+import com.im.moobeing.domain.radish.dto.response.*;
 import com.im.moobeing.domain.radish.entity.CapsuleType;
 import com.im.moobeing.domain.radish.entity.RadishCapsule;
 import com.im.moobeing.domain.radish.repository.RadishCapsuleRepository;
@@ -132,5 +129,17 @@ public class RadishService {
         return capsules.stream()
                 .map(RadishCapsuleAreaResponse::of)
                 .collect(Collectors.toList());
+    }
+
+    public CapsuleSummaryResponse getRadishSummary(Member member) {
+        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
+        List<RadishCapsule> capsules = radishCapsuleRepository.findAllByIsHarvestedAndMemberIdOrderByCreateAtDesc(false, member.getId(), pageable);
+        int count = capsules.size();
+        LocalDateTime time = capsules.stream()
+                .map(RadishCapsule::getEndAt)
+                .sorted()
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException(ErrorCode.INTERNAL_SERVER_ERROR));
+        return new CapsuleSummaryResponse(time, count);
     }
 }

@@ -3,10 +3,7 @@ package com.im.moobeing.domain.radish.controller;
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.domain.radish.dto.request.CreateRadishCapsuleRequest;
 import com.im.moobeing.domain.radish.dto.request.RadishCapsuleAreaRequest;
-import com.im.moobeing.domain.radish.dto.response.CharactersResponse;
-import com.im.moobeing.domain.radish.dto.response.CreateRadishCapsuleResponse;
-import com.im.moobeing.domain.radish.dto.response.RadishCapsuleAreaResponse;
-import com.im.moobeing.domain.radish.dto.response.RadishCapsuleResponse;
+import com.im.moobeing.domain.radish.dto.response.*;
 import com.im.moobeing.domain.radish.entity.RadishCapsule;
 import com.im.moobeing.domain.radish.repository.RadishCapsuleRepository;
 import com.im.moobeing.domain.radish.service.RadishService;
@@ -80,5 +77,10 @@ public class RadishController {
             @RequestBody RadishCapsuleAreaRequest request) {
         List<RadishCapsuleAreaResponse> responses = radishService.findUnharvestedCapsulesInArea(member, request);
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<CapsuleSummaryResponse> getSummaryRadish(@AuthenticationPrincipal Member member) {
+        return ResponseEntity.ok(radishService.getRadishSummary(member));
     }
 }
