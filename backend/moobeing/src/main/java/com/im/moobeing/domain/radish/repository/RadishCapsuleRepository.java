@@ -10,12 +10,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RadishCapsuleRepository extends JpaRepository<RadishCapsule, Long> {
-    @Query("SELECT r FROM radish_capsule r WHERE r.isHarvested = true AND r.member.id = :memberId AND r.createAt <= :endDate " +
-            "ORDER BY r.createAt DESC")  // 역순 정렬 추가
-    List<RadishCapsule> findHarvestedRadishByMemberAndBeforeDate(
+    @Query("SELECT r FROM radish_capsule r WHERE r.isHarvested = true AND r.member.id = :memberId " +
+            "AND r.createAt BETWEEN :startDate AND :endDate " +
+            "ORDER BY r.createAt DESC")
+    List<RadishCapsule> findHarvestedRadishByMemberAndDateRange(
             @Param("memberId") Long memberId,
+            @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable);
+
     List<RadishCapsule> findAllByIsHarvestedAndMemberIdOrderByCreateAtDesc(boolean isHarvested, Long memberId, Pageable pageable);
     @Query("SELECT rc FROM radish_capsule rc WHERE rc.member.id = :memberId " +
             "AND rc.isHarvested = false " +
