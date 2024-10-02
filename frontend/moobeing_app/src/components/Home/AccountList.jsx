@@ -151,10 +151,11 @@ const AccountList = () => {
         // accountData.getAccountDtoList를 상태에 저장
         if (accountData && Array.isArray(accountData.getAccountDtoList)) {
           const processedAccounts = accountData.getAccountDtoList.map(account => ({
-            bankImageUrl: "", // 적절한 이미지 경로 추가 또는 매핑
+            id: account.id,
+            bankImageUrl: account.bankImageUrl,
             accountName: account.accountName,
             accountNum: account.accountNum,
-            remainingBalance: account.balance,
+            remainingBalance: account.remainingBalance,
           }));
           setAccounts(processedAccounts);
         } else {
@@ -191,6 +192,8 @@ const AccountList = () => {
 
   const visibleAccounts = accounts.slice(currentIndex, currentIndex + accountsPerPage);
   const currentPage = Math.floor(currentIndex / accountsPerPage) + 1;
+
+  console.log('여기 확인!!!!!!!', accounts)
 
   return (
     <>
