@@ -2,6 +2,7 @@ import styled, { keyframes } from "styled-components";
 import useDateStore from "../../store/DateStore";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import useUserStore from "../../store/UserStore";
 
 // 반짝이는 애니메이션 정의
 const sparkle = keyframes`
@@ -99,7 +100,7 @@ const MonthText = styled.span`
 const PageTitle = ({ totalExpense, setViewMode, viewMode }) => {
   const { selectedDate } = useDateStore(); // Zustand로부터 date 가져오기
   const navigate = useNavigate();
-  const dummyUserInfo = { name: "사용자" };
+  const user = useUserStore();
 
   const toggle = (mode) => {
     setViewMode(mode);
@@ -109,7 +110,7 @@ const PageTitle = ({ totalExpense, setViewMode, viewMode }) => {
     navigate("/moobti");
   };
 
-  const userName = dummyUserInfo.name ? dummyUserInfo.name : "사용자";
+  const userName = user.userInfo.name ? user.userInfo.name : "사용자";
 
   // 현재 날짜의 월을 가져옴
   const currentMonth = dayjs().format("MM");

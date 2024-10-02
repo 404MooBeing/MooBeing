@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import DropDownArrow from "../../assets/dropdown/DropdownArrow.png";
 import CopyButton from "../../assets/button/copyButton.svg";

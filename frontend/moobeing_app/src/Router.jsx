@@ -31,17 +31,12 @@ import Spend from "./pages/SpendPage";
 import TransactionHistory from "./pages/TransactionHistoryPage";
 import Welcome from "./pages/WelcomePage";
 
-import { useUserStore, testLogin } from "./store/UserStore";
+import useUserStore from "./store/UserStore";
 
 function Router() {
   const location = useLocation();
   const navigate = useNavigate();
   const userInfo = useUserStore((state) => state.userInfo);
-
-  // 무조건 로그인된 상태로 테스트하기 위해 testLogin 호출
-  useEffect(() => {
-    testLogin();
-  }, []);
 
   // 로그인되지 않았을 경우 로그인 페이지로 리디렉션
   useEffect(() => {
