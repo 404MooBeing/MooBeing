@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = import.meta.env?.REACT_APP_BASE_URL || 'http://localhost:3000';
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3000';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -22,13 +22,23 @@ const dummyAccountInfo = {
 };
 
 // 통장 조회
+// export const getAccountInfo = async () => {
+//   try {
+//     return new Promise((resolve) => {
+//       setTimeout(() => {
+//         resolve(dummyAccountInfo);
+//       }, 500);
+//     });
+//   } catch (error) {
+//     console.error("통장 조회 실패:", error);
+//     throw error;
+//   }
+// };
+
 export const getAccountInfo = async () => {
   try {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(dummyAccountInfo);
-      }, 500);
-    });
+    const response = await api.get('/account')
+    return response.data
   } catch (error) {
     console.error("통장 조회 실패:", error);
     throw error;
