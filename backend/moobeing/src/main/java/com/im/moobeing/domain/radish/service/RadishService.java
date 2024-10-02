@@ -72,13 +72,11 @@ public class RadishService {
         return new CreateRadishCapsuleResponse(radishCapsule.getEndAt(), radishCapsule.getLat(), radishCapsule.getLng(), radishCapsule.getImgUrl());
     }
 
-    public List<CharactersResponse> characters(Member member, boolean isIncludeBaby) {
+    public List<CharactersResponse> characters(Member member) {
         return memberRadishRepository.findByMemberId(member.getId())
                 .stream()
                 .filter(memberRadish -> !Objects.isNull(memberRadish.getRadishNumber()) && memberRadish.getRadishNumber() > 0)
                 .map(mr -> CharactersResponse.of(mr.getRadish(), mr.getRadishNumber()))
-                .filter(charactersResponse -> isIncludeBaby || charactersResponse.radishId() != 3L)
-                .sorted((o1, o2) -> o1.radishId() < o2.radishId() ? -1 : 1)
                 .toList();
     }
 
