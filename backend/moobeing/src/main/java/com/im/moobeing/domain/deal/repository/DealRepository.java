@@ -39,4 +39,9 @@ public interface DealRepository extends JpaRepository<Deal, Long> {
                                             @Param("endDate") LocalDateTime endDate,
                                             @Param("transactionType") String transactionType,
                                             Pageable pageable);
+
+    @Query("SELECT d FROM Deal d WHERE d.member = :member AND d.createdDate BETWEEN :startDate AND :endDate AND d.price < 0")
+    List<Deal> findAllExpenseByMemberAndDateRange(@Param("member") Member member,
+                                           @Param("startDate") LocalDateTime startDate,
+                                           @Param("endDate") LocalDateTime endDate);
 }

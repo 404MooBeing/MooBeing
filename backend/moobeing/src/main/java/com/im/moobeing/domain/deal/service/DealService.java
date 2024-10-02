@@ -2,10 +2,11 @@ package com.im.moobeing.domain.deal.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.im.moobeing.domain.account.entity.AccountProduct;
+import com.im.moobeing.domain.deal.dto.response.PaymentSummaryResponse;
 import com.im.moobeing.domain.account.repository.AccountProductRepository;
 import com.im.moobeing.domain.deal.dto.request.DealCreateRequest;
 import com.im.moobeing.domain.deal.dto.request.TransactionHistoryRequest;
@@ -22,7 +23,6 @@ import com.im.moobeing.domain.deal.entity.DealCategory;
 import com.im.moobeing.domain.deal.repository.DealRepository;
 import com.im.moobeing.domain.loan.entity.LoanRepaymentRecord;
 import com.im.moobeing.domain.loan.entity.MemberLoan;
-import com.im.moobeing.domain.loan.repository.LoanProductRepository;
 import com.im.moobeing.domain.loan.repository.LoanRepaymentRecordRepository;
 import com.im.moobeing.domain.loan.repository.MemberLoanRepository;
 import com.im.moobeing.domain.member.entity.Member;
@@ -256,5 +256,31 @@ public class DealService {
                     );
                 })
                 .collect(Collectors.toList());
+    }
+
+    public PaymentSummaryResponse getPaymentSummary(Member member) {
+        LocalDateTime beforeStart = YearMonth.now().minusMonths(1).atDay(1).atStartOfDay();
+        LocalDateTime beforeEnd = LocalDate.now().minusMonths(1).plusDays(1).atStartOfDay();
+        LocalDateTime afterStart = YearMonth.now().atDay(1).atStartOfDay();
+
+        Long lastMonthSum = dealRepository.findAllExpenseByMemberAndDateRange(member, beforeStart, afterStart)
+                .stream().mapToLong(Deal::getPrice).sum();
+        long lastSum = dealRepository.findAllExpenseByMemberAndDateRange(member, beforeStart, beforeEnd)
+                .stream().mapToLong(Deal::getPrice).sum();
+        long nowSum = dealRepository.findAllExpenseByMemberAndDateRange(member, afterStart, LocalDateTime.now())
+                .stream().mapToLong(Deal::getPrice).sum();
+
+        long difference = nowSum - lastSum;
+
+        String message;
+        if (difference < 0) {
+            message = "지난 달보다 " + Math.abs(difference) + "원 더 썼어요!";
+        } else if (difference > 0) {
+            message = "지난 달보다 " + Math.abs(difference) + "원 덜 썼어요!";
+        } else {
+            message = "지난 달과 같은 금액을 썼어요!";
+        }
+
+        return new PaymentSummaryResponse(lastMonthSum, message, lastSum < nowSum);
     }
 }

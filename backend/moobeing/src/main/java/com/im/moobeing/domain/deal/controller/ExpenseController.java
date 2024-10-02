@@ -2,12 +2,13 @@ package com.im.moobeing.domain.deal.controller;
 
 import java.util.List;
 
+import com.im.moobeing.domain.account.service.AccountService;
+import com.im.moobeing.domain.deal.dto.response.PaymentSummaryResponse;
 import com.im.moobeing.domain.deal.dto.request.TransactionHistoryRequest;
 import com.im.moobeing.domain.deal.dto.response.AccountSummaryResponse;
 import com.im.moobeing.domain.deal.dto.response.TransactionHistoryResponse;
 import com.im.moobeing.domain.deal.service.DealService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 @Slf4j
 public class ExpenseController {
 	private final DealService dealService;
+	private final AccountService accountService;
 
 	@Operation(summary = "소비 카테고리별 조회", description = "사용자의 한달간 소비를 카테고리별로 조회한다.")
 	@ApiResponse(responseCode = "401", description = "사용자 인증이 올바르지 않음",
@@ -113,5 +115,10 @@ public class ExpenseController {
 			@RequestParam Integer day
 	) {
 		return ResponseEntity.ok(dealService.getAccountSummary(member, year, month, day));
+	}
+
+	@GetMapping("/summary")
+	public ResponseEntity<PaymentSummaryResponse> getPaymentSummary(@AuthenticationPrincipal Member member) {
+		return ResponseEntity.ok(dealService.getPaymentSummary(member));
 	}
 }
