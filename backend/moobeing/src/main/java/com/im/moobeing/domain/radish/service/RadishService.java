@@ -94,10 +94,10 @@ public class RadishService {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(page - 1, pageSize);
 
-        YearMonth yearMonth = YearMonth.of(year, month);
-        LocalDateTime endDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
+        LocalDateTime startDate = YearMonth.of(year, month).atDay(1).atStartOfDay();
+        LocalDateTime endDate = YearMonth.of(year, month).atEndOfMonth().atTime(23, 59, 59);
 
-        List<RadishCapsule> capsules = radishCapsuleRepository.findHarvestedRadishByMemberAndBeforeDate(member.getId(), endDate, pageable);
+        List<RadishCapsule> capsules = radishCapsuleRepository.findHarvestedRadishByMemberAndDateRange(member.getId(), startDate, endDate, pageable);
 
         return capsules.stream()
                 .map(RadishCapsuleResponse::of)
