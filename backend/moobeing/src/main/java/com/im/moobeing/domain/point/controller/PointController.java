@@ -53,4 +53,9 @@ public class PointController {
         log.error(String.valueOf(member.getId()));
         return ResponseEntity.ok(pointService.getPointTransactionHistory(request, member));
     }
+
+    @GetMapping("/my")
+    public ResponseEntity<Long> getMyPoint(@AuthenticationPrincipal Member member) {
+        return ResponseEntity.ok(pointService.getCurrentBalance(member));
+    }
 }

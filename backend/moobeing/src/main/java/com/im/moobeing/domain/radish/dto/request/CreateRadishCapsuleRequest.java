@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class CreateRadishCapsuleRequest {
 
     private Long dealId;
