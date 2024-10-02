@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record TransactionHistoryRequest(
         @Schema(description = "조회할 계좌 ID", example = "1") Long accountId,
-        @Schema(description = "조회할 기간 (1개월, 3개월, 6개월, 1년 중 하나)", example = "3") Integer months,
-        @Schema(description = "거래 유형 (전체, 입금, 출금)", example = "all") String transactionType,
+        @Schema(description = "조회할 기간 (1개월, 3개월, 6개월, 1년 중 하나)", example = "3개월") Integer months,
+        @Schema(description = "거래 유형 (전체, 입금, 출금 중 하나)", example = "전체") String transactionType,
         @Schema(description = "페이지 번호", example = "1") int page
 ) {
 
