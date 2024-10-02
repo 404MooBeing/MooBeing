@@ -29,6 +29,12 @@ public class AccountController {
 		return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccount(member));
 	}
 
+	@Operation(summary = "예원의 계좌 잔액 총 합 조회", description = "리스트를 돌며 sum을 한다.")
+	@GetMapping
+	public ResponseEntity<Long> getBalance(@AuthenticationPrincipal Member member) {
+		return ResponseEntity.ok(accountService.sumBalance(member));
+	}
+
 	@Operation(summary = "대출금 상납", description = "대출금 상납하기")
 	@PostMapping
 	public ResponseEntity<?> sendAccount(@AuthenticationPrincipal Member member, @RequestBody SendAccountRequest sendAccountRequest) {
