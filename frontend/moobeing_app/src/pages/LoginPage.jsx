@@ -136,7 +136,7 @@ const Login = () => {
   };
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     const loginData = {
       email: email,
       password: password,

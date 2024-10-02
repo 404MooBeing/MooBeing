@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { getAccountInfo } from "../../apis/AccountApi";
 import goToJourney from "../../assets/button/goToJourney.svg";
 import leftButton from "../../assets/button/leftButton.svg";
 import rightButton from "../../assets/button/rightButton.svg";
@@ -33,6 +34,7 @@ const AccountInfo = styled.div`
 const AccountName = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
   font-size: 13px;
 
   @media (min-width: 600px) {
@@ -50,7 +52,7 @@ const AccountItem = styled.div`
 `;
 
 const NavigateButton = styled.button`
-  margin: 2px 4px;
+  margin: 2px;
   cursor: pointer;
   background-color: transparent;
   border: none;
@@ -139,40 +141,32 @@ const AccountList = () => {
   const totalPages = Math.ceil(accounts.length / accountsPerPage);
   const navigate = useNavigate();
 
+  // API 호출을 통한 계좌 정보 가져오기
   useEffect(() => {
-    const dummyAccounts = [
-      {
-        bankImageUrl: Hana,
-        accountName: "하나은행 일반 계좌",
-        remainingBalance: 1000000,
-        interestRate: 1.5,
-        accountNum: '1003-2293-332-1',
-      },
-      {
-        bankImageUrl: NongHyup,
-        accountName: "농협은행 정기예금",
-        remainingBalance: 500000,
-        interestRate: 2.0,
-        accountNum: '3244-2293-332-1',
-      },
-      {
-        bankImageUrl: ShinHan,
-        accountName: "신한은행 적금",
-        remainingBalance: 750000,
-        interestRate: 1.8,
-        accountNum: '3324-33435-333-1',
-      },
-      {
-        bankImageUrl: WooRi,
-        accountName: "우리은행 주택청약",
-        remainingBalance: 300000,
-        interestRate: 1.2,
-        accountNum: '3324-3838-333-1',
-      },
-    ];
+    const fetchAccountInfo = async () => {
+      try {
+        const accountData = await getAccountInfo(); // API 호출
+        console.log(accountData); // 데이터 구조 확인을 위한 콘솔 로그
 
-    setAccounts(dummyAccounts);
-  }, []);
+        // accountData.getAccountDtoList를 상태에 저장
+        if (accountData && Array.isArray(accountData.getAccountDtoList)) {
+          const processedAccounts = accountData.getAccountDtoList.map(account => ({
+            bankImageUrl: "", // 적절한 이미지 경로 추가 또는 매핑
+            accountName: account.accountName,
+            accountNum: account.accountNum,
+            remainingBalance: account.balance,
+          }));
+          setAccounts(processedAccounts);
+        } else {
+          console.error("계좌 목록이 배열이 아닙니다.");
+        }
+      } catch (error) {
+        console.error("계좌 정보 불러오기 실패:", error);
+      }
+    };
+
+    fetchAccountInfo(); // 함수 실행
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   const handleScrollNext = () => {
     setCurrentIndex((prevIndex) => {
@@ -208,7 +202,7 @@ const AccountList = () => {
                 key={index}
                 onClick={() => navigateToSpend(account)}
               >
-                <BankLogo src={account.bankImageUrl} alt="로고" />
+                <BankLogo src={account.bankImageUrl || basicRad} alt="로고" />
                 <AccountInfo>
                   <AccountName>
                     <div>{account.accountName}</div>
@@ -250,6 +244,6 @@ const AccountList = () => {
       )}
     </>
   );
-}
+};
 
 export default AccountList;
