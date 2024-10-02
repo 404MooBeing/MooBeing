@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import useCapsuleStore from "../store/Capsule";
+import useCapsuleStore from "../store/CapsuleStore";
 
 const Container = styled.div`
   display: flex;
@@ -130,7 +130,8 @@ const NextButton = styled.button`
 
 function CapsuleMessage() {
   const [text, setText] = useState("");
-  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -142,7 +143,7 @@ function CapsuleMessage() {
   } = useCapsuleStore();
 
   const handleNext = () => {
-    updateImgAndDescription(image, text);
+    updateImgAndDescription(imageFile, text);
     console.log(useCapsuleStore.getState());
     navigate("/choose-character");
   };
@@ -156,7 +157,8 @@ function CapsuleMessage() {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setImage(URL.createObjectURL(file));
+      setImageFile(file); // 진짜 이미지 파일
+      setImagePreview(URL.createObjectURL(file)); // 미리보기용 이미지
     }
   };
 
@@ -175,9 +177,9 @@ function CapsuleMessage() {
       </TransactionBox>
 
       <ImgForm>
-        {image ? (
+        {imagePreview ? (
           <>
-            <ImagePreview src={image} alt="Preview" />
+            <ImagePreview src={imagePreview} alt="Preview" />
             <ReselectionButton onClick={handleImageSelection}>
               다시 선택
             </ReselectionButton>

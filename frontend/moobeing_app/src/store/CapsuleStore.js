@@ -1,11 +1,11 @@
 import { create } from "zustand";
 
 const useCapsuleStore = create((set) => ({
-  // 초기 상태 정의
+  dealId: 1, // transaction의 아이디
   transactionName: "",
   transactionAmount: 0,
   transactionDate: "",
-  imgFile: "", // null could be possible
+  imgFile: "", // null가능
   description: "",
   type: "", // SMALL_RADISH, MEDIUM_RADISH, LARGE_RADISH
   radishId: "",
@@ -16,18 +16,19 @@ const useCapsuleStore = create((set) => ({
   placeName: "",
 
   // 그룹 1: 거래 정보 업데이트 함수
-  updateTransactionInfo: (name, amount, date) =>
+  updateTransactionInfo: (id, name, amount, date) =>
     set((state) => ({
+      dealId: id,
       transactionName: name,
       transactionAmount: amount,
       transactionDate: date,
     })),
 
   // 그룹 2: 이미지 파일 및 설명 업데이트 함수
-  updateImgAndDescription: (file, desc) =>
-    set((state) => ({
-      imgFile: file,
-      description: desc,
+  updateImgAndDescription: (imgFile, description) =>
+    set(() => ({
+      imgFile,
+      description,
     })),
 
   // 그룹 3: 타입 및 수확 정보 업데이트 함수
