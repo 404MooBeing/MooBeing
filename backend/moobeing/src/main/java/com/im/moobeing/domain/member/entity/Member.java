@@ -57,7 +57,7 @@ public class Member extends BaseTimeEntity {
     @Column
     private Boolean isGoodMember;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<MemberRadish> memberRadishes = new ArrayList<>();
 
     @Column
