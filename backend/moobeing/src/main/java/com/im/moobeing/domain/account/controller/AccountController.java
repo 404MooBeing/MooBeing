@@ -95,11 +95,4 @@ public class AccountController {
 		accountService.depositFunds(member, depositRequest);
 		return ResponseEntity.ok(null);
 	}
-
-	@Operation(summary = "남은 금액 확인", description = "월 평균 사용 금액과 실 사용 금액을 비교하여 남은 금액을 나타냅니다.")
-	@GetMapping("/remainder")
-	public ResponseEntity<?> getMonthlyRemainder(@AuthenticationPrincipal Member member) {
-		return ResponseEntity.status(HttpStatus.OK).body(accountService.getMonthlyRemainder(member));
-	}
-
 }
