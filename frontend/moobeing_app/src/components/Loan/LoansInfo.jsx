@@ -26,7 +26,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 20px; // 패딩 조정
+  padding: 8%; // 패딩 조정
   box-sizing: border-box;
   animation: ${(props) =>
     props.$isclosing
