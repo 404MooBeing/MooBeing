@@ -6,10 +6,7 @@ import com.im.moobeing.domain.account.dto.request.CreateAccountProductRequest;
 import com.im.moobeing.domain.account.dto.request.DepositRequest;
 import com.im.moobeing.domain.account.dto.request.SendAccountRequest;
 import com.im.moobeing.domain.account.dto.request.TransferRequest;
-import com.im.moobeing.domain.account.dto.response.AccountProductResponse;
-import com.im.moobeing.domain.account.dto.response.GetAccountResponse;
-import com.im.moobeing.domain.account.dto.response.ProfitMarginResponse;
-import com.im.moobeing.domain.account.dto.response.SendAccountResponse;
+import com.im.moobeing.domain.account.dto.response.*;
 import com.im.moobeing.domain.account.entity.Account;
 import com.im.moobeing.domain.account.entity.AccountProduct;
 import com.im.moobeing.domain.account.repository.AccountProductRepository;
@@ -106,8 +103,7 @@ public class AccountService {
 
 		return SendAccountResponse.of(oldAccountBalance);
 	}
-
-	public ProfitMarginResponse profitMargin(Member member) {
+	public RemainderResponse getMonthlyRemainder(Member member) {
 		// 저번 달 지출 비용 확인하기. 현재 시간을
 		int beforeYear = LocalDateTime.now().getYear();
 		int beforeMonth = LocalDateTime.now().getMonthValue() - 1;
@@ -121,15 +117,20 @@ public class AccountService {
 
 		// 만약 지난달에 초과 지출하거나,
 		if (remainder < 0){
-			return ProfitMarginResponse.of(0L,null);
+			return RemainderResponse.of(0L);
 		}
+		return RemainderResponse.of(remainder);
+	}
+
+	public ProfitMarginResponse profitMargin(Member member) {
+
 
 		List<MemberLoan> memberLoan = memberLoanRepository.findAllByMemberId(member.getId());
 
 		List<LoanListDto> loanList = new ArrayList<>();
 
 		for (MemberLoan loan : memberLoan) {
-			Long canPay = loan.getRemainingBalance() - remainder;
+			Long canPay = loan.getRemainingBalance();
 			LoanProduct loanProduct = loanProductRepository.findByLoanName(loan.getLoanProductName())
 					.orElseThrow(()-> new BusinessException(ErrorCode.LP_NOT_FOUND));
 			if (canPay <= 0){
@@ -140,7 +141,7 @@ public class AccountService {
 			loanList.add(LoanListDto.of(loan.getLoanProductName(), interestBalance));
 		}
 
-		return ProfitMarginResponse.of(remainder, loanList);
+		return ProfitMarginResponse.of(11L, loanList);
 	}
 
 	private static Long loanInterestSavingsCalculation(Long principal, double annualInterestRate, int loanTermMonths, Long extraPayment) {
