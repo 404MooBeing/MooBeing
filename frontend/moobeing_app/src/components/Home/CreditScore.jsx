@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { darken } from "polished"; // polished에서 darken 가져오기
 import radish from "../../assets/radishes/basicRad.svg";
+import { getCreditRate } from "../../apis/UserApi"; // API import
 
 // 신용등급별 색상
 const GraphColors = {
@@ -91,7 +92,7 @@ const Radish = styled.img`
   height: 60px;
   position: absolute;
   top: -20px;
-  right: -28px; // 오른쪽에 고정
+  right: -33px; // 오른쪽에 고정
   transition: right 2s ease;
 `;
 
@@ -108,24 +109,31 @@ const CreditText = styled.div`
 `;
 
 const CreditScore = () => {
-  // 더미 데이터
+  const [creditInfo, setCreditInfo] = useState({
+    ratingName: "A", // 기본값
+    ratingPercent: 100, // 기본값
+  });
+
   const userInfo = {
     radishImageUrl: radish, // 더미 이미지 URL
   };
 
-  const creditRate = {
-    ratingName: "B", // 더미 신용등급
-    ratingPercent: 70, // 더미 신용등급 백분율
-  };
-  // eslint-disable-next-line
-  const [creditInfo, setCreditInfo] = useState({
-    ratingName: creditRate ? creditRate.ratingName : "A",
-    ratingPercent: creditRate ? Math.max(creditRate.ratingPercent, 0) : 100,
-  });
-
+  // API 호출을 통한 신용등급 데이터 가져오기
   useEffect(() => {
-    // API 연동이 들어올 때 여기에 데이터 fetch 로직을 추가하면 됩니다.
-    // 현재는 더미 데이터를 사용하므로 생략합니다.
+    const fetchCreditRate = async () => {
+      try {
+        const data = await getCreditRate(); // API 호출
+        // 신용등급 값이 음수일 경우 최소값 0으로 설정
+        setCreditInfo({
+          ratingName: data.ratingName,
+          ratingPercent: Math.max(data.ratingPercent, 0),
+        });
+      } catch (error) {
+        console.error("신용등급 데이터를 불러오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchCreditRate(); // 컴포넌트가 마운트될 때 API 호출
   }, []);
 
   // 다음 등급 달성 시까지 남은 퍼센트
@@ -162,6 +170,6 @@ const CreditScore = () => {
       <CreditText>{displayText}</CreditText>
     </Container>
   );
-}
+};
 
 export default CreditScore;

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import AccountList from "./AccountList";
+import { getAccountSum } from "../../apis/AccountApi";
 
 const Container = styled.div`
   background-color: #f5fded;
@@ -59,8 +60,21 @@ const AccountListContainer = styled.div`
 
 const AccountInfo = () => {
   // eslint-disable-next-line
-  const [totalAccountAmount, setTotalAccountAmount] = useState(10000000000); 
+  const [totalAccountAmount, setTotalAccountAmount] = useState(0); 
 
+  useEffect(() => {
+    const fetchAccountSum = async () => {
+      try {
+        const data = await getAccountSum();
+        setTotalAccountAmount(data); // API 응답을 상태에 저장
+      } catch (error) {
+        console.error('대출금 총합 조회 실패:', error);
+      }
+    };
+
+    fetchAccountSum(); // useEffect 안에서 API 호출
+  }, []); // 빈 배열을 두 번째 인수로 전달하여 컴포넌트가 마운트될 때 한 번만 실행
+  
   return (
     <Container>
       <SubHeader>

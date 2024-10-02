@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import closeButton from "../../assets/button/closeButton.svg";
+import useTransactionStore from '../../store/TransactionStore'; // Zustand import
 
 const PopupOverlay = styled.div`
   position: fixed;
@@ -84,9 +85,17 @@ const SelectButton = styled.button`
   width: 100%;
 `;
 
-const SortTransaction = ({ onClose, onSelect }) => {
-  const [selectedPeriod, setSelectedPeriod] = useState('1개월');
-  const [selectedType, setSelectedType] = useState('전체');
+const SortTransaction = ({ onClose }) => {
+  const { sortCriteria, setSortCriteria } = useTransactionStore(); // Zustand에서 가져오기
+
+  const [selectedPeriod, setSelectedPeriod] = useState(sortCriteria.period);
+  const [selectedType, setSelectedType] = useState(sortCriteria.type);
+
+  // 처음 렌더링 시 Zustand의 값으로 초기값 설정
+  useEffect(() => {
+    setSelectedPeriod(sortCriteria.period);
+    setSelectedType(sortCriteria.type);
+  }, [sortCriteria]);
 
   const handlePeriodClick = (period) => {
     setSelectedPeriod(period);
@@ -96,23 +105,19 @@ const SortTransaction = ({ onClose, onSelect }) => {
     setSelectedType(type);
   };
 
-  // Close 버튼 이미지나 오버레이를 클릭할 때 선택 초기화 후 닫기
   const handleClose = () => {
-    setSelectedPeriod('1개월');
-    setSelectedType('전체');
     onClose();
   };
 
-  // PopupOverlay의 빈 공간을 클릭했을 때도 선택 초기화 후 닫기
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       handleClose();
     }
   };
 
-  // 조회 버튼 클릭 시 부모에게 데이터 전달
+  // 조회 버튼 클릭 시 Zustand에 저장하고, 팝업 닫기
   const handleSelectClick = () => {
-    onSelect({ period: selectedPeriod, type: selectedType });
+    setSortCriteria({ period: selectedPeriod, type: selectedType });
     onClose();
   };
 
