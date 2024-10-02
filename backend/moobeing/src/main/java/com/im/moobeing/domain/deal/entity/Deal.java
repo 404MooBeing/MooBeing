@@ -50,4 +50,8 @@ public class Deal extends BaseTimeEntity {
 		this.remainBalance = remainBalance;
 		this.account = account;
 	}
+
+	public Long getAbsPrice() {
+		return Math.abs(price);
+	}
 }
