@@ -8,7 +8,8 @@ import rainbowRad from "../assets/radishes/rainbowRad.svg";
 import musinsaRad from "../assets/radishes/musinsaRad.svg";
 import basicRad from "../assets/radishes/basicRad.svg";
 import { getUserRadishCollection } from "../apis/RadishApi";
-import useCapsuleStore from "../store/Capsule";
+import useCapsuleStore from "../store/CapsuleStore";
+import useRadishStore from "../store/RadishStore";
 
 const Container = styled.div`
   margin-top: 10%;
@@ -140,34 +141,14 @@ function ChooseCharacter() {
   const [currentCharacter, setCurrentCharacter] = useState(0);
   const [currentSize, setCurrentSize] = useState(null);
   const navigate = useNavigate();
-
-  const [characters, setCharacters] = useState([
-    { radishName: "기본무", radishImageUrl: basicRad, radishId: 1 },
-    { radishName: "부끄렁무", radishImageUrl: blushRad, radishId: 2 },
-    { radishName: "무신사", radishImageUrl: musinsaRad, radishId: 3 },
-    { radishName: "무지개", radishImageUrl: rainbowRad, radishId: 4 },
-  ]);
+  const { characters } = useRadishStore();
+  const { updateRadishInfo } = useCapsuleStore();
 
   const sizes = [
     { name: "작은무", day: 20, value: "SMALL_RADISH" },
     { name: "중간무", day: 40, value: "MEDIUM_RADISH" },
     { name: "큰무", day: 60, value: "LARGE_RADISH" },
   ];
-
-  const { updateRadishInfo } = useCapsuleStore();
-
-  // useEffect(() => {
-  //   const fetchRadishCollection = async () => {
-  //     try {
-  //       const response = await getUserRadishCollection();
-  //       setCharacters(response.memberRadishes);
-  //     } catch (error) {
-  //       console.error("Failed to fetch radish collection:", error);
-  //     }
-  //   };
-
-  //   fetchRadishCollection();
-  // }, []);
 
   const handleNext = () => {
     const harvestDate = getHarvestDate(sizes[currentSize].day);

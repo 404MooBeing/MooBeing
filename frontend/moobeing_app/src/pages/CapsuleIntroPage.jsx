@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import smileRad from "../assets/radishes/smileRad.svg";
 import { useNavigate } from "react-router-dom";
+import { getCharacter } from "../apis/CapsuleApi";
+import useRadishStore from "../store/RadishStore";
 
 const Container = styled.div`
   padding: 30px;
@@ -99,6 +101,26 @@ const StartButton = styled.button`
 
 function CapsuleIntro() {
   const navigate = useNavigate();
+  const { characters, setCharacters, setIsLoading, setError } =
+    useRadishStore();
+
+  useEffect(() => {
+    const fetchCharacters = async () => {
+      setIsLoading(true);
+      try {
+        const charactersData = await getCharacter();
+        setCharacters(charactersData);
+        // console.log(charactersData);
+        // console.log(characters);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCharacters();
+  }, [setCharacters, setIsLoading, setError]);
 
   const handleStart = () => {
     navigate("/capsule-create");
