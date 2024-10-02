@@ -17,6 +17,7 @@ import com.im.moobeing.domain.radish.repository.RadishCapsuleRepository;
 import com.im.moobeing.global.error.ErrorCode;
 import com.im.moobeing.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RadishService {
@@ -38,7 +40,9 @@ public class RadishService {
     private final MemberRadishRepository memberRadishRepository;
 
     public CreateRadishCapsuleResponse createRadishCapsule(Member member, CreateRadishCapsuleRequest requestDto) {
-        MemberRadish memberRadish = memberRadishRepository.findByMemberIdAndRadishId(member.getId(), requestDto.getRadishId());
+        MemberRadish memberRadish = memberRadishRepository.findByMemberIdAndRadishId(member.getId(), requestDto.getRadishId())
+                .orElseThrow(() -> new BadRequestException(ErrorCode.RD_NO_RADISH));
+
         memberRadish.minusRadishNumber();
         if (memberRadish.getRadishNumber() == 0) {
             memberRadishRepository.delete(memberRadish);
@@ -65,7 +69,7 @@ public class RadishService {
 
         radishCapsuleRepository.save(radishCapsule);
 
-        return new CreateRadishCapsuleResponse(radishCapsule.getEndAt(), radishCapsule.getLat(), radishCapsule.getLng());
+        return new CreateRadishCapsuleResponse(radishCapsule.getEndAt(), radishCapsule.getLat(), radishCapsule.getLng(), radishCapsule.getImgUrl());
     }
 
     public List<CharactersResponse> characters(Member member) {

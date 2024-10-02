@@ -13,6 +13,7 @@ import com.im.moobeing.domain.radish.service.RadishService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class RadishController {
     }
 
     @Operation(summary = "무 심기", description = "무를 심습니다. 수확일자, 위치 반환")
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CreateRadishCapsuleResponse> createRadishCapsule(
             @AuthenticationPrincipal Member member,
             @ModelAttribute CreateRadishCapsuleRequest requestDto

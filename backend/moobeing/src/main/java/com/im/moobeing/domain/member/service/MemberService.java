@@ -14,6 +14,7 @@ import com.im.moobeing.global.client.ShinhanClient;
 import com.im.moobeing.global.config.ApiKeyConfig;
 import com.im.moobeing.global.error.ErrorCode;
 import com.im.moobeing.global.error.exception.AuthenticationException;
+import com.im.moobeing.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -243,7 +244,8 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("Radish not found with id: " + babyMooRadishId));
 
         // member와 radish를 기준으로 memberRadish 엔티티를 찾습니다.
-        MemberRadish memberRadish = memberRadishRepository.findByMemberIdAndRadishId(member.getId(), radish.getId());
+        MemberRadish memberRadish = memberRadishRepository.findByMemberIdAndRadishId(member.getId(), radish.getId())
+                .orElseThrow(() -> new BadRequestException(ErrorCode.RD_NO_RADISH));
 
         if (memberRadish.getRadishNumber() > 5) {
             // radishNumber가 5 초과일 경우 5를 감소시킵니다.
