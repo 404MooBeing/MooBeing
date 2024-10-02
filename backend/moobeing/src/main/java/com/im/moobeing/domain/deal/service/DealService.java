@@ -150,7 +150,7 @@ public class DealService {
                     DealCategory category = entry.getKey();
                     Long totalAmount = entry.getValue();
                     String color = getCategoryColor(category);  // Helper function to get category color
-                    return GetDrawPiChartDto.of(category.name(), category.getDescription(), totalAmount, color);
+                    return GetDrawPiChartDto.of(category.getDescription(), category.getDescription(), totalAmount, color);
                 })
                 .collect(Collectors.toList());
 
