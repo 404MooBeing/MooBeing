@@ -15,9 +15,11 @@ public class RadishCapsuleAreaResponse {
     private long remainingDays;
     private Double lat;
     private Double lng;
+    private boolean isRiped;
 
     public static RadishCapsuleAreaResponse of(RadishCapsule capsule) {
         long remainingDays = Duration.between(LocalDateTime.now(), capsule.getEndAt()).toDays();
-        return new RadishCapsuleAreaResponse(capsule.getId(), capsule.getCharacter().getRadishImageUrl(), remainingDays, capsule.getLat(), capsule.getLng());
+        boolean isRiped = capsule.getEndAt().isBefore(LocalDateTime.now());
+        return new RadishCapsuleAreaResponse(capsule.getId(), capsule.getCharacter().getRadishImageUrl(), remainingDays, capsule.getLat(), capsule.getLng(), isRiped);
     }
 }
