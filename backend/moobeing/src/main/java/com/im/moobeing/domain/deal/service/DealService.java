@@ -136,13 +136,14 @@ public class DealService {
 
     public GetDrawPiChartResponse drawPiChart(Member member, Integer year, Integer month) {
         validateDate(year, month);
-
-        List<Deal> deals = dealRepository.findAllByMemberAndYearAndMonth(member, year, month);
+        LocalDateTime start = YearMonth.of(year, month).atDay(1).atStartOfDay();
+        LocalDateTime end = YearMonth.of(year, month).atEndOfMonth().atTime(23, 59, 59);
+        List<Deal> deals = dealRepository.findAllExpenseByMemberAndDateRange(member, start, end);
 
         Map<DealCategory, Long> totalAmountsByCategory = deals.stream()
                 .collect(Collectors.groupingBy(
                         Deal::getDealCategory,
-                        Collectors.summingLong(Deal::getPrice)
+                        Collectors.summingLong(Deal::getAbsPrice)
                 ));
 
         List<GetDrawPiChartDto> getDrawPiChartDtoList = totalAmountsByCategory.entrySet().stream()
