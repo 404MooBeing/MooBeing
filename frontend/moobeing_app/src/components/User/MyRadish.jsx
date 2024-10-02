@@ -43,6 +43,17 @@ const ChooseButton = styled.button`
 const ScrollContainer = styled.div`
   height: calc(100vh - 400px); /* 상단 요소들의 높이를 고려하여 조정하세요 */
   overflow-y: auto;
+
+  /* 크롬, 사파리, 오페라 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* IE와 Edge */
+  -ms-overflow-style: none;
+
+  /* Firefox */
+  scrollbar-width: none;
 `;
 
 const CardContainer = styled.div`
@@ -290,6 +301,7 @@ const MyRadish = () => {
         //   radishRank: selectedCharacter.radishRank,
         //   radishImageUrl: selectedCharacter.radishImageUrl,
         // });
+        await selectRadish(selectedCharacter.radishName);
         setIsChooseActive(false);
         setSelectedCharacter(null);
       } catch (error) {
