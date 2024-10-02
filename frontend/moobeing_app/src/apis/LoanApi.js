@@ -22,13 +22,24 @@ const dummyLoanData = {
 };
 
 // 나의 대출 총금액 확인
+// export const getLoanSum = async () => {
+//   try {
+//     return new Promise((resolve) => {
+//       setTimeout(() => {
+//         resolve({ totalLoan: dummyLoanData.totalLoan });
+//       }, 500);
+//     });
+//   } catch (error) {
+//     console.error("대출 총금액 불러오기 실패:", error);
+//     throw error;
+//   }
+// };
+
+// 나의 대출 총금액 확인
 export const getLoanSum = async () => {
   try {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ totalLoan: dummyLoanData.totalLoan });
-      }, 500);
-    });
+    const response = await api.get("/loan/sum");
+    return response.data;
   } catch (error) {
     console.error("대출 총금액 불러오기 실패:", error);
     throw error;
@@ -50,19 +61,29 @@ export const getLoanMonthly = async () => {
 };
 
 // 나의 대출 확인
+// export const getLoanSort = async (sortType) => {
+//   try {
+//     return new Promise((resolve) => {
+//       setTimeout(() => {
+//         let sortedLoans = [...dummyLoanData.loanProducts];
+//         if (sortType === "rate") {
+//           sortedLoans.sort((a, b) => a.rate - b.rate);
+//         } else if (sortType === "amount") {
+//           sortedLoans.sort((a, b) => b.amount - a.amount);
+//         }
+//         resolve(sortedLoans);
+//       }, 500);
+//     });
+//   } catch (error) {
+//     console.error("대출 정보 불러오기 실패:", error);
+//     throw error;
+//   }
+// };
+
 export const getLoanSort = async (sortType) => {
   try {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        let sortedLoans = [...dummyLoanData.loanProducts];
-        if (sortType === "rate") {
-          sortedLoans.sort((a, b) => a.rate - b.rate);
-        } else if (sortType === "amount") {
-          sortedLoans.sort((a, b) => b.amount - a.amount);
-        }
-        resolve(sortedLoans);
-      }, 500);
-    });
+    const response = await api.get(`/loan?sort=${sortType}`);
+    return response.data;
   } catch (error) {
     console.error("대출 정보 불러오기 실패:", error);
     throw error;

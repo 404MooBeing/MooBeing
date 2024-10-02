@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 const useTransactionStore = create((set) => ({
-  account: {},
+  account: null,
   accounts: [],
   sortCriteria: { period: "1개월", type: "전체" },
   isRadishSelected: false,

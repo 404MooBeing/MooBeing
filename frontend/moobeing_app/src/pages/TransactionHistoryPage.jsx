@@ -1,8 +1,9 @@
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import TransactionInfo from "../components/TransactionHistory/TransactionInfo";
 import TransactionList from "../components/TransactionHistory/TransactionList";
+import useTransactionStore from "../store/TransactionStore";
 
 const Screen = styled.div`
   display: flex;
@@ -23,50 +24,26 @@ const Container = styled.div`
 
 const TransactionHistory = () => {
   const location = useLocation();
-  const { account: initialAccount, accounts } = location.state || {};
+  const { account: selectedAccount, accounts: initialAccounts } = location.state || {}; // useLocation으로 받은 account와 accounts
 
-  // account 상태를 상위 컴포넌트에서 관리
-  const [account, setAccount] = useState(initialAccount || {});
+  const { setAccount, setAccounts, accounts } = useTransactionStore();
 
-  // 계좌 변경 함수 (TransactionInfo에서 호출)
-  const handleAccountChange = (selectedAcc) => {
-    setAccount(selectedAcc);
-  };
+  // 최초에 초기값 설정 및 선택된 계좌 설정
+  useEffect(() => {
+    if (initialAccounts && accounts.length === 0) {
+      setAccounts(initialAccounts); // 계좌 목록을 store에 저장
+    }
 
-   // 조회 조건 관리
-  const [sortCriteria, setSortCriteria] = useState({ period: "1개월", type: "전체" });
-  
-  // 정렬 기준 변경 함수
-  const handleSortSelect = (selectedSort) => {
-    setSortCriteria(selectedSort); // 정렬 기준 업데이트
-  };
-
-  // 무 심기 선택 버튼 state 조절
-  const [isRadishSelected, setIsRadishSelected] = useState(false);
-
-  // 무 심기 선택 버튼 조절
-  const toggleRadishSelection = () => {
-    setIsRadishSelected(!isRadishSelected);
-  };
-
+    if (selectedAccount) {
+      setAccount(selectedAccount); // 선택된 계좌를 store에 저장
+    }
+  }, [initialAccounts, selectedAccount, accounts, setAccounts, setAccount]);
 
   return (
     <Screen>
       <Container>
-        <TransactionInfo
-          account={account}
-          accounts={accounts}
-          isRadishSelected={isRadishSelected}
-          toggleRadishSelection={toggleRadishSelection}
-          onAccountChange={handleAccountChange}
-          onSortSelect={handleSortSelect}
-          sortCriteria={sortCriteria}
-        />
-        <TransactionList 
-          account={account} 
-          isRadishSelected={isRadishSelected}
-          sortCriteria={sortCriteria} 
-        />
+        <TransactionInfo />
+        <TransactionList />
       </Container>
     </Screen>
   );

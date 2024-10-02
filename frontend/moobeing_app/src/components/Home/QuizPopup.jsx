@@ -25,7 +25,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 5px;
+  padding: 10px;
   box-sizing: border-box;
   color: #24272d;
   box-shadow: 3px 3px 3px #d9d9d9;
@@ -69,7 +69,7 @@ const SubTitle = styled.h2`
 
 const Radish = styled.img`
   height: 150px; /* 적절한 크기로 설정 */
-  margin-top: 35px;
+  margin-top: 50px;
 `;
 
 const QuizButton = styled.button`
