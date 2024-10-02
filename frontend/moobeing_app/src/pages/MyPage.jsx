@@ -54,14 +54,15 @@ const MyPage = () => {
     birthday: "980321",
     email: "mooch@ssafy.edu",
     gender: "M",
-    id : "ssafy11"
+    id : "ssafy11",
+    nickname : "닉네임"
   })
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userData = await getUserInfo(); // 사용자 정보 가져오기
-        console.log(userData.email + "!!")
+        setUserInfo(userData)
          // Zustand 스토어에 저장
       } catch (error) {
         console.error("데이터 가져오기 실패:", error);
