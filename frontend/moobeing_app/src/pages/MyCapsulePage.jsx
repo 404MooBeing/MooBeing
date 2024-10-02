@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import CapsuleCard from '../components/MyCapsule/CapsuleCard';
 import DateSortPopUp from '../components/MyCapsule/DateSortPopUp';
-import { getCapsulesByYearMonth, getAllCapsules } from '../apis/MyCapsuleApi';
 import LeftButton from '../assets/button/leftButtonBlack.svg';
 import RightButton from '../assets/button/rightButtonBlack.svg';
+import { getCapsulesByYearMonth, getAllCapsules } from '../apis/MyCapsuleApi';
 
 const Screen = styled.div`
   display: flex;
@@ -92,29 +92,74 @@ const MyCapsulePage = () => {
   const [capsules, setCapsules] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isAtBottom, setIsAtBottom] = useState(false);
+  const loadingRef = useRef(false);
+  const containerRef = useRef(null);
 
-  useEffect(() => {
-    fetchCapsules();
-  }, [selectedYear, selectedMonth, isAllView]);
-
-  const fetchCapsules = async () => {
+  const fetchCapsules = useCallback(async (resetPage = false) => {
+    if (loadingRef.current || (!hasMore && !resetPage)) return;
+    loadingRef.current = true;
     setLoading(true);
     setError(null);
     try {
+      const currentPage = resetPage ? 1 : page;
       let data;
       if (isAllView) {
-        data = await getAllCapsules();
+        data = await getAllCapsules(currentPage);
       } else {
-        data = await getCapsulesByYearMonth(selectedYear, selectedMonth);
+        data = await getCapsulesByYearMonth(selectedYear, selectedMonth, currentPage);
       }
-      setCapsules(data);
+      if (data.length === 0) {
+        setHasMore(false);
+        setIsAtBottom(true);
+      } else {
+        setCapsules(prevCapsules => {
+          const newCapsules = resetPage ? data : [...prevCapsules, ...data];
+          // 스크롤 위치 유지를 위해 setTimeout 사용
+          setTimeout(() => {
+            if (containerRef.current) {
+              containerRef.current.scrollTop = isAtBottom ? containerRef.current.scrollHeight : scrollPosition;
+            }
+          }, 0);
+          return newCapsules;
+        });
+        setPage(prevPage => resetPage ? 2 : prevPage + 1);
+      }
     } catch (err) {
       setError('캡슐을 불러오는 데 실패했습니다.');
       console.error('Error fetching capsules:', err);
     } finally {
       setLoading(false);
+      loadingRef.current = false;
     }
-  };
+  }, [isAllView, selectedYear, selectedMonth, page, hasMore, scrollPosition, isAtBottom]);
+
+  useEffect(() => {
+    setHasMore(true);
+    fetchCapsules(true);
+  }, [selectedYear, selectedMonth, isAllView]);
+
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current || loadingRef.current) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+    setScrollPosition(scrollTop);
+    setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 20);
+    if (isAtBottom) {
+      fetchCapsules();
+    }
+  }, [fetchCapsules]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, [handleScroll]);
 
   const toggleDateSort = () => {
     setIsDateSortOpen(!isDateSortOpen);
@@ -125,11 +170,17 @@ const MyCapsulePage = () => {
     setSelectedMonth(month);
     setIsAllView(false);
     setIsDateSortOpen(false);
+    setPage(1);
+    setCapsules([]);
+    setHasMore(true);
   };
 
   const handleSelectAllView = () => {
     setIsAllView(true);
     setIsDateSortOpen(false);
+    setPage(1);
+    setCapsules([]);
+    setHasMore(true);
   };
 
   const changeMonth = (increment) => {
@@ -165,7 +216,7 @@ const MyCapsulePage = () => {
 
   return (
     <Screen>
-      <Container>
+      <Container ref={containerRef}>
         <ContentWrapper>
           <Title>
             <TitleText>
@@ -184,13 +235,14 @@ const MyCapsulePage = () => {
               </DateLabelContainer>
               <CapsuleCard 
                 title={item.title}
-                amount={item.amount}
+                amount={String(item.amount).slice(1)}
                 imageUrl={item.imageUrl}
                 iconUrl={item.iconUrl}
                 content={item.content}
               />
             </React.Fragment>
           ))}
+          {!hasMore && <p>더 이상 캡슐이 없습니다.</p>}
         </ContentWrapper>
         
         {isDateSortOpen && (
