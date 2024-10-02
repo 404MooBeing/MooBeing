@@ -115,3 +115,13 @@ export const getCoin = async () => {
     throw error;
   }
 };
+
+export const getUserRadishCollection = async () => {
+  try {
+    const response = await api.get("/radish/characters");
+    return response.data;
+  } catch (error) {
+    console.error("무 컬렉션 가져오기 실패,", error);
+    throw error;
+  }
+}
