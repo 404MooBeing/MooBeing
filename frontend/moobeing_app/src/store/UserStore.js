@@ -37,4 +37,19 @@ const useUserStore = create(
   )
 );
 
-export default useUserStore;
+// 테스트용 아이디와 비밀번호를 Zustand 스토어에 저장하는 함수
+const testLogin = () => {
+  const setUserInfo = useUserStore.getState().setUserInfo;
+
+  // 임의로 테스트용 데이터를 Zustand 스토어에 저장
+  const testUser = {
+    email: "test@gmail.com",
+    name: "테스트 유저",
+    humanNumber: "123456", // 임의 번호
+  };
+
+  setUserInfo(testUser); // Zustand 스토어에 사용자 정보 저장
+  console.log("Test login successful:", testUser);
+};
+
+export {useUserStore, testLogin};
