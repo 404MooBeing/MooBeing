@@ -487,17 +487,19 @@ VALUES
 INSERT IGNORE INTO radish_capsule (member_id, deal_id, character_id, description, img_url, type, lat, lng, place_name, address_name, create_at, end_at, is_harvested) VALUES
 (1, 1, 1, '마트에서 장을 보고 무를 심었습니다.', 'https://s3.seungki-cho.lol/moobeing/D2992ECB-6473-44F3-9421-A1D8A26A59A5.jpg', 'SMALL_RADISH', 37.5665, 126.9780, '서울 마트', '서울시 중구 을지로', '2024-09-26 12:00:00', DATE_ADD('2024-09-26 12:00:00', INTERVAL 20 DAY), false),
 (1, 2, 2, '신한은행에서 대출 상환 후 무를 심었습니다.', 'https://s3.seungki-cho.lol/moobeing/F6F17FC7-8C5B-4323-A0C8-17CF3B561E76.jpg', 'SMALL_RADISH', 37.5665, 126.9780, '신한은행 본점', '서울시 중구 태평로', '2024-09-15 10:00:00', DATE_ADD('2024-09-15 10:00:00', INTERVAL 20 DAY), false),
-(1, 3, 3, '오늘 국립중앙박물관에서 경천사 십층 석탑을 관람하였습니다. 경천사 십층 석탑은 고려시대의 대표적인 석탑으로, 국보 제86호로 지정되어 있습니다. 이 석탑은 1348년에 완성되었으며, 석재를 조각하여 화려한 불교적 세계관을 표현한 것이 특징입니다. 당시의 건축 기술과 미적 감각을 엿볼 수 있는 귀중한 문화재입니다.', 'https://s3.seungki-cho.lol/moobeing/F5976E22-0564-4104-BF0C-155746D617DE%20(1).jpg', 'MEDIUM_RADISH', 37.5230, 126.9800, '국립중앙박물관', '서울시 용산구 서빙고로', '2024-09-20 14:00:00', DATE_ADD('2024-09-20 14:00:00', INTERVAL 40 DAY), false),
+(1, 3, 5, '오늘 국립중앙박물관에서 경천사 십층 석탑을 관람하였습니다. 경천사 십층 석탑은 고려시대의 대표적인 석탑으로, 국보 제86호로 지정되어 있습니다. 이 석탑은 1348년에 완성되었으며, 석재를 조각하여 화려한 불교적 세계관을 표현한 것이 특징입니다. 당시의 건축 기술과 미적 감각을 엿볼 수 있는 귀중한 문화재입니다.', 'https://s3.seungki-cho.lol/moobeing/F5976E22-0564-4104-BF0C-155746D617DE%20(1).jpg', 'MEDIUM_RADISH', 37.5230, 126.9800, '국립중앙박물관', '서울시 용산구 서빙고로', '2024-09-20 14:00:00', DATE_ADD('2024-09-20 14:00:00', INTERVAL 40 DAY), false),
 (1, 10, 1, '마트에서 장을 보고 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5665, 126.9780, '서울 마트', '서울시 중구 을지로', '2024-07-01 10:00:00', DATE_ADD('2024-07-01 10:00:00', INTERVAL 20 DAY), true),
 (1, 11, 2, '친구와 함께 커피를 마시며 작은 무를 심었습니다.', 'https://picsum.photos/300/300', 'MEDIUM_RADISH', 37.5725, 126.9890, '서울 카페', '서울시 종로구 인사동', '2024-07-05 11:00:00', DATE_ADD('2024-07-05 11:00:00', INTERVAL 40 DAY), true),
-(1, 12, 3, '도서관에서 책을 읽으며 무를 심었습니다.', 'https://picsum.photos/300/300', 'LARGE_RADISH', 37.5770, 126.9820, '서울 도서관', '서울시 종로구 대학로', '2024-07-10 12:00:00', DATE_ADD('2024-07-10 12:00:00', INTERVAL 180 DAY), true),
+(1, 12, 7, '도서관에서 책을 읽으며 무를 심었습니다.', 'https://picsum.photos/300/300', 'LARGE_RADISH', 37.5770, 126.9820, '서울 도서관', '서울시 종로구 대학로', '2024-07-10 12:00:00', DATE_ADD('2024-07-10 12:00:00', INTERVAL 180 DAY), true),
 (1, 13, 4, '헬스장에서 운동 후 작은 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5790, 126.9950, '서울 헬스장', '서울시 성동구 성수동', '2024-07-15 13:00:00', DATE_ADD('2024-07-15 13:00:00', INTERVAL 20 DAY), true),
 (1, 14, 5, '영화관에서 무를 심었습니다.', 'https://picsum.photos/300/300', 'MEDIUM_RADISH', 37.5625, 126.9785, '서울 영화관', '서울시 중구 명동', '2024-07-20 14:00:00', DATE_ADD('2024-07-20 14:00:00', INTERVAL 40 DAY), true),
 (1, 15, 6, '산책을 하며 무를 심었습니다.', 'https://picsum.photos/300/300', 'LARGE_RADISH', 37.5650, 126.9765, '서울 공원', '서울시 중구 장충동', '2024-07-25 15:00:00', DATE_ADD('2024-07-25 15:00:00', INTERVAL 180 DAY), true),
 (1, 16, 7, '미술관에서 전시를 보며 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5680, 126.9920, '서울 미술관', '서울시 종로구 청운동', '2024-08-01 16:00:00', DATE_ADD('2024-08-01 16:00:00', INTERVAL 20 DAY), true),
 (1, 17, 8, '카페에서 휴식을 취하며 무를 심었습니다.', 'https://picsum.photos/300/300', 'MEDIUM_RADISH', 37.5730, 126.9800, '서울 카페', '서울시 종로구 삼청동', '2024-08-05 17:00:00', DATE_ADD('2024-08-05 17:00:00', INTERVAL 40 DAY), true),
 (1, 18, 9, '박물관에서 무를 심었습니다.', 'https://picsum.photos/300/300', 'LARGE_RADISH', 37.5750, 126.9785, '서울 국립중앙박물관', '서울시 용산구', '2024-08-10 18:00:00', DATE_ADD('2024-08-10 18:00:00', INTERVAL 180 DAY), true),
-(1, 19, 10, '독서 모임 후 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.5660, 126.9770, '서울 독서 모임 장소', '서울시 서대문구 신촌', '2024-08-15 19:00:00', DATE_ADD('2024-08-15 19:00:00', INTERVAL 20 DAY), true);
+(1, 19, 10, '독서 모임 후 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.477942, 126.980520, '서울 독서 모임 장소', '서울시 서대문구 신촌', DATE_SUB(now(), INTERVAL 21 DAY), DATE_SUB(now(), INTERVAL 1 DAY), true),
+(1, 20, 2, '헬스장에서 운동 후 작은 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.476282, 126.981818, '서울 독서 모임 장소', '서울시 서대문구 신촌', DATE_SUB(now(), INTERVAL 22 DAY), DATE_SUB(now(), INTERVAL 2 DAY), true),
+(1, 21, 4, '농협은행에서 대출 상환 후 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.478078, 126.982473, '서울 독서 모임 장소', '서울시 서대문구 신촌', DATE_SUB(now(), INTERVAL 23 DAY), DATE_SUB(now(), INTERVAL 3 DAY), true);
 
 
 INSERT IGNORE INTO alarm (member_id, icon_name, title, message, created_at) VALUES
