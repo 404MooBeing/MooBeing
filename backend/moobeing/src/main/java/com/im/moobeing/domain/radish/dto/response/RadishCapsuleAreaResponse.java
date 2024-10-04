@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RadishCapsuleAreaResponse {
     private Long id;
-    private String radishImage;
+    private String radishImageUrl;
     private long remainingDays;
     private Double lat;
     private Double lng;
