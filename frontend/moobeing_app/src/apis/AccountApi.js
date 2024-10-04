@@ -97,17 +97,13 @@ export const postAccountLoan = async (requestBody) => {
 // 대출금 상환시 얻을 수 있는 이익 계산
 export const getAccountBenefit = async () => {
   try {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const benefit = Math.floor(dummyAccountInfo.loanAmount * dummyAccountInfo.interestRate / 100);
-        resolve({ benefit });
-      }, 500);  
-    });  
+    const response = await api.get("/account/benefit");
+    return response.data;
   } catch (error) {
     console.error("대출금 상환시 얻을 수 있는 이익 계산 실패:", error);
     throw error;
-  }  
-};  
+  }
+};
 
 // 계좌별 날짜 합계 조회
 export const getSpendSummary = async (year, month, day) => {

@@ -64,7 +64,7 @@ const PayButton = styled.button`
 
 const CustomDropdownContainer = styled.div`
   position: relative;
-  width: 170px;
+  width: 230px;
   max-width: 300px;
   display: inline-block;
   margin: 10px 0;
@@ -78,7 +78,7 @@ const CustomDropdownHeader = styled.div`
   outline: none;
   cursor: pointer;
   display: flex;
-  justify-content: space-between;
+  justify-content: center; // 중앙 정렬
   align-items: center;
   background-image: url(${DropDownArrow});
   background-repeat: no-repeat;
@@ -135,7 +135,9 @@ function LeftMoneyManage() {
   const [accountBenefit, setAccountBenefit] = useState({});
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [remainingBalance, setRemainingBalance] = useState(0);
+  const [loanList, setLoanList] = useState([]); // 초기값을 빈 배열로 설정
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedLoan, setSelectedLoan] = useState(null); // 선택된 대출 상태 추가
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -148,14 +150,13 @@ function LeftMoneyManage() {
       const response = await getAccountBenefit();
       setAccountBenefit(response);
       setRemainingBalance(response.accountLeftMoney || 0);
+      setLoanList(Array.isArray(response.LoanList) ? response.LoanList : []); // 배열인지 확인 후 설정
     } catch (error) {
       console.error("계좌 혜택 데이터를 가져오는 중 오류 발생:", error);
     } finally {
       setIsLoading(false);
     }
   };
-
-  const loanList = accountBenefit.LoanList || [];
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -171,29 +172,38 @@ function LeftMoneyManage() {
         <SubTitle>남은 돈 관리하기</SubTitle>
       </SubHeader>
 
+      <CustomDropdownContainer>
+        <CustomDropdownHeader onClick={toggleDropdown}>
+          {selectedLoan ? selectedLoan.loanName : "대출 상품 선택"} {/* 선택된 대출 상품 이름으로 설정 */}
+        </CustomDropdownHeader>
+        {isDropdownOpen && (
+          <CustomDropdownList>
+            {loanList.map((loan) => (
+              <CustomDropdownItem key={loan.loanName} onClick={() => {
+                setSelectedLoan(loan);
+                setIsDropdownOpen(false); // 드롭다운 숨기기
+              }}>
+                {loan.loanName}
+              </CustomDropdownItem>
+            ))}
+          </CustomDropdownList>
+        )}
+      </CustomDropdownContainer>
+
       <TextTag>
-        대출잔액은 <MoneySpan>{remainingBalance?.toLocaleString()}원</MoneySpan>이며,
-        <br />
-        <CustomDropdownContainer>
-          남은 돈 <MoneySpan>230,000원</MoneySpan>을
-          <CustomDropdownHeader onClick={toggleDropdown}>
-            대출 상품 선택
-          </CustomDropdownHeader>
-          {isDropdownOpen && (
-            <CustomDropdownList>
-              {loanList.map((loan) => (
-                <CustomDropdownItem key={loan.loanName}>
-                  {loan.loanName}
-                </CustomDropdownItem>
-              ))}
-            </CustomDropdownList>
-          )}
-        </CustomDropdownContainer>{" "}
-        에
-        <br />
-        <LastLine>
-          상환하면 이자 <MoneySpan>0원</MoneySpan>을 아낄 수 있어요
-        </LastLine>
+        남은 돈 <MoneySpan>{remainingBalance?.toLocaleString()}원</MoneySpan>을
+      </TextTag>
+
+      <TextTag>
+        {selectedLoan && (
+          <>
+          <LastLine>
+              상환하면 이자 <MoneySpan>{selectedLoan.interestBalance.toLocaleString()}원</MoneySpan>을 아낄 수 있어요
+            </LastLine>
+            대출잔액: <MoneySpan>{selectedLoan.loanBalance.toLocaleString()}원</MoneySpan>
+            <br />
+          </>
+        )}
       </TextTag>
 
       <PayButton onClick={() => navigate('/repayment')}>상환하러 가기</PayButton>
