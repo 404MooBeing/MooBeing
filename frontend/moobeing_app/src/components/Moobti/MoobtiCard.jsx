@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styled from 'styled-components';
+import downloadButtonImage from "../../assets/button/DownloadButton.png";
 
 const Card = styled.div`
   background-color: #e8f5e9;
   border-radius: 20px;
-  padding: 20px;
+  padding: 15px 20px 20px 20px;
   width: 90%;
   max-width: 300px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -19,10 +20,9 @@ const CardHeader = styled.div`
 `;
 
 const CharacterImage = styled.img`
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   object-fit: contain;
-  margin-bottom: 20px;
 `;
 
 const CharacterName = styled.h2`
@@ -30,23 +30,25 @@ const CharacterName = styled.h2`
   font-weight: bold;
   margin-bottom: 8px;
 
-  .highlight {
+  span {
     font-size: 28px;
-    color: #4CAF50;
+    color: #348833;
   }
 `;
 
 const Description = styled.p`
-  font-size: 22px;
+  font-size: 16px;
   font-weight: bold;
+  line-height: 150%;
   color: #333;
   margin-bottom: 0;
+  font-family: 'Nanum Gothic', sans-serif;
 `;
 
 const StatusSection = styled.div`
   background-color: white;
   border-radius: 15px;
-  padding: 20px;
+  padding: 5px 20px 5px 20px;
 `;
 
 const StatusTitle = styled.h3`
@@ -56,15 +58,12 @@ const StatusTitle = styled.h3`
 `;
 
 const TraitContainer = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 `;
 
-const TraitName = styled.div`
-  font-size: 14px;
-  font-weight: bold;
-  color: #000000; // 검은색으로 변경
-  margin-bottom: 5px;
-`;
+const TraitTitle = styled.div`
+  margin-bottom: 8px;
+`
 
 const StatusBar = styled.div`
   width: 100%;
@@ -92,37 +91,32 @@ const StatusLabel = styled.div`
   justify-content: space-between;
   font-size: 12px;
   color: #666;
+  margin-top: 10px;
 `;
 
-const TraitCategory = styled.div`
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 5px;
+const Buttondiv = styled.div`
   display: flex;
-  align-items: center;
+  justify-content: flex-end;
+`
+
+const StyledDownloadButton = styled.img`
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  cursor: pointer;
+  margin-bottom: 10px;
 `;
 
-const PercentageDisplay = styled.span`
-  margin: 0 5px;
-`;
-
-const SelectedTrait = styled.span`
-  color: inherit;
-`;
-
-const TraitLabel = styled.span`
-  font-weight: ${props => props.isCloser ? 'bold' : 'normal'};
-  color: ${props => props.isCloser ? '#000' : '#666'};
-`;
-
-const MoobtiCard = ({ character, traits }) => {
+const MoobtiCard = forwardRef(({ character, traits, onDownload }, ref) => {
   return (
-    <Card>
+    <Card ref={ref}>
+      <Buttondiv>
+        <StyledDownloadButton onClick={onDownload} src={downloadButtonImage} />
+      </Buttondiv>
       <CardHeader>
         <CharacterName>
           {character.type}<br />
-          <span className="highlight">{character.name}</span>
+          <span>{character.name}</span>
         </CharacterName>
         <CharacterImage src={character.imageUrl} alt={character.name} />
         <Description>{character.description}</Description>
@@ -131,28 +125,19 @@ const MoobtiCard = ({ character, traits }) => {
         <StatusTitle>성향</StatusTitle>
         {traits.map((trait, index) => (
           <TraitContainer key={index}>
-            <TraitCategory>
-              {trait.category}:
-              <PercentageDisplay>
-                {trait.percentage}%
-              </PercentageDisplay>
-              <SelectedTrait>
-                {trait.percentage > 50 ? trait.right : trait.left}
-              </SelectedTrait>
-            </TraitCategory>
+            <TraitTitle>{trait.category}: {trait.percentage}%</TraitTitle>
             <StatusBar color={trait.color}>
               <StatusDot percentage={trait.percentage} color={trait.color} />
-              {/* StatusPercentage 컴포넌트 제거 */}
             </StatusBar>
             <StatusLabel>
-              <TraitLabel isCloser={trait.percentage <= 50}>{trait.left}</TraitLabel>
-              <TraitLabel isCloser={trait.percentage > 50}>{trait.right}</TraitLabel>
+              <span>{trait.left}</span>
+              <span>{trait.right}</span>
             </StatusLabel>
           </TraitContainer>
         ))}
       </StatusSection>
     </Card>
   );
-};
+});
 
 export default MoobtiCard;

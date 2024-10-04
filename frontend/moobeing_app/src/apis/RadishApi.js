@@ -50,3 +50,14 @@ export const growBabyRadish = async () => {
     throw error;
   }
 };
+
+// 아직 뽑지 않은 무가 몇개 남았고, 몇 분 남았는지 확인하는 api
+export const getRadishSummary = async () => {
+  try {
+    const response = await api.get('radish/summary');
+    return response.data;
+  } catch (error) {
+    console.error("무 정보 갖고 오기 실패", error);
+    throw error;
+  }
+}

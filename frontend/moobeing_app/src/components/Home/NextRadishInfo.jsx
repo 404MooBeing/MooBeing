@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { differenceInSeconds, intervalToDuration } from "date-fns";
 import basicRadish from "../../assets/radishes/basicRad.svg";
+import { getRadishSummary } from "../../apis/RadishApi";
 
 const Container = styled.div`
   background-color: #f5fded;

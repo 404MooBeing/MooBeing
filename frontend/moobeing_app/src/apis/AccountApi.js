@@ -106,9 +106,9 @@ export const getAccountBenefit = async () => {
 };
 
 // 계좌별 날짜 합계 조회
-export const getSpendSummary = async (year, month, day) => {
+export const getSpendSummary = async () => {
   try {
-    const response = await api.get(`/expense/account-summary?year=${year}&month=${month}&day=${day}`);
+    const response = await api.get('/expense/summary');
     return response.data;
   } catch (error) {
     console.error("계좌별 날짜 합계 불러오기 실패:", error);
