@@ -282,6 +282,6 @@ public class DealService {
             message = "지난 달과 같은 금액을 썼어요!";
         }
 
-        return new PaymentSummaryResponse(lastMonthSum, message, lastSum < nowSum);
+        return new PaymentSummaryResponse(Math.abs(lastMonthSum), message, lastSum < nowSum);
     }
 }
