@@ -4,6 +4,8 @@ import com.im.moobeing.domain.deal.entity.Deal;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Objects;
+
 @AllArgsConstructor
 @Getter
 public class DealHistoryResponse {
@@ -12,8 +14,10 @@ public class DealHistoryResponse {
 	private Long price;
 
 	public static DealHistoryResponse of(Deal deal) {
-		return new DealHistoryResponse(deal.getTitle(), deal.getDealCategory().getDescription() == null ? "수입" : deal.getDealCategory().getDescription(),
-			deal.getPrice());
+		return new DealHistoryResponse(
+				deal.getTitle(),
+				deal.getDealCategory().getDescription() == null ? "수입" : deal.getDealCategory().getDescription(),
+				Objects.equals(deal.getDealCategory().getDescription(), "대출") ? -deal.getPrice() : deal.getPrice());
 	}
 
 	public static DealHistoryResponse from(String title, String categoryName, Long price) {
