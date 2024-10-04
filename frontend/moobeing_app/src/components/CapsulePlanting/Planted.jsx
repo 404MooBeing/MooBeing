@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import useCapsuleStore from "../../store/CapsuleStore";
 const Title = styled.h1`
   font-size: 40px;
   text-align: center;
@@ -24,12 +24,14 @@ const Date = styled.p`
 `;
 
 function Planted() {
+  const { harvestAt } = useCapsuleStore();
+
   return (
     <>
       <Title>
         무캡슐이 <br /> 심어졌습니다.
       </Title>
-      <Date>언제 만나요</Date>
+      <Date> {harvestAt} 에 만나요!</Date>
       <Button> 확인하러가기 </Button>
     </>
   );

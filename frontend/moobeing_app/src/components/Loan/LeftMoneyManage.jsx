@@ -116,13 +116,6 @@ const CustomDropdownItem = styled.li`
   &:hover {
     background-color: #c5e1ab;
   }
-
-  ${(props) =>
-    props.selected &&
-    `
-    background-color: #C5E1AB;
-    font-weight: bold;
-  `}
 `;
 
 const TextTag = styled.div`
@@ -138,79 +131,39 @@ const LastLine = styled.div`
   margin: 10px 0px;
 `;
 
-const AlertContainer = styled.div`
-  position: fixed;
-  top: 20vh;
-  left: 50%;
-  width: 70%;
-  transform: translateX(-50%);
-  background-color: rgba(144, 144, 144, 0.8);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
-  z-index: 1000;
-  opacity: ${(props) => (props.visible ? 1 : 0)};
-  transition: opacity 0.3s ease-in-out;
-`;
-
 function LeftMoneyManage() {
   const [accountBenefit, setAccountBenefit] = useState({});
-  const [selectedLoan, setSelectedLoan] = useState(""); // 선택된 대출 상품 상태
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 열림 상태
-  const [interestBalance, setInterestBalance] = useState(0);
-  const [showAlert, setShowAlert] = useState(false); // 커스텀 경고창 표시 상태
-  const navigate = useNavigate(); // useNavigate 훅 사용
-
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [remainingBalance, setRemainingBalance] = useState(0);
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
-  // 컴포넌트가 마운트될 때 계좌 혜택 데이터를 가져오기
   useEffect(() => {
-    // 계좌 혜택 데이터 가져오기
-    getAccountBenefit()
-      .then((response) => {
-        setAccountBenefit(response); // 계좌 혜택 상태 업데이트
-        setRemainingBalance(response.accountLeftMoney || 0); // 초기 잔액 설정
-      })
-      .catch((error) => {
-        console.error("계좌 혜택 데이터를 가져오는 중 오류 발생:", error);
-      });
-  }, []);
+    fetchAccountBenefitData();
+  }, []); // 컴포넌트가 마운트될 때만 실행
 
-  // const remainingBalance = accountBenefit.accountLeftMoney || 0;
-  const loanList = accountBenefit.LoanList || []; // LoanList를 상태에서 가져오기
-
-  // 대출 선택 시 호출되는 함수
-  const handleLoanChange = (loanName) => {
-    setSelectedLoan(loanName); // 선택된 대출 업데이트
-    setIsDropdownOpen(false); // 드롭다운 닫기
-    setIsLoading(true); // 로딩 상태 활성화
-
-    // 선택된 대출의 이자 잔액 찾기
-    const selectedInterest = loanList.find(
-      (loan) => loan.loanName === loanName
-    )?.interestBalance;
-
-    if (selectedInterest !== undefined) {
-      setInterestBalance(selectedInterest); // 이자 잔액 상태 업데이트
+  const fetchAccountBenefitData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getAccountBenefit();
+      setAccountBenefit(response);
+      setRemainingBalance(response.accountLeftMoney || 0);
+    } catch (error) {
+      console.error("계좌 혜택 데이터를 가져오는 중 오류 발생:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // '상환하러 가기' 버튼 클릭 시 호출되는 함수
-  const handlePayment = () => {
-    if (selectedLoan) {
-      navigate(`/repayment/${selectedLoan}`, {
-        state: { loanList, remainingBalance }, // 상태로 데이터 전달
-      }); // 선택된 대출과 함께 이동
-    } else {
-      setShowAlert(true); // 커스텀 경고창 표시
-      setTimeout(() => setShowAlert(false), 2000); // 2초 후 경고창 숨기기
-    }
+  const loanList = accountBenefit.LoanList || [];
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <Container>
@@ -222,24 +175,15 @@ function LeftMoneyManage() {
         대출잔액은 <MoneySpan>{remainingBalance?.toLocaleString()}원</MoneySpan>이며,
         <br />
         <CustomDropdownContainer>
-        남은 돈 <MoneySpan>230,000원</MoneySpan>을<CustomDropdownHeader
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            {selectedLoan.length > 8
-              ? `${selectedLoan.substring(0, 8)}...`
-              : selectedLoan || "대출 상품 선택"}
+          남은 돈 <MoneySpan>230,000원</MoneySpan>을
+          <CustomDropdownHeader onClick={toggleDropdown}>
+            대출 상품 선택
           </CustomDropdownHeader>
           {isDropdownOpen && (
             <CustomDropdownList>
               {loanList.map((loan) => (
-                <CustomDropdownItem
-                  key={loan.loanName}
-                  onClick={() => handleLoanChange(loan.loanName)}
-                  selected={selectedLoan === loan.loanName}
-                >
-                  {loan.loanName.length > 12
-                    ? `${loan.loanName.substring(0, 12)}...`
-                    : loan.loanName}
+                <CustomDropdownItem key={loan.loanName}>
+                  {loan.loanName}
                 </CustomDropdownItem>
               ))}
             </CustomDropdownList>
@@ -248,15 +192,11 @@ function LeftMoneyManage() {
         에
         <br />
         <LastLine>
-          상환하면 이자 <MoneySpan>{interestBalance.toLocaleString()}원</MoneySpan>을
-          아낄 수 있어요
+          상환하면 이자 <MoneySpan>0원</MoneySpan>을 아낄 수 있어요
         </LastLine>
       </TextTag>
 
-      <PayButton onClick={handlePayment}>상환하러 가기</PayButton>
-      <AlertContainer visible={showAlert}>
-        대출 상품을 선택해주세요.
-      </AlertContainer>
+      <PayButton onClick={() => navigate('/repayment')}>상환하러 가기</PayButton>
     </Container>
   );
 }

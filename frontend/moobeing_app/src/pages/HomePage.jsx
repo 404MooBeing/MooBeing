@@ -31,7 +31,7 @@ return (
     <Screen>
       <Container>
         <QuizPopup/>
-        <AccountInfo/>
+        <AccountInfo />
         <LoanInfo />
         <MonthlyPayment />
         <CreditScore/>

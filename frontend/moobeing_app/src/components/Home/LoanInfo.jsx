@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import goToJourney from "../../assets/button/goToJourney.svg";
+import { getLoanSum } from "../../apis/LoanApi";
 
 const Container = styled.div`
   background-color: #f5fded;
@@ -41,16 +42,15 @@ const LoanBalance = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 5px;
-  margin-top: 10px;
   font-size: 20px;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: 0 2px 10px;
   flex-shrink: 1;
   min-width: 0;
   flex-grow: 1;
+  padding-bottom: 5px;
 
   @media (min-width: 600px) {
     font-size: 25px;
@@ -81,11 +81,25 @@ const RepaymentButton = styled.button`
   border-radius: 10px;
   cursor: pointer;
   font-family: 'mainFont';
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `
 
 const LoanInfo = () => {
   // eslint-disable-next-line
-  const [loanSum, setLoanSum] = useState({ monthlyLoanAmount: 300000 });
+  const [loanSum, setLoanSum] = useState(0);
+
+  useEffect(() => {
+    const fetchLoanSum = async () => {
+      try {
+        const data = await getLoanSum();
+        setLoanSum(data.sumLoanValue)
+      } catch (error) {
+        console.error("대출 총잔액 불러오기 실패:", error)
+      }
+    };
+
+    fetchLoanSum();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -106,7 +120,7 @@ const LoanInfo = () => {
         </NavigateButton>
       </SubHeader>
       <LoanBalance>
-        {loanSum.monthlyLoanAmount.toLocaleString()} 원
+        {loanSum.toLocaleString()} 원
         <RepaymentButton onClick={goToLoanPaymentPage}>상환하러 가기</RepaymentButton>
       </LoanBalance>
     </Container>

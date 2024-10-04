@@ -1,10 +1,13 @@
 import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 import PropTypes from "prop-types";
+import useSpendStore from "../../store/SpendStore";
   
-const PieGraph = ({ data, width = "100%", height = 300 }) => {
+const PieGraph = ({ width = "100%", height = 300 }) => {
+  const data = useSpendStore((state) => state.pieChartData.getPieChartList || []);
+
   // 전체 합계 계산
-  const total = data.reduce((sum, item) => sum + item.value, 0);
+  const total = data.length > 0 ? data.reduce((sum, item) => sum + item.value, 0) : 1;
 
   return (
     <div style={{ width: width, height: height }}>
