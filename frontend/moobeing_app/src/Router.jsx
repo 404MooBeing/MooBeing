@@ -18,7 +18,8 @@ import CapsuleSearch from "./pages/CapsuleSearchPage";
 import CoinExchange from "./pages/CoinExchangePage";
 import Coin from "./pages/CoinPage";
 import GetRadishCharacter from "./pages/GetRadishCharacterPage";
-import LoanJourney from "./pages/LoanJourneyPage";
+import TotalLoanJourney from "./pages/TotalLoanJourneyPage";
+import EachLoanJourney from "./pages/EachLoanJourneyPage";
 import Loan from "./pages/LoanPage";
 import LoanPayment from "./pages/LoanPaymentPage";
 import Menu from "./pages/MenuPage";
@@ -80,7 +81,8 @@ function Router() {
           <Route path="/coin-exchange" element={<CoinExchange />} />
           <Route path="/coin" element={<Coin />} />
           <Route path="/get-radishcharacter" element={<GetRadishCharacter />} />
-          <Route path="/loan-journey" element={<LoanJourney />} />
+          <Route path="/total-journey" element={<TotalLoanJourney />} />
+          <Route path="/each-journey/:loanName" element={<EachLoanJourney />} />
           <Route path="/loan" element={<Loan />} />
           <Route path="/loan-payment" element={<LoanPayment />} />
           <Route path="/menu" element={<Menu />} />

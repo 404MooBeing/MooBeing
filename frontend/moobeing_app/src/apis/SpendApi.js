@@ -36,7 +36,7 @@ export const getPieChart = async (year, month) => {
     const response = await api.get(`/expense/pi?year=${year}&month=${month}`);
     return response.data;
   } catch (error) {
-    console.error("카테고리 파이차트 가져오기 실패:", error);
+    console.error("파이차트 가져오기 실패:", error);
     throw error;
   }
 };

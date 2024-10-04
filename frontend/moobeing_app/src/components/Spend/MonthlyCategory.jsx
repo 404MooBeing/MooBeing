@@ -58,8 +58,36 @@ const LabelAccent = styled.span`
   margin-right: 8px;
 `;
 
+const NoPaymentsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 25%;
+`;
+
+const NoPaymentsImage = styled.img`
+  width: 70px;
+  height: 70px;
+  margin-bottom: 10px;
+`;
+
+const NoPaymentsText = styled.p`
+  font-size: 14px;
+  color: #999;
+`;
+
 const MonthlyCategory = () => {
   const data = useSpendStore((state) => state.pieChartData.getCategoryList || []);
+
+  if (data.length === 0) {
+    return (
+      <NoPaymentsContainer>
+        <NoPaymentsImage src={basicRad} alt="No payments" />
+        <NoPaymentsText>소비 내역이 없습니다.</NoPaymentsText>
+      </NoPaymentsContainer>
+    );
+  }
 
   return (
     <Category>

@@ -110,14 +110,14 @@ const NoPaymentsContainer = styled.div`
 `;
 
 const NoPaymentsImage = styled.img`
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   margin-bottom: 20px;
 `;
 
 const NoPaymentsText = styled.div`
-  font-size: 16px;
-  color: #555;
+  font-size: 14px;
+  color: #999;
 `;
 
 const DailyCategoryList = ({ payments }) => {

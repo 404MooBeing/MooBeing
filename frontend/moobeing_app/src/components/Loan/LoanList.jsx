@@ -168,7 +168,7 @@ function LoanList({ loans }) {
   };
 
   const handleLoanItemClick = (loanName) => {
-    navigate(`/loan-journey/${loanName}`);
+    navigate(`/each-journey/${loanName}`);
   };
 
   const totalPages = Math.ceil(loanData.length / loansPerPage);

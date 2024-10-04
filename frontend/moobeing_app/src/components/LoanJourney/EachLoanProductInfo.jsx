@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 const Container = styled.div`
   background-color: #f5fded;
@@ -87,43 +86,36 @@ const PayButton = styled.button`
   }
 `;
 
-function LoanDescription() {
+function LoanDescription({ loanDetail }) {
   const { loanName } = useParams();
-  const navigate = useNavigate();
-  const [showAlert, setShowAlert] = useState(false);
-
-  // 하드코딩된 loanDetail 데이터
-  const loanDetail = {
-    monthBalance: 5000000, // 남은 대출 금액
-    remainingBalance: 300000, // 이번달 상환금액
-  };
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
   // '상환하러 가기' 버튼 클릭 시 호출되는 함수
   const handlePayment = () => {
     if (loanName) {
-      navigate(`/loan-payment/${loanName}`); // 선택된 대출과 함께 이동
+      navigate(`/repayment/${loanName}`); // 선택된 대출과 함께 이동
     } else {
-      setShowAlert(true); // 커스텀 경고창 표시
-      setTimeout(() => setShowAlert(false), 2000); // 2초 후 경고창 숨기기
+      window.alert('상환 페이지 가기 실패')
     }
   };
 
   return (
     <Container>
       <SubHeader>
-        <SubTitle>{loanName || "대출명"}</SubTitle>
+        <SubTitle>{loanName}</SubTitle>
         <SubSubTitle>상세 정보</SubSubTitle>
       </SubHeader>
       <ContentDetail>
         <ContentTitle>남은 대출 금액</ContentTitle>
-        <Content>{loanDetail.monthBalance.toLocaleString()} 원</Content>
+        <Content>{loanDetail.monthBalance?.toLocaleString() || 0} 원</Content>
       </ContentDetail>
       <ContentDetail>
         <ContentTitle>이번달 상환금액</ContentTitle>
-        <Content>{loanDetail.remainingBalance.toLocaleString()} 원</Content>
+        <Content>
+          {loanDetail.remainingBalance?.toLocaleString() || 0} 원
+        </Content>
       </ContentDetail>
       <PayButton onClick={handlePayment}>상환하러 가기</PayButton>
-      {showAlert && <div>경고: 대출 이름이 없습니다.</div>}
     </Container>
   );
 }
