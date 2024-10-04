@@ -1,5 +1,6 @@
 package com.im.moobeing.domain.deal.controller;
 
+import com.im.moobeing.domain.deal.dto.response.MoobtiResponse;
 import com.im.moobeing.domain.deal.service.OpenAPIService;
 import java.util.List;
 
@@ -125,8 +126,8 @@ public class ExpenseController {
 	}
 
 	@GetMapping("/moobti")
-	public ResponseEntity<Void> getMoobti(@AuthenticationPrincipal Member member) {
-		openAPIService.getMoobti(member);
-		return ResponseEntity.ok(null);
+	public ResponseEntity<MoobtiResponse> getMoobti(@AuthenticationPrincipal Member member) {
+		MoobtiResponse moobti = openAPIService.getMoobti(member);
+		return ResponseEntity.ok(moobti);
 	}
 }

@@ -1,6 +1,10 @@
 package com.im.moobeing.domain.deal.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.im.moobeing.domain.deal.dto.CategoryPercentDto;
 import com.im.moobeing.domain.deal.dto.request.OpenAIRequest;
 import com.im.moobeing.domain.deal.dto.response.GetDrawPiChartResponse;
 import com.im.moobeing.domain.deal.dto.response.MoobtiResponse;
@@ -185,19 +189,16 @@ public class OpenAPIServiceImpl implements OpenAPIService {
                     + "\n"
                     + "이제 너는 소비 내역 분석기가 되어 내가 주는 소비 내역을 보고 \n"
                     + "유형 이름과 description, 각 카테고리별로 변환한 %을 json 으로 묶어서 보여줘\n"
-                    + "다른 말은 하지 말고 json 만 보내\n"
-                    + "\n"
-                    + "변환할 json 포맷은 다음과 같아\n"
-                    + "{\n"
-                    + "type: 유형,\n"
-                    + "description : 유형 설명\n"
-                    + ",categories : [ 카테고리 이름 :  변환한 카테고리 % ]\n"
-                    + "}\n"
-                    + "  ]\n\n"));
+                    + "다른 말은 하지 말고 다음 형식대로만 보내\n"
+                    + "type: 유형 이름(name),"
+                    + "description : 유형 설명 (description),"
+                    + "categories : [ 카테고리 이름 :  변환한 카테고리 % ]\n"
+                    + "줄바꿈이랑 띄어쓰기 하지마 "));
         // 사용자 정보 넣는 부분 추가
         LocalDateTime now = LocalDateTime.now();
         GetDrawPiChartResponse getDrawPiChartResponse = dealService.drawPiChart(member,
             now.getYear(), now.getMonthValue() - 1);
+
         promptList.add(new OpenAIRequest(OpenAIRole.system, getDrawPiChartResponse.getGetCategoryListDtoList().toString()));
         Map<String, Object> requestBody = new HashMap<>();
         // 사용할 모델 정보
@@ -209,15 +210,37 @@ public class OpenAPIServiceImpl implements OpenAPIService {
             HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
             ResponseEntity<String> response = restTemplate.exchange(OPENAI_API_URL, HttpMethod.POST,
                 entity, String.class);
-            log.info(response.getBody());
-//            if (response.getStatusCode() == HttpStatus.OK) {
-////                log.info(response.getBody());
-//            } else {
-////                throw new OpenAiException();
-//            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            // JSON 문자열을 MoobtiResponse 객체로 변환
+
+            System.out.println(extractMessageField(response.getBody()));
+            if (response.getStatusCode() == HttpStatus.OK) {
+//                return parseMoobtiResponse(extractMessageField(response.getBody()));
+//                return objectMapper.readValue(extractMessageField(response.getBody()), MoobtiResponse.class);
+//                log.info(response.getBody());
+//                return parseOpenAIResponse(response.getBody());
+            } else {
+//                throw new OpenAiException();
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return null;
     }
+
+    private String extractMessageField(String responseBody) {
+        try {
+            JsonNode root = objectMapper.readTree(responseBody);
+            JsonNode messageNode = root.path("choices")
+                                       .get(0)
+                                       .path("message");
+
+            return objectMapper.writeValueAsString(messageNode);
+        } catch (Exception e) {
+//            throw new MessageParsingException();
+        }
+        return null;
+    }
+
+
 }
