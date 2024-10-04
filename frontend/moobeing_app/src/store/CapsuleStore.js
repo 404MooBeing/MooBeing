@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const useCapsuleStore = create((set) => ({
-  dealId: 1, // transaction의 아이디
+  dealId: 0, // transaction의 아이디
   transactionName: "",
   transactionAmount: 0,
   transactionDate: "",

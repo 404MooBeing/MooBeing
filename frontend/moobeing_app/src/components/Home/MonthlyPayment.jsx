@@ -1,18 +1,8 @@
 import { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import goToJourney from "../../assets/button/goToJourney.svg";
 import { getSpendSummary } from "../../apis/AccountApi";
-
-// 반짝이는 애니메이션 정의
-const sparkle = keyframes`
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-`;
 
 const Container = styled.div`
   background-color: #f5fded;
@@ -92,16 +82,15 @@ const TextContainer = styled.div`
 const ComparisonText = styled.div`
   color: ${(props) => (props.isMorePaid ? '#348833' : '#FF5A0E')}; /* true면 초록색, false면 빨간색 */
   padding: 5px 10px;
-  font-size: 18px;
-  border-radius: 10px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
   font-family: 'mainFont';
-  animation: ${sparkle} 1.5s infinite; /* 1.5초마다 반복 */
+  box-shadow: inset 0 -10px 0 #E0EED2;
 `;
 
 const MonthlyPayment = () => {
   const [paymentSum, setPaymentSum] = useState({ monthlyPaymentAmount: 0 });
-  const [compareText, setCompareText] = useState('')
+  const [compareText, setCompareText] = useState('지난 달 지출내역이 없습니다')
   const [isMorePaid, setIsMorePaid] = useState(true);
 
   const navigate = useNavigate();
@@ -137,7 +126,7 @@ const MonthlyPayment = () => {
         {paymentSum.monthlyPaymentAmount.toLocaleString()} 원
       </PaymentSum>
       <TextContainer>
-        <ComparisonText isMorePaid={isMorePaid}>"{compareText}"</ComparisonText>
+        <ComparisonText isMorePaid={isMorePaid}>{compareText}</ComparisonText>
       </TextContainer>
     </Container>
   );
