@@ -6,10 +6,7 @@ import com.im.moobeing.domain.account.dto.request.CreateAccountProductRequest;
 import com.im.moobeing.domain.account.dto.request.DepositRequest;
 import com.im.moobeing.domain.account.dto.request.SendAccountRequest;
 import com.im.moobeing.domain.account.dto.request.TransferRequest;
-import com.im.moobeing.domain.account.dto.response.AccountProductResponse;
-import com.im.moobeing.domain.account.dto.response.GetAccountResponse;
-import com.im.moobeing.domain.account.dto.response.ProfitMarginResponse;
-import com.im.moobeing.domain.account.dto.response.SendAccountResponse;
+import com.im.moobeing.domain.account.dto.response.*;
 import com.im.moobeing.domain.account.entity.Account;
 import com.im.moobeing.domain.account.entity.AccountProduct;
 import com.im.moobeing.domain.account.entity.AccountSequence;
@@ -103,8 +100,7 @@ public class AccountService {
 
 		return SendAccountResponse.of(oldAccountBalance);
 	}
-
-	public ProfitMarginResponse profitMargin(Member member) {
+	public Long getMonthlyRemainder(Member member) {
 		// 저번 달 지출 비용 확인하기. 현재 시간을
 		int beforeYear = LocalDateTime.now().getYear();
 		int beforeMonth = LocalDateTime.now().getMonthValue() - 1;
@@ -118,62 +114,53 @@ public class AccountService {
 
 		// 만약 지난달에 초과 지출하거나,
 		if (remainder < 0){
-			return ProfitMarginResponse.of(0L,null);
+			return 0L;
 		}
+		return remainder;
+	}
+
+	public ProfitMarginResponse profitMargin(Member member) {
+		Long remainder = getMonthlyRemainder(member);
 
 		List<MemberLoan> memberLoan = memberLoanRepository.findAllByMemberId(member.getId());
 
 		List<LoanListDto> loanList = new ArrayList<>();
 
 		for (MemberLoan loan : memberLoan) {
-			Long canPay = loan.getRemainingBalance() - remainder;
-			LoanProduct loanProduct = loanProductRepository.findByLoanName(loan.getLoanProductName())
-					.orElseThrow(()-> new BusinessException(ErrorCode.LP_NOT_FOUND));
-			if (canPay <= 0){
-				canPay = loan.getRemainingBalance();
+			if (loan.getStatus().equals("INACTIVE")){
+				continue;
 			}
-			Long interestBalance = loanInterestSavingsCalculation(loan.getRemainingBalance(), loanProduct.getInterestRate(), Integer.parseInt(String.valueOf(loanProduct.getLoanPeriod())), canPay);
+			LoanProduct loanProduct = loanProductRepository.findByLoanName(loan.getLoanProductName())
+					.orElseThrow(() -> new BusinessException(ErrorCode.LP_NOT_FOUND));
+			long loanTermMonths = loanProduct.getLoanPeriod() / 30;
+			// 이득 구하기
+			Long interestBalance = loanInterestSavingsCalculation(loan.getRemainingBalance(), loanProduct.getInterestRate(), (int)loanTermMonths, remainder);
 
-			loanList.add(LoanListDto.of(loan.getLoanProductName(), interestBalance));
+			loanList.add(LoanListDto.of(loan.getLoanProductName(), interestBalance, loan.getRemainingBalance()));
 		}
 
 		return ProfitMarginResponse.of(remainder, loanList);
 	}
 
-	private static Long loanInterestSavingsCalculation(Long principal, double annualInterestRate, int loanTermMonths, Long extraPayment) {
-		annualInterestRate = annualInterestRate / 100;
-		// 월 이자율 계산
-		double monthlyInterestRate = annualInterestRate / 12;
-
-		// 원금 일부 상환 전 월 상환액 계산
-		double monthlyPayment = calculateMonthlyPayment(principal, monthlyInterestRate, loanTermMonths);
-
-		// 원금 일부 상환 전 총 이자 비용 계산
-		double totalInterestBefore = calculateTotalInterest(monthlyPayment, loanTermMonths, principal);
-
-		// 원금 일부 상환 후 새로운 원금 계산
-		double newPrincipal = principal - extraPayment;
-
-		// 원금 일부 상환 후 월 상환액 재계산 (대출 기간은 유지)
-		double newMonthlyPayment = calculateMonthlyPayment(newPrincipal, monthlyInterestRate, loanTermMonths);
-
-		// 원금 일부 상환 후 총 이자 비용 계산
-		double totalInterestAfter = calculateTotalInterest(newMonthlyPayment, loanTermMonths, newPrincipal);
-
-		// 이자 절감액 계산
-		Long interestSavings = (long) (totalInterestBefore - totalInterestAfter);
-
-		return interestSavings;
+	private double calculateMonthlyPayment(double principal, double annualInterestRate, int months) {
+		double monthlyInterestRate = annualInterestRate / 12 / 100;
+		return principal * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, months))
+				/ (Math.pow(1 + monthlyInterestRate, months) - 1);
 	}
 
-	// 월 상환액 계산 함수
-	public static double calculateMonthlyPayment(double principal, double monthlyInterestRate, int loanTermMonths) {
-		return principal * monthlyInterestRate / (1 - Math.pow(1 + monthlyInterestRate, -loanTermMonths));
+	private double calculateTotalInterest(double monthlyPayment, int months, double principal) {
+		return (monthlyPayment * months) - principal;
 	}
 
-	// 총 이자 비용 계산 함수
-	public static double calculateTotalInterest(double monthlyPayment, int loanTermMonths, double principal) {
-		return (monthlyPayment * loanTermMonths) - principal;
+	private Long loanInterestSavingsCalculation(Long principal, double annualInterestRate, int loanTermMonths, Long remainder) {
+		double monthlyPayment = calculateMonthlyPayment(principal, annualInterestRate, loanTermMonths);
+		double totalInterest = calculateTotalInterest(monthlyPayment, loanTermMonths, principal);
+
+		long nextPrincipal = principal - remainder;
+		double nextMonthlyPayment = calculateMonthlyPayment(nextPrincipal, annualInterestRate, loanTermMonths);
+		double nextTotalInterest = calculateTotalInterest(nextMonthlyPayment, loanTermMonths, nextPrincipal);
+
+		return Math.round(totalInterest - nextTotalInterest);
 	}
 
 	@Transactional(readOnly = false)
