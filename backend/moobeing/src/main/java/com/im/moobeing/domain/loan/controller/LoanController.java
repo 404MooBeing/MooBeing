@@ -61,6 +61,12 @@ public class LoanController {
 		return ResponseEntity.status(HttpStatus.OK).body(loanService.getPercentLoan(member));
 	}
 
+	@Operation(summary = "대출별로 몇 퍼센트 상환인지 체크", description = "몇 퍼센트 상환인지 체크하기")
+	@GetMapping("/percent-name")
+	public ResponseEntity<?> getPercentLoanName(@AuthenticationPrincipal Member member){
+		return ResponseEntity.status(HttpStatus.OK).body(loanService.getPercentLoanName(member));
+	}
+
 	@Operation(summary = "모든 대출금 또래 상환능력 조회", description = "모든 대출금 또래 상환능력 조회 하기")
 	@GetMapping("/all-buddy")
 	public ResponseEntity<?> getAllBuddyLoanMap(@AuthenticationPrincipal Member member){

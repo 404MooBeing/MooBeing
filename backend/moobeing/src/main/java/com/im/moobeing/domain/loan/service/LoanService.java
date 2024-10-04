@@ -280,6 +280,19 @@ public class LoanService {
 		return GetPercentLoanResponse.of(remainingPercent);
 	}
 
+	public List<GetPercentLoanNameResponse> getPercentLoanName(Member member) {
+		return memberLoanRepository.findAllByMemberId(member.getId())
+				.stream()
+				.filter(loan -> loan.getRemainingBalance() > 0)
+				.map(loan -> {
+					double remainingPercent = (loan.getInitialBalance() > 0)
+							? ((double) loan.getRemainingBalance() / loan.getInitialBalance()) * 100
+							: 0.0;
+					return new GetPercentLoanNameResponse(loan.getLoanProductName(), remainingPercent);
+				})
+				.collect(Collectors.toList());
+	}
+
 	public GetAllLoanMapResponse getAllBuddyLoanMap(Member member) {
 		List<MemberLoan> memberLoanList = memberLoanRepository.findAllByMemberId(member.getId());
 
