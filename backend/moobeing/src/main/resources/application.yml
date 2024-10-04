@@ -31,7 +31,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     defer-datasource-initialization: true
     properties:
       hibernate:
@@ -45,3 +45,7 @@ spring:
       com.app: debug
 
 SSAFY_APIKEY: ${SSAFY_APIKEY}
+
+openai:
+  api:
+    key: ${OPENAI_KEY}
