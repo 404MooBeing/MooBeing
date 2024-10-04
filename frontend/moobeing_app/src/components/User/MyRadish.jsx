@@ -9,7 +9,7 @@ import {
   selectRadish,
   growBabyRadish,
 } from "../../apis/RadishApi";
-// import { useUserStore } from "../../store/UserStore";
+// import useUserStore from "../../store/UserStore";
 import checkBox from "../../assets/checkBox.svg";
 
 const Container = styled.div`
