@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { postAccountHistory } from "../../apis/AccountApi"; // API 함수 가져오기
 import useTransactionStore from "../../store/TransactionStore";
 import basicRad from "../../assets/radishes/basicRad.svg";
+import useCapsuleStore from "../../store/CapsuleStore";
 
 const ListContainer = styled.div`
   padding: 20px;
@@ -111,6 +112,7 @@ const NoTransactionText = styled.p`
 `;
 
 const TransactionList = () => {
+  const { updateTransactionInfo } = useCapsuleStore();
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
   const [selectedTransactionIndex, setSelectedTransactionIndex] = useState(null);
@@ -149,6 +151,15 @@ const TransactionList = () => {
   const handleSelectTransaction = (index) => {
     if (isRadishSelected) {
       setSelectedTransactionIndex(index);
+  
+      // 선택된 거래 정보를 가져와서 updateTransactionInfo 호출
+      const selectedTransaction = transactions[index];
+      updateTransactionInfo(
+        selectedTransaction.id,               // 거래 ID
+        selectedTransaction.title,            // 거래 이름 (상호명 등)
+        selectedTransaction.amount,           // 거래 금액
+        selectedTransaction.date              // 거래 날짜
+      );
     }
   };
 
@@ -182,7 +193,7 @@ const TransactionList = () => {
               </TitleAndTime>
               <AmountAndRemain>
                 <Amount amount={transaction.amount}>
-                  {transaction.amount} 원
+                  {transaction.amount.toLocaleString()} 원
                 </Amount>
                 <Remain>잔액 {transaction.remainBalance}</Remain>
               </AmountAndRemain>

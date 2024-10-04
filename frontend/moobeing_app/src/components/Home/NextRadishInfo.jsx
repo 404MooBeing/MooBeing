@@ -46,11 +46,11 @@ const CountdownContainer = styled.div`
 `;
 
 const Countdown = styled.div`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
 
   @media (min-width: 600px) {
-    font-size: 35px;
+    font-size: 25px;
   }
 `;
 
@@ -72,33 +72,31 @@ const ComingSoon = styled.div`
   transform: translate(-50%, -50%);
   font-size: 15px;
   font-weight: 700;
-  color: #5E5054;
+  color: #5e5054;
   pointer-events: none;
   text-align: center;
 `;
 
-const LoanInfo = () => {
-  const [timeLeft, setTimeLeft] = useState("");
+const RadishInfo = () => {
+  const [timeLeft, setTimeLeft] = useState("뽑을 무가 없습니다");
+  const [count, setCount] = useState(0);
+  const [targetDate, setTargetDate] = useState(null); // 목표 시간을 상태로 저장
 
-  const targetDate = new Date("2024-10-05T00:00:00");
-
-  const calculateTimeLeft = () => {
+  const calculateTimeLeft = (targetDate) => {
     const now = new Date();
-    const secondsLeft = differenceInSeconds(targetDate, now);
+    const secondsLeft = differenceInSeconds(new Date(targetDate), now);
 
     if (secondsLeft > 0) {
       const duration = intervalToDuration({
         start: now,
-        end: targetDate,
+        end: new Date(targetDate),
       });
 
-      // undefined 방지를 위해 기본값을 설정
       const days = duration.days || 0;
       const hours = duration.hours || 0;
       const minutes = duration.minutes || 0;
       const remainingSeconds = secondsLeft % 60;
 
-      // 한국어 형식으로 문자열 만들기
       const formattedDuration = `${days}일 ${hours}시간 ${minutes}분 ${remainingSeconds}초`;
       return formattedDuration;
     } else {
@@ -107,21 +105,39 @@ const LoanInfo = () => {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+    const fetchRadishSummary = async () => {
+      try {
+        const summary = await getRadishSummary();
+        const { remainTime, count } = summary;
+
+        setCount(count);
+        setTargetDate(remainTime); // 목표 시간을 설정
+      } catch (error) {
+        console.error("무 요약 데이터를 가져오지 못했습니다.", error);
+      }
+    };
+
+    fetchRadishSummary();
+  }, []);
+
+  useEffect(() => {
+    if (!targetDate) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft(targetDate)); // 남은 시간을 매초 계산
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(timer); // 컴포넌트 언마운트 시 타이머 정리
+  }, [targetDate]); // targetDate가 변경될 때마다 실행
 
   return (
     <Container>
       <SubHeader>
         <SubTitle>다음 무 수확까지</SubTitle>
-        <LeftRad>남은 무 6개</LeftRad>
+        <LeftRad>남은 무 {count}개</LeftRad> {/* count 상태 반영 */}
       </SubHeader>
       <CountdownContainer>
-        <Countdown>{timeLeft}</Countdown>
+        <Countdown>{timeLeft}</Countdown> {/* 남은 시간 표시 */}
         <ImageContainer>
           <RadishIcon src={basicRadish} alt="Radish Icon" />
           <ComingSoon>coming soon</ComingSoon>
@@ -131,4 +147,4 @@ const LoanInfo = () => {
   );
 };
 
-export default LoanInfo;
+export default RadishInfo;
