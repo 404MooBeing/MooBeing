@@ -103,3 +103,25 @@ export const getStreamCnt = async () => {
     throw error;
   }
 };
+
+
+// 무 코인 개수 받아오기
+export const getCoin = async () => {
+  try {
+    const response = await api.get("/point/my");
+    return response.data;
+  } catch (error) {
+    console.error("무코인 가져오기 실패,", error);
+    throw error;
+  }
+};
+
+export const getUserRadishCollection = async () => {
+  try {
+    const response = await api.get("/radish/characters");
+    return response.data;
+  } catch (error) {
+    console.error("무 컬렉션 가져오기 실패,", error);
+    throw error;
+  }
+}

@@ -4,41 +4,17 @@ import styled, { keyframes, css } from "styled-components";
 // import MonthlyRecord from "../components/Radish/MonthlyRecord";
 
 import Line from "../../assets/button/Line.svg";
-// import {
-//   getUserRadishCollection,
-//   selectRadish,
-//   growBabyRadish,
-// } from "../apis/RadishApi";
+import {
+  getUserRadishCollection,
+  selectRadish,
+  growBabyRadish,
+} from "../../apis/RadishApi";
 // import { useUserStore } from "../../store/UserStore";
 import checkBox from "../../assets/checkBox.svg";
-
-const PageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  padding-bottom: 30px;
-`;
-
-const ScrollableContent = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  overflow-y: auto;
-  box-sizing: border-box;
-`;
-
-const ContentContainer = styled.div`
-  flex: 1;
-  margin-bottom: 20px;
-`;
 
 const Container = styled.div`
   width: 100%;
   max-width: 600px;
-  margin: 5vh auto 0;
   padding: 0 20px;
   box-sizing: border-box;
 `;
@@ -46,31 +22,6 @@ const Container = styled.div`
 const TitleContainer = styled.div`
   text-align: center;
   margin-bottom: 20px;
-`;
-
-const Subtitle = styled.h2`
-  margin-bottom: 20px;
-`;
-
-const SortButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-`;
-
-const SortButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #24272d;
-  font-size: 13px;
-  font-weight: ${(props) => (props.isselected ? "bold" : "normal")};
-`;
-
-const LineImg = styled.img`
-  height: 15px;
-  padding: 0px 10px;
-  margin-top: 2px;
 `;
 
 const ChooseButtonContainer = styled.div`
@@ -87,6 +38,22 @@ const ChooseButton = styled.button`
   border-radius: 30px;
   padding: 10px 20px;
   cursor: pointer;
+`;
+
+const ScrollContainer = styled.div`
+  height: calc(100vh - 400px); /* 상단 요소들의 높이를 고려하여 조정하세요 */
+  overflow-y: auto;
+
+  /* 크롬, 사파리, 오페라 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* IE와 Edge */
+  -ms-overflow-style: none;
+
+  /* Firefox */
+  scrollbar-width: none;
 `;
 
 const CardContainer = styled.div`
@@ -114,8 +81,8 @@ const CharacterCard = styled.div`
   ${(props) =>
     props.isselected &&
     `
-    filter: drop-shadow(0 0 8px #348833);
-  `}
+      filter: drop-shadow(0 0 8px #348833);
+    `}
 
   @media (max-width: 400px) {
     width: calc(50% - 10px);
@@ -136,7 +103,6 @@ const CharacterName = styled.span`
   padding: 2px 5px;
   border-radius: 20px;
   background-color: ${(props) => {
-    // console.log("Rank:", props.rank); // 이 줄을 추가해서 rank 값을 확인
     switch (props.rank) {
       case "B":
         return "#D6F2CE";
@@ -184,6 +150,7 @@ const DecisionButton = styled.button`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
+// 애니메이션 정의
 const explosionAnimation = keyframes`
   0% { transform: scale(0); opacity: 1; }
   20% { transform: scale(1); opacity: 0.8; }
@@ -239,6 +206,7 @@ const NewCharacterEffect = styled.div`
   justify-content: center;
   animation: ${newCharacterAnimation} 0.5s ease-out 1.5s both;
 `;
+
 const fadeOut = keyframes`
   from { opacity: 1; }
   to { opacity: 0; }
@@ -289,19 +257,8 @@ const MyRadish = () => {
   useEffect(() => {
     const fetchRadishCollection = async () => {
       try {
-        // const response = await getUserRadishCollection();
-        // setCharacters(response.memberRadishes);
-        setCharacters([
-          {
-            "radishId": 1,
-            "radishName": "무",
-            "radishRank": "A",
-            "radishNumber": 1,
-            "radishImageUrl": "https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9",
-            "radishCreateTime": "2024-08-31T00:13:49"
-          }
-        ]
-        );
+        const memberRadishes = await getUserRadishCollection();
+        setCharacters(memberRadishes);
       } catch (error) {
         console.error("Failed to fetch radish collection:", error);
       }
@@ -344,6 +301,7 @@ const MyRadish = () => {
         //   radishRank: selectedCharacter.radishRank,
         //   radishImageUrl: selectedCharacter.radishImageUrl,
         // });
+        await selectRadish(selectedCharacter.radishName);
         setIsChooseActive(false);
         setSelectedCharacter(null);
       } catch (error) {
@@ -358,14 +316,7 @@ const MyRadish = () => {
       setGrowingCharacter(char);
       try {
         const newRadish = async () => {
-          // const result = await growBabyRadish();
-          const result = {
-            "name": "Test User",
-            "radishName": "babyRad",
-            "radishRank": "B",
-            "radishImageUrl": "https://github.com/user-attachments/assets/67db296c-70b7-422c-bc1f-8fab92414dc6",
-            "radishMessage": "귀여운 애기 무네요 새로운 시작의 발판이 될 거 같아요! 이 무를 타임캡슐무 심는곳에 심으면 어떤 무로 성장할 지 기대되요!"
-          }
+          const result = await growBabyRadish();
           setTimeout(() => {
             setCharacters((prevCharacters) =>
               prevCharacters.map((c) => {
@@ -416,106 +367,79 @@ const MyRadish = () => {
   };
 
   return (
-    <PageWrapper>
-      <ScrollableContent>
-        <ContentContainer>
-          <Container>
-            <TitleContainer>
-              {/* <Subtitle>무 컬렉션</Subtitle> */}
-              {/* <SortButtonContainer>
-                <SortButton
-                  onClick={() => setSortBy("radishCreateTime")}
-                  isselected={sortBy === "radishCreateTime"}
-                >
-                  날짜순
-                </SortButton>
-                <LineImg src={Line} alt="Line" />
-                <SortButton
-                  onClick={() => setSortBy("radishRank")}
-                  isselected={sortBy === "radishRank"}
-                >
-                  랭킹순
-                </SortButton>
-              </SortButtonContainer> */}
-            </TitleContainer>
-            <ChooseButtonContainer>
-              <ChooseButton
-                onClick={handleChoose}
-                isactive={isChooseActive.toString()}
-              >
-                선택
-              </ChooseButton>
-            </ChooseButtonContainer>
-
-            {/* <MonthlyRecord /> */}
-
-            <CardContainer>
-              {sortedCharacters.map((char) => (
-                <CharacterCard
-                  key={char.radishId}
-                  isselectable={isChooseActive ? "true" : "false"}
-                  isselected={selectedCharacter?.radishId === char.radishId}
-                  onClick={() => handleCardClick(char)}
-                >
-                  {growingCharacter?.radishId === char.radishId ? (
-                    <AnimationContainer>
-                      <ExplosionEffect />
-                      <SmokeEffect />
-                      <NewCharacterEffect>
-                        <CharacterImage src={char.radishImageUrl} />
-                      </NewCharacterEffect>
-                    </AnimationContainer>
-                  ) : (
+    <Container>
+      <TitleContainer>
+        {/* 필요 시 제목 등을 추가하세요 */}
+      </TitleContainer>
+      <ChooseButtonContainer>
+        <ChooseButton
+          onClick={handleChoose}
+          isactive={isChooseActive.toString()}
+        >
+          선택
+        </ChooseButton>
+      </ChooseButtonContainer>
+      <ScrollContainer>
+        <CardContainer>
+          {sortedCharacters.map((char) => (
+            <CharacterCard
+              key={char.radishId}
+              isselectable={isChooseActive ? "true" : "false"}
+              isselected={selectedCharacter?.radishId === char.radishId}
+              onClick={() => handleCardClick(char)}
+            >
+              {growingCharacter?.radishId === char.radishId ? (
+                <AnimationContainer>
+                  <ExplosionEffect />
+                  <SmokeEffect />
+                  <NewCharacterEffect>
                     <CharacterImage src={char.radishImageUrl} />
-                  )}
-                  <CharacterName rank={char.radishRank}>
-                    {char.radishName}
-                  </CharacterName>
-                  <CharacterCount>{char.radishNumber}x</CharacterCount>
-                  {/* {((!isChooseActive &&
-                    char.radishName === userInfo.radishName) ||
-                    (isChooseActive &&
-                      selectedCharacter?.radishId === char.radishId)) && (
-                    <CheckBoxOverlay src={checkBox} alt="Selected" />
-                  )} */}
-                  {char.radishName === "응애무" &&
-                    char.radishNumber >= 5 &&
-                    !isGrowthComplete &&
-                    !isFadingOut && (
-                      <GrowButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleGrow(char);
-                        }}
-                        disabled={growingCharacter !== null}
-                        fadeOut={isFadingOut}
-                      >
-                        성장하기
-                      </GrowButton>
-                    )}
-                  {isGrowthComplete &&
-                    growingCharacter?.radishId === char.radishId && (
-                      <AcquireButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAcquire();
-                        }}
-                      >
-                        획득하기
-                      </AcquireButton>
-                    )}
-                </CharacterCard>
-              ))}
-            </CardContainer>
-          </Container>
-        </ContentContainer>
-      </ScrollableContent>
+                  </NewCharacterEffect>
+                </AnimationContainer>
+              ) : (
+                <CharacterImage src={char.radishImageUrl} />
+              )}
+              <CharacterName rank={char.radishRank}>
+                {char.radishName}
+              </CharacterName>
+              <CharacterCount>{char.count}x</CharacterCount>
+              {/* 추가적인 요소들이 필요하면 여기에 추가하세요 */}
+              {char.radishName === "응애무" &&
+                char.count >= 5 &&
+                !isGrowthComplete &&
+                !isFadingOut && (
+                  <GrowButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleGrow(char);
+                    }}
+                    disabled={growingCharacter !== null}
+                    fadeOut={isFadingOut}
+                  >
+                    성장하기
+                  </GrowButton>
+                )}
+              {isGrowthComplete &&
+                growingCharacter?.radishId === char.radishId && (
+                  <AcquireButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAcquire();
+                    }}
+                  >
+                    획득하기
+                  </AcquireButton>
+                )}
+            </CharacterCard>
+          ))}
+        </CardContainer>
+      </ScrollContainer>
       {selectedCharacter !== null && (
         <DecisionButtonContainer>
           <DecisionButton onClick={handleDecision}>결정</DecisionButton>
         </DecisionButtonContainer>
       )}
-    </PageWrapper>
+    </Container>
   );
 };
 

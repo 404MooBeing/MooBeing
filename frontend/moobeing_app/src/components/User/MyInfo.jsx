@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -104,8 +105,8 @@ const MyInfo = ({userInfo}) => {
       <Contents>
         <SubTitle>개인정보</SubTitle>
         <InfoRow>
-          <Label>아이디</Label>
-          <Value>{userInfo.id}</Value>
+          <Label>닉네임</Label>
+          <Value>{userInfo.nickname}</Value>
         </InfoRow>
         <InfoRow>
           <Label>생년월일</Label>
