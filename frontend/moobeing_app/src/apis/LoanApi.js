@@ -179,6 +179,7 @@ export const changeInterestRate = async () => {
   try {
     const response = await api.post("/loan/good");
     console.log("금리혜택을 받는 axios 함수가 호출 되었습니다");
+    return response.data
   } catch (error) {
     console.error("금리혜택을 받는 함수 호출 실패", error);
   }

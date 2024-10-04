@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import {
   LineChart,
@@ -41,12 +42,13 @@ const ChartContainer = styled.div`
 `;
 
 const TitleOfChart = styled.div`
-  font-size: 28px;
-  margin-top: 3vh;
+  font-size: 18px;
+  margin-top: 5vh;
   margin-bottom: 1vh;
+  font-weight: bold;
 
   @media (min-width: 600px) {
-    font-size: 33px;
+    font-size: 25px;
   }
 `;
 
@@ -213,7 +215,12 @@ const CustomDropdownItem = styled.li`
   `}
 `;
 
-const CustomDropdown = ({ options, selectedOption, onChange, visibleData }) => {
+const NoData = styled.div`
+  padding-top: 20px;
+  padding-bottom: 20px;
+`
+
+const CustomDropdown = ({ options, selectedOption, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOptionClick = (value) => {
@@ -221,13 +228,10 @@ const CustomDropdown = ({ options, selectedOption, onChange, visibleData }) => {
     setIsOpen(false);
   };
 
-  const currentVisibleYear =
-    visibleData.length > 0 ? visibleData[0].year : selectedOption;
-
   return (
     <CustomDropdownContainer>
       <CustomDropdownHeader onClick={() => setIsOpen(!isOpen)}>
-        {currentVisibleYear ? `${currentVisibleYear}년` : "연도 선택"}
+        {selectedOption ? `${selectedOption}년` : "연도를 선택하세요"}
       </CustomDropdownHeader>
       {isOpen && (
         <CustomDropdownList>
@@ -250,11 +254,9 @@ const CustomTooltip = ({ active, payload, label, isYearly }) => {
   if (active && payload && payload.length) {
     const formatToKoreanWon = (value) => {
       if (value >= 100000000) {
-        return `${(value / 100000000).toFixed(2)}억`;
+        return `${Math.floor(value / 100000000)}억`;
       } else if (value >= 10000) {
-        return `${(value / 10000).toFixed(2)}만`;
-      } else if (value >= 1000) {
-        return `${(value / 1000).toFixed(2)}천`;
+        return `${Math.floor(value / 10000)}만`;
       } else {
         return `${value}`;
       }
@@ -267,7 +269,6 @@ const CustomTooltip = ({ active, payload, label, isYearly }) => {
           padding: "3px 10px",
           border: "1px solid #ccc",
           borderRadius: "10px",
-          textAlign: "center",
         }}
       >
         <p>{isYearly ? `${label}년` : `${label}월`}</p>
@@ -282,14 +283,13 @@ const CustomTooltip = ({ active, payload, label, isYearly }) => {
   return null;
 };
 
-const LoanJourneyGraph = ({
+function EachLoanJourneyGraph({
   data = [],
   peerData = [],
   yearData = [],
   yearPeerData = [],
-  mode = "total",
-  productName = ""
-}) => {
+}) {
+  const { loanName } = useParams();
   const [visibleRange, setVisibleRange] = useState([0, 4]);
   const [yAxisDomain, setYAxisDomain] = useState([0, 0]);
   const [showPeerData, setShowPeerData] = useState(false);
@@ -310,7 +310,15 @@ const LoanJourneyGraph = ({
 
   useEffect(() => {
     updateYAxisDomain();
-  }, [data, peerData, yearData, yearPeerData, visibleRange, showPeerData, isYearly]);
+  }, [
+    data,
+    peerData,
+    yearData,
+    yearPeerData,
+    visibleRange,
+    showPeerData,
+    isYearly,
+  ]);
 
   const updateYAxisDomain = () => {
     const targetData = isYearly ? yearData : data;
@@ -389,9 +397,9 @@ const LoanJourneyGraph = ({
     if (value >= 100000000) {
       return `${(value / 100000000).toFixed(2)}억`;
     } else if (value >= 10000) {
-      return `${(value / 10000).toFixed(2)}만`;
+      return `${(value / 10000).toFixed(0)}만`;
     } else if (value >= 1000) {
-      return `${(value / 1000).toFixed(2)}천`;
+      return `${(value / 1000).toFixed(0)}천`;
     } else {
       return `${value}`;
     }
@@ -400,7 +408,7 @@ const LoanJourneyGraph = ({
   if (!data || data.length === 0) {
     return (
       <GraphContainer>
-        <h1>데이터가 없습니다.</h1>
+        <NoData>데이터가 없습니다.</NoData>
       </GraphContainer>
     );
   }
@@ -414,22 +422,19 @@ const LoanJourneyGraph = ({
           </ToggleCircle>
         </ToggleButton>
       </ToggleWrapper>
-      <TitleOfChart>
-        {mode === "total" ? "전체 상환 여정" : `${productName} 상환 여정`}
-      </TitleOfChart>
+      <TitleOfChart>{loanName} 상환 여정</TitleOfChart>
       <DataCollectContainer>
         <CustomDropdown
           options={availableYears}
           selectedOption={currentYear}
           onChange={handleYearChange}
-          visibleData={visibleData}
         />
         <DataCollectButton
           isYearly={isYearly}
           onClick={() => {
             setIsYearly(!isYearly);
-            setShowPeerData(false); // Reset peer data visibility when switching view
-            setVisibleRange([0, 4]); // Reset to first data of the selected view
+            setShowPeerData(false);
+            setVisibleRange([0, 4]);
           }}
         >
           {isYearly ? "월별 보기" : "연도별 보기"}
@@ -463,7 +468,7 @@ const LoanJourneyGraph = ({
             <Line
               type="monotone"
               dataKey="loanBalance"
-              name={mode === "total" ? "내 잔액" : productName}
+              name="내 잔액"
               stroke="#4caf50"
               strokeWidth={2}
               dot={{ r: 5 }}
@@ -512,7 +517,6 @@ const LoanJourneyGraph = ({
       </ButtonContainer>
     </GraphContainer>
   );
-};
+}
 
-
-export default LoanJourneyGraph;
+export default EachLoanJourneyGraph;

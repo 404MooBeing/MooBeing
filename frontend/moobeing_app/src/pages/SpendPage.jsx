@@ -78,7 +78,6 @@ const Spend = () => {
       setSpendData(data);
     } catch (error) {
       setError("소비 데이터 가져오기 실패");
-      console.error(error);
     }
   }, [setSpendData]);
 
@@ -88,7 +87,6 @@ const Spend = () => {
       setPieChartData(pieData);
     } catch (error) {
       setError("파이 차트 가져오기 실패");
-      console.error(error);
     }
   }, [setPieChartData]);
 
@@ -98,7 +96,6 @@ const Spend = () => {
       setSpendCategory(spendCategoryData);
     } catch (error) {
       setError("소비 데이터 조회 실패");
-      console.error(error);
     }
   }, [setSpendCategory]);
 
@@ -129,9 +126,9 @@ const Spend = () => {
         />
         <style>{transitionStyles}</style>
         {isLoading ? (
-          <LoadingOrError>로딩 중</LoadingOrError>
+          <LoadingOrError>로딩 중...</LoadingOrError>
         ) : error ? (
-          <LoadingOrError>{error}</LoadingOrError>
+          <LoadingOrError>로딩 중...</LoadingOrError>
         ) : (
           <TransitionGroup component={null}>
             {viewMode === "차트 보기" ? (
