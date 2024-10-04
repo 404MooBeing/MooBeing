@@ -61,18 +61,6 @@ export const postAccountHistory = async (accountHistoryData) => {
 };  
 
 
-// 계좌별 날짜 합계 조회
-export const getSpendSummary = async (year, month, day) => {
-  try {
-    const response = await api.get(`/expense/account-summary?year=${year}&month=${month}&day=${day}`);
-    return response.data;
-  } catch (error) {
-    console.error("계좌별 날짜 합계 불러오기 실패:", error);
-    throw error;
-  }
-};
-
-
 // 대출금을 내 계좌에서 상환하기
 // export const postAccountLoan = async (accountData) => {
 //   try {

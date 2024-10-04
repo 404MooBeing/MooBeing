@@ -32,7 +32,6 @@ import QuizResult from "./pages/QuizResultPage";
 import Spend from "./pages/SpendPage";
 import TransactionHistory from "./pages/TransactionHistoryPage";
 import Welcome from "./pages/WelcomePage";
-
 import useUserStore from "./store/UserStore";
 
 function Router() {
