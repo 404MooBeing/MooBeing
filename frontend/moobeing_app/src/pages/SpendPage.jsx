@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import PageTitle from "../components/Spend/PageTitle";
 import Calendar from "../components/Spend/Calendar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import DailyCategory from "../components/Spend/DailyCategory";
 import PieGraph from "../components/Spend/PieGraph";
@@ -60,46 +60,64 @@ const transitionStyles = `
   }
 `;
 
+const LoadingOrError = styled.div`
+  margin-top: 30%;
+`
+
 const Spend = () => {
   const { selectedDate } = useDateStore();
   const { spendData, pieChartData, spendCategory, setSpendData, setPieChartData, setSpendCategory } = useSpendStore();
-  const [viewMode, setViewMode] = useState("차트 보기"); // '차트 보기' or '캘린더 보기'
+  const [viewMode, setViewMode] = useState("차트 보기");
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+  const [error, setError] = useState(null); // 에러 상태 추가
+
+  // API 호출 함수들 최적화
+  const fetchSpendData = useCallback(async (year, month) => {
+    try {
+      const data = await getSpendDataByMonth(year, month);
+      setSpendData(data);
+    } catch (error) {
+      setError("소비 데이터 가져오기 실패");
+      console.error(error);
+    }
+  }, [setSpendData]);
+
+  const fetchPieChartData = useCallback(async (year, month) => {
+    try {
+      const pieData = await getPieChart(year, month);
+      setPieChartData(pieData);
+    } catch (error) {
+      setError("파이 차트 가져오기 실패");
+      console.error(error);
+    }
+  }, [setPieChartData]);
+
+  const fetchSpendCategory = useCallback(async (year, month) => {
+    try {
+      const spendCategoryData = await getSpendCategory(year, month);
+      setSpendCategory(spendCategoryData);
+    } catch (error) {
+      setError("소비 데이터 조회 실패");
+      console.error(error);
+    }
+  }, [setSpendCategory]);
 
   useEffect(() => {
     const year = selectedDate.year();
     const month = selectedDate.month() + 1;
 
-    const fetchSpendData = async () => {
-      try {
-        const data = await getSpendDataByMonth(year, month);
-        setSpendData(data);
-      } catch (error) {
-        console.error("소비 데이터 가져오기 실패", error);
-      }
-    };
+    // 로딩 상태 시작
+    setIsLoading(true);
+    setError(null);
 
-    const fetchPieChartData = async () => {
-      try {
-        const pieData = await getPieChart(year, month);
-        setPieChartData(pieData);
-      } catch (error) {
-        console.error("파이 차트 가져오기 실패", error);
-      }
-    };
-
-    const fetchSpendCategory = async () => {
-      try {
-        const spendCategoryData = await getSpendCategory(year, month);
-        setSpendCategory(spendCategoryData);
-      } catch (error) {
-        console.error("월별 소비 카테고리별 조회 실패", error);
-      }
-    };
-
-    fetchSpendData();
-    fetchPieChartData();
-    fetchSpendCategory();
-  }, [selectedDate, setSpendData, setPieChartData, setSpendCategory]);
+    // API 호출 실행
+    Promise.all([
+      fetchSpendData(year, month),
+      fetchPieChartData(year, month),
+      fetchSpendCategory(year, month),
+    ])
+      .finally(() => setIsLoading(false)); // 로딩 상태 종료
+  }, [selectedDate, fetchSpendData, fetchPieChartData, fetchSpendCategory]);
 
   return (
     <Screen>
@@ -110,23 +128,29 @@ const Spend = () => {
           viewMode={viewMode}
         />
         <style>{transitionStyles}</style>
-        <TransitionGroup component={null}>
-          {viewMode === "차트 보기" ? (
-            <CSSTransition key="calendar" timeout={500} classNames="fade">
-              <CalendarWrapper>
-                <Calendar />
-                <DailyCategory />
-              </CalendarWrapper>
-            </CSSTransition>
-          ) : (
-            <CSSTransition key="graph" timeout={500} classNames="fade">
-              <PieWrapper>
-                <PieGraph />
-                <MonthlyCategory />
-              </PieWrapper>
-            </CSSTransition>
-          )}
-        </TransitionGroup>
+        {isLoading ? (
+          <LoadingOrError>로딩 중</LoadingOrError>
+        ) : error ? (
+          <LoadingOrError>{error}</LoadingOrError>
+        ) : (
+          <TransitionGroup component={null}>
+            {viewMode === "차트 보기" ? (
+              <CSSTransition key="calendar" timeout={500} classNames="fade">
+                <CalendarWrapper>
+                  <Calendar />
+                  <DailyCategory />
+                </CalendarWrapper>
+              </CSSTransition>
+            ) : (
+              <CSSTransition key="graph" timeout={500} classNames="fade">
+                <PieWrapper>
+                  <PieGraph />
+                  <MonthlyCategory />
+                </PieWrapper>
+              </CSSTransition>
+            )}
+          </TransitionGroup>
+        )}
       </Container>
     </Screen>
   );

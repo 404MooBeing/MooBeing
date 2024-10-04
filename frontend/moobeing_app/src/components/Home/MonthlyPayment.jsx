@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import goToJourney from "../../assets/button/goToJourney.svg";
+import { getSpendSummary } from "../../apis/AccountApi";
 
 // 반짝이는 애니메이션 정의
 const sparkle = keyframes`
@@ -89,7 +90,7 @@ const TextContainer = styled.div`
 `
 
 const ComparisonText = styled.div`
-  color: #348833;
+  color: ${(props) => (props.isMorePaid ? '#348833' : '#FF5A0E')}; /* true면 초록색, false면 빨간색 */
   padding: 5px 10px;
   font-size: 18px;
   border-radius: 10px;
@@ -99,12 +100,26 @@ const ComparisonText = styled.div`
 `;
 
 const MonthlyPayment = () => {
-  // eslint-disable-next-line
-  const [paymentSum, setLoanSum] = useState({ monthlyPaymentAmount: 300000 });
-  // eslint-disable-next-line
-  const [compareText, setCompareText] = useState('지난 달보다 3,022원 더 썼어요!')
+  const [paymentSum, setPaymentSum] = useState({ monthlyPaymentAmount: 0 });
+  const [compareText, setCompareText] = useState('')
+  const [isMorePaid, setIsMorePaid] = useState(true);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchSpendSummary = async () => {
+      try {
+        const summary = await getSpendSummary();
+        setPaymentSum({ monthlyPaymentAmount: summary.monthlyPaymentAmount });
+        setCompareText(summary.compareText);
+        setIsMorePaid(summary.isMorePaid);
+      } catch (error) {
+        console.error("소비 요약 데이터를 가져오지 못했습니다.", error);
+      }
+    };
+
+    fetchSpendSummary();
+  }, []); // 빈 배열은 컴포넌트가 마운트될 때 한 번만 실행됨
 
   const goToLoanSpendPage = () => {
     navigate("/spend");
@@ -122,7 +137,7 @@ const MonthlyPayment = () => {
         {paymentSum.monthlyPaymentAmount.toLocaleString()} 원
       </PaymentSum>
       <TextContainer>
-        <ComparisonText>"{compareText}"</ComparisonText>
+        <ComparisonText isMorePaid={isMorePaid}>"{compareText}"</ComparisonText>
       </TextContainer>
     </Container>
   );
