@@ -10,9 +10,11 @@ import com.im.moobeing.domain.deal.dto.response.GetDrawPiChartResponse;
 import com.im.moobeing.domain.deal.dto.response.MoobtiResponse;
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.global.entity.OpenAIRole;
+import com.im.moobeing.global.error.exception.OpenAIException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -188,12 +190,8 @@ public class OpenAPIServiceImpl implements OpenAPIService {
                     + "}\n"
                     + "\n"
                     + "이제 너는 소비 내역 분석기가 되어 내가 주는 소비 내역을 보고 \n"
-                    + "유형 이름과 description, 각 카테고리별로 변환한 %을 json 으로 묶어서 보여줘\n"
-                    + "다른 말은 하지 말고 다음 형식대로만 보내\n"
-                    + "type: 유형 이름(name),"
-                    + "description : 유형 설명 (description),"
-                    + "categories : [ 카테고리 이름 :  변환한 카테고리 % ]\n"
-                    + "줄바꿈이랑 띄어쓰기 하지마 "));
+                    + "유형 이름과 description, 각 카테고리별로 변환한 %을 , 으로 분리해서 보여줘\n "
+                    + "줄바꿈이랑 띄어쓰기 하지마 카테고리 들은 이름, 퍼센트  이렇게 차례대로 보내 식비, 의료, 문화, 대출, 유흥 순서대로 보내고 없어도 퍼센트 0 이라고 해서 보내  label 붙이지 말고 값들만 보여줘"));
         // 사용자 정보 넣는 부분 추가
         LocalDateTime now = LocalDateTime.now();
         GetDrawPiChartResponse getDrawPiChartResponse = dealService.drawPiChart(member,
@@ -213,19 +211,14 @@ public class OpenAPIServiceImpl implements OpenAPIService {
             ObjectMapper objectMapper = new ObjectMapper();
             // JSON 문자열을 MoobtiResponse 객체로 변환
 
-            System.out.println(extractMessageField(response.getBody()));
             if (response.getStatusCode() == HttpStatus.OK) {
-//                return parseMoobtiResponse(extractMessageField(response.getBody()));
-//                return objectMapper.readValue(extractMessageField(response.getBody()), MoobtiResponse.class);
-//                log.info(response.getBody());
-//                return parseOpenAIResponse(response.getBody());
+                return parsingMoobTi(extractMessageField(response.getBody()));
             } else {
-//                throw new OpenAiException();
+                throw new OpenAIException("OpenAI 응답 오류");
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     private String extractMessageField(String responseBody) {
@@ -235,11 +228,30 @@ public class OpenAPIServiceImpl implements OpenAPIService {
                                        .get(0)
                                        .path("message");
 
-            return objectMapper.writeValueAsString(messageNode);
+            String content = messageNode.path("content").asText();
+
+
+            return content;
         } catch (Exception e) {
-//            throw new MessageParsingException();
+            throw new OpenAIException("OpenAI 파싱 오류");
         }
-        return null;
+    }
+
+    private MoobtiResponse parsingMoobTi(String s){
+        String[] tokens = s.split(",");
+        List<CategoryPercentDto> categoryPercentDtoList = new ArrayList<>();
+        if (tokens.length != 7){
+            throw new OpenAIException("OpenAI 파싱 오류");
+        }
+
+        //식비, 의료, 문화, 대출, 유흥
+        categoryPercentDtoList.add(new CategoryPercentDto("식비", Double.parseDouble(tokens[2])));
+        categoryPercentDtoList.add(new CategoryPercentDto("의료", Double.parseDouble(tokens[3])));
+        categoryPercentDtoList.add(new CategoryPercentDto("문화", Double.parseDouble(tokens[4])));
+        categoryPercentDtoList.add(new CategoryPercentDto("대출", Double.parseDouble(tokens[5])));
+        categoryPercentDtoList.add(new CategoryPercentDto("유흥", Double.parseDouble(tokens[6])));
+        MoobtiResponse moobtiResponse = new MoobtiResponse(tokens[0], tokens[1], categoryPercentDtoList);
+        return moobtiResponse;
     }
 
 
