@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const config = {
-    apiKey: "AIzaSyDf2tO7gYmnvDp0nnoClfhpJah74L0_Z8s",
-    authDomain: "moobeing-94714.firebaseapp.com",
-    projectId: "moobeing-94714",
-    storageBucket: "moobeing-94714.appspot.com",
-    messagingSenderId: "897587874738",
-    appId: "1:897587874738:web:6c65a9521f13b03735b2ab",
-    measurementId: "G-JKBHH3EN4Y"
+    apiKey: "AIzaSyCTHRWWL50vqyNfYQnJofsEItQxl2fgI3I",
+    authDomain: "moobeing-ee0eb.firebaseapp.com",
+    projectId: "moobeing-ee0eb",
+    storageBucket: "moobeing-ee0eb.appspot.com",
+    messagingSenderId: "830764540752",
+    appId: "1:830764540752:web:aa3e3215695f7b78288255",
+    measurementId: "G-2MW15Q9GCQ"
 };
 
 const app = initializeApp(config);
@@ -17,7 +17,7 @@ const messaging = getMessaging();
 //토큰값 얻기
 getToken(messaging, {
   vapidKey:
-    "BGvIwfXXUWwvAoq56A2dp8iFU5k6PqxJ1c8CP9jmbvj7yrYX1KOO3AVsiZCSupVzZOHjN_MkWI-_lk-tlVdPKzo", // 문자열에서 변수로 수정
+    "BKSLg2e8SNHqXlxXcufLmhbyE2IUJg3pyyG_aTt4NsLqvVopevgxg0e2jNaeXHG_vGGHbHdZklPwFlH2nOnCNfE", // 문자열에서 변수로 수정
 })
   .then((currentToken) => {
     if (currentToken) {
