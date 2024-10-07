@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Header from "./components/Fixed/Header";
 import Footer from "./components/Fixed/Footer";
 import Home from "./pages/HomePage";
@@ -42,6 +42,7 @@ function Router() {
 
   // 로그인되지 않았을 경우 로그인 페이지로 리디렉션
   useEffect(() => {
+    console.log()
     if (!userInfo) {
       navigate("/login");
     }
@@ -63,7 +64,7 @@ function Router() {
         }}
       >
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={userInfo ? <Home /> : <Navigate replace to="/login" />} />
           <Route path="/loading" element={<Loading />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
