@@ -24,6 +24,13 @@ getToken(messaging, {
       // Send the token to your server and update the UI if necessary
       // ...
       console.log(currentToken);
+      
+      // 클립보드에 토큰 복사
+      navigator.clipboard.writeText(currentToken).then(() => {
+          alert("토큰이 클립보드에 복사되었습니다: " + currentToken);
+      }).catch(err => {
+          console.error("토큰 복사 실패:", err);
+      });
     } else {
       // Show permission request UI
       console.log(
