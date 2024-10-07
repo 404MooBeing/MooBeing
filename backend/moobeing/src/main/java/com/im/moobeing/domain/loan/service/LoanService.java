@@ -293,6 +293,15 @@ public class LoanService {
 				.collect(Collectors.toList());
 	}
 
+	public GetPercentLoanResponse getPercentLoanResponse(Member member, String loanName) {
+		MemberLoan memberLoan = memberLoanRepository.findByMemberIdAndLoanProductName(member.getId(), loanName)
+				.orElseThrow(() -> new BusinessException(ErrorCode.ML_NOT_FOUND));
+		double percent = memberLoan.getInitialBalance() > 0
+				? ((double) memberLoan.getRemainingBalance() / memberLoan.getInitialBalance()) * 100
+				: 0.0;
+		return GetPercentLoanResponse.of(percent);
+	}
+
 	public GetAllLoanMapResponse getAllBuddyLoanMap(Member member) {
 		List<MemberLoan> memberLoanList = memberLoanRepository.findAllByMemberId(member.getId());
 

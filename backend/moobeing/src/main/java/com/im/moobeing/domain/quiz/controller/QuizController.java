@@ -1,5 +1,8 @@
 package com.im.moobeing.domain.quiz.controller;
 
+import com.im.moobeing.domain.quiz.dto.request.EconomicQuizAnswerRequest;
+import com.im.moobeing.domain.quiz.dto.response.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,9 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.domain.quiz.dto.request.QuizAnswerRequest;
-import com.im.moobeing.domain.quiz.dto.response.QuizAnswerResponse;
-import com.im.moobeing.domain.quiz.dto.response.QuizColdResponse;
-import com.im.moobeing.domain.quiz.dto.response.QuizDetailResponse;
 import com.im.moobeing.domain.quiz.service.QuizService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
-
+@Slf4j
 @RestController
 @RequestMapping("/quiz")
 @RequiredArgsConstructor
@@ -88,5 +88,28 @@ public class QuizController {
 		@AuthenticationPrincipal Member member,
 		@PathVariable long quizNum) {
 		return ResponseEntity.ok(quizService.openQuizAnswer(member, quizNum));
+	}
+
+	@Operation(summary = "경제 용어 퀴즈 상세 조회", description = "사용자의 경제 용어 퀴즈를 상세 조회한다.")
+	@ApiResponse(responseCode = "401", description = "사용자 인증이 올바르지 않음",
+			content = @Content(mediaType = "application/json",
+					schema = @Schema(implementation = ErrorResponse.class),
+					examples = @ExampleObject(value = "{\"error\" : \"사용자 인증에 실패하였습니다.\"}")))
+	@GetMapping("/economic")
+	public ResponseEntity<EconomicQuizDetailResponse> getEconomicQuiz(@AuthenticationPrincipal Member member) {
+		return ResponseEntity.ok(quizService.getEconomicQuiz(member));
+	}
+
+	@Operation(summary = "경제 용어 퀴즈 정답 확인", description = "입력한 경제 용어 퀴즈의 정답이 맞는지 확인하고 상태를 변경한다.")
+	@ApiResponse(responseCode = "401", description = "사용자 인증이 올바르지 않음",
+			content = @Content(mediaType = "application/json",
+					schema = @Schema(implementation = ErrorResponse.class),
+					examples = @ExampleObject(value = "{\"error\" : \"사용자 인증에 실패하였습니다.\"}")))
+	@PostMapping(path = "/economic/{quizNum}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<EconomicQuizAnswerResponse> confirmEconomicQuizAnswer(
+			@AuthenticationPrincipal Member member,
+			@RequestBody EconomicQuizAnswerRequest quizAnswerRequest,
+			@PathVariable long quizNum) {
+		return ResponseEntity.ok(quizService.confirmEconomicQuizAnswer(member, quizNum, quizAnswerRequest));
 	}
 }

@@ -1,26 +1,27 @@
 package com.im.moobeing.domain.quiz.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import com.im.moobeing.domain.deal.service.DealService;
+import com.im.moobeing.domain.quiz.dto.request.EconomicQuizAnswerRequest;
+import com.im.moobeing.domain.quiz.dto.response.*;
+import com.im.moobeing.domain.quiz.entity.*;
+import com.im.moobeing.domain.quiz.repository.QuizDataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.im.moobeing.domain.deal.dto.response.DealCategoryResponse;
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.domain.member.service.MemberService;
 import com.im.moobeing.domain.quiz.dto.request.QuizAnswerRequest;
-import com.im.moobeing.domain.quiz.dto.response.QuizAnswerResponse;
-import com.im.moobeing.domain.quiz.dto.response.QuizColdResponse;
-import com.im.moobeing.domain.quiz.dto.response.QuizDetailResponse;
-import com.im.moobeing.domain.quiz.dto.response.QuizResponse;
-import com.im.moobeing.domain.quiz.entity.Quiz;
-import com.im.moobeing.domain.quiz.entity.QuizInputAnswer;
-import com.im.moobeing.domain.quiz.entity.QuizStatus;
 import com.im.moobeing.domain.quiz.repository.QuizRepository;
 import com.im.moobeing.global.error.ErrorCode;
 import com.im.moobeing.global.error.exception.AuthenticationException;
@@ -36,6 +37,7 @@ public class QuizService {
 	private final MemberService memberService;
 	private final DealService expenseService;
 	private final QuizRepository quizRepository;
+	private final QuizDataRepository quizDataRepository;
 
 	@Transactional(readOnly = true)
 	public List<QuizResponse> getQuizAll(Member member)
@@ -133,6 +135,7 @@ public class QuizService {
 						.status(QuizStatus.NOT_STARTED)
 						.example(example)
 						.answer(answer)
+						.quizType(QuizType.EXPENSE)
 						.build();
 		quizRepository.save(quiz);
 	}
@@ -174,5 +177,62 @@ public class QuizService {
 		quiz.setQuizStatus(QuizStatus.NOT_STARTED);
 
 		return "히히 살아났다!!";
+	}
+
+	@Transactional
+	public EconomicQuizDetailResponse getEconomicQuiz(Member member) {
+		Quiz quiz = quizRepository.findByStatusAndMemberAndQuizType(QuizStatus.NOT_STARTED, member, QuizType.ECONOMY)
+				.orElseGet(() -> createEconomicQuiz(member));
+		QuizData quizData = quizDataRepository.findById(quiz.getQuizDataId())
+				.orElseThrow(() -> new EntityNotFoundException(ErrorCode.BAD_REQUEST));
+		return EconomicQuizDetailResponse.from(quiz, quizData);
+	}
+
+	@Transactional
+	public EconomicQuizAnswerResponse confirmEconomicQuizAnswer(Member member, long quizNum, EconomicQuizAnswerRequest quizAnswerRequest) {
+		Quiz quiz = quizRepository.findByQuizId(quizNum)
+				.orElseThrow(() -> new EntityNotFoundException(ErrorCode.QZ_NOT_FOUND_QUIZ));
+
+		if (!quiz.getMember().getId().equals(member.getId())) {
+			throw new AuthenticationException(ErrorCode.QZ_UNAUTHORIZED);
+		}
+		if (quiz.getQuizType() != QuizType.ECONOMY) {
+			throw new IllegalArgumentException("해당 퀴즈는 경제 용어 퀴즈가 아닙니다.");
+		}
+
+		QuizData quizData = quizDataRepository.findById(quiz.getQuizDataId())
+				.orElseThrow(() -> new EntityNotFoundException(ErrorCode.BAD_REQUEST));
+
+		boolean userAnswer = quizAnswerRequest.isAnswer();
+		boolean correctAnswer = quizData.getAnswer();
+
+		boolean isCorrect = (userAnswer == correctAnswer);
+		quiz.updateCorrect(isCorrect);
+		quiz.setQuizStatus(QuizStatus.DONE);
+		quiz.setEndedAt(LocalDateTime.now());
+		quizRepository.save(quiz);
+
+		return EconomicQuizAnswerResponse.from(quiz, quizData);
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public Quiz createEconomicQuiz(Member member) {
+		QuizData quizData = quizDataRepository.findByQuizDate(LocalDate.now())
+				.orElseThrow(() -> new EntityNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
+
+		Optional<Quiz> optionalQuiz = quizRepository.findByMemberAndQuizDataId(member, quizData.getId());
+		if (optionalQuiz.isPresent() && optionalQuiz.get().getStatus().equals(QuizStatus.DONE)) {
+			throw new EntityNotFoundException(ErrorCode.QZ_ALREADY_SOLVE);
+		}
+
+		Quiz quiz = Quiz.builder()
+				.member(member)
+				.status(QuizStatus.NOT_STARTED)
+				.quizType(QuizType.ECONOMY)
+				.quizDataId(quizData.getId())
+				.build();
+
+		quizRepository.save(quiz);
+		return quiz;
 	}
 }

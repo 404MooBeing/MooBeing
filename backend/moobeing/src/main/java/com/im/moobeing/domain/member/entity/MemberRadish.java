@@ -45,6 +45,7 @@ public class MemberRadish extends BaseTimeEntity {
     }
 
     public void minusRadishNumber() {
+        if (this.id == 1) return;
         if (this.radishNumber == 0) {
             throw new BadRequestException(ErrorCode.BAD_REQUEST);
         }

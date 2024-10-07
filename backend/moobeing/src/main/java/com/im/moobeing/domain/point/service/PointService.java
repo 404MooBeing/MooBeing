@@ -2,10 +2,10 @@ package com.im.moobeing.domain.point.service;
 
 import com.im.moobeing.domain.account.entity.Account;
 import com.im.moobeing.domain.account.repository.AccountRepository;
-import com.im.moobeing.domain.deal.dto.request.TransactionHistoryRequest;
 import com.im.moobeing.domain.deal.entity.Deal;
 import com.im.moobeing.domain.deal.repository.DealRepository;
 import com.im.moobeing.domain.member.entity.Member;
+import com.im.moobeing.domain.point.dto.request.PointTransactionHistoryRequest;
 import com.im.moobeing.domain.point.dto.response.PointTransactionHistoryResponse;
 import com.im.moobeing.domain.point.entity.PointTransaction;
 import com.im.moobeing.domain.point.repository.PointTransactionRepository;
@@ -71,7 +71,7 @@ public class PointService {
         pointTransactionRepository.save(new PointTransaction(receiver, amount, newBalance, LocalDateTime.now()));
     }
 
-    public List<PointTransactionHistoryResponse> getPointTransactionHistory(TransactionHistoryRequest request, Member member) {
+    public List<PointTransactionHistoryResponse> getPointTransactionHistory(PointTransactionHistoryRequest request, Member member) {
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusMonths(request.months());
 

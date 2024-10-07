@@ -8,6 +8,7 @@ import com.im.moobeing.global.fcm.entity.PushSubscription;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,8 +69,12 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<PushSubscription> pushSubscriptions = new ArrayList<>(); // 여러 개의 푸시 구독
 
+    @Setter
+    @Column
+    private LocalDate lastSolvedAt;
+
     @Builder
-    public Member(Long id, String email, String password, Long totalPoints, String name, String gender, String birthday, String userKey, Long selectedRadishId, String nickname) {
+    public Member(Long id, String email, String password, Long totalPoints, String name, String gender, String birthday, String userKey, Long selectedRadishId, String nickname, LocalDate lastSolvedAt, Boolean isGoodMember) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -80,6 +85,7 @@ public class Member extends BaseTimeEntity {
         this.userKey = userKey;
         this.selectedRadishId = selectedRadishId;
         this.nickname = nickname;
+        this.lastSolvedAt = lastSolvedAt;
     }
 
     public void changeMember(MemberChangeRequest memberChangeRequest){
