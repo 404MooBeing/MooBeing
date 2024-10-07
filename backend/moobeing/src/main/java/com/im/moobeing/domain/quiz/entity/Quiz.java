@@ -16,15 +16,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.joda.time.LocalDate;
 
 @Table(name = "quiz")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Quiz extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +37,10 @@ public class Quiz extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private QuizStatus status;
 
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private QuizType quizType;
+
 	@Column
 	private Boolean isCorrect;
 
@@ -50,10 +53,14 @@ public class Quiz extends BaseTimeEntity {
 	private int example;
 
 	@Column
+	@Setter
 	private LocalDateTime endedAt;
 
+	@Column(nullable = true)
+	private Long quizDataId;
+
 	@Builder
-	private Quiz(Long quizId, Member member, QuizStatus status, int answer, int example) {
+	private Quiz(Long quizId, Member member, QuizStatus status, int answer, int example, QuizType quizType, Long quizDataId) {
 		this.quizId = quizId;
 		this.member = member;
 		this.status = status;
@@ -61,6 +68,8 @@ public class Quiz extends BaseTimeEntity {
 		this.example = example;
 		this.isCorrect = false;
 		this.endedAt = LocalDateTime.now().plusWeeks(1);
+		this.quizType = quizType;
+		this.quizDataId = quizDataId;
 	}
 
 	public void updateCorrect(Boolean isCorrect) {
