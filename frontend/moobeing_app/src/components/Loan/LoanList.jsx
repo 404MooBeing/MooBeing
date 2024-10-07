@@ -28,6 +28,8 @@ const LoanInfo = styled.div`
 const LoanName = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
   font-size: 13px;
 
   @media (min-width: 600px) {

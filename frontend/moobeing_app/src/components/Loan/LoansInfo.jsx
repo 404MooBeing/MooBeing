@@ -3,7 +3,7 @@ import styled, { css, keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import LoanList from "./LoanList";
 import goToJourney from "../../assets/button/goToJourney.svg";
-import { getLoanSort } from "../../apis/LoanApi.js";
+import { getLoanSort, getLoanPercent } from "../../apis/LoanApi.js";
 import basicRad from "../../assets/radishes/basicRad.svg"; // basicRad 이미지 임포트
 
 const fadeOut = keyframes`
@@ -41,12 +41,12 @@ const SubHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px; // 마진 줄임
+  margin-bottom: 10px;
 `;
 
 const SubTitle = styled.div`
   margin: 0;
-  font-size: 22px; // 폰트 크기 줄임
+  font-size: 22px;
   font-weight: 700;
 
   @media (min-width: 600px) {
@@ -103,7 +103,7 @@ const NavigateButton = styled.button`
 `;
 
 const NavigateImage = styled.img`
-  width: 18px; // 이미지 크기 줄임
+  width: 18px;
   height: 18px;
 `;
 
@@ -125,7 +125,7 @@ const NoLoansContainer = styled.div`
 `;
 
 const NoLoansImage = styled.img`
-  width: 70px; /* 이미지 크기 조정 */
+  width: 70px;
   height: auto;
   margin: 10px 0px;
 
@@ -143,6 +143,7 @@ const NoLoanText = styled.p`
 function LoansInfo() {
   const [loans, setLoans] = useState([]);
   const [totalLoanAmount, setTotalLoanAmount] = useState(0);
+  const [totalPercent, setTotalPercent] = useState(0); // totalPercent 상태 추가
   const [activeSort, setActiveSort] = useState("interest");
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -163,6 +164,18 @@ function LoansInfo() {
     };
 
     fetchData();
+
+    // Loan Percent를 불러와서 totalPercent 설정
+    const fetchLoanPercent = async () => {
+      try {
+        const response = await getLoanPercent();
+        setTotalPercent(response.remainingPercent || 0); // percent 데이터를 받아서 상태에 저장
+      } catch (error) {
+        console.error("대출 퍼센트 불러오기 실패:", error);
+      }
+    };
+
+    fetchLoanPercent();
   }, []);
 
   const sortByInterestRate = async () => {
@@ -186,7 +199,7 @@ function LoansInfo() {
   };
 
   const navigateToTotalJourney = () => {
-    navigate("/total-journey");
+    navigate("/total-journey", { state: { totalPercent } }); // totalPercent를 함께 전달
   };
 
   if (isLoading) {
