@@ -13,10 +13,12 @@ import com.im.moobeing.domain.radish.entity.RadishCapsule;
 import com.im.moobeing.domain.radish.repository.RadishCapsuleRepository;
 import com.im.moobeing.global.error.ErrorCode;
 import com.im.moobeing.global.error.exception.BadRequestException;
+import com.im.moobeing.global.fcm.service.FCMService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,6 +37,7 @@ public class RadishService {
     private final RadishCapsuleRepository radishCapsuleRepository;
     private final DealRepository dealRepository;
     private final MemberRadishRepository memberRadishRepository;
+    private final FCMService fcmService;
 
     public CreateRadishCapsuleResponse createRadishCapsule(Member member, CreateRadishCapsuleRequest requestDto) {
         MemberRadish memberRadish = memberRadishRepository.findByMemberIdAndRadishId(member.getId(), requestDto.getRadishId())
@@ -141,5 +144,30 @@ public class RadishService {
                 .findFirst()
                 .orElseThrow(() -> new BadRequestException(ErrorCode.INTERNAL_SERVER_ERROR));
         return new CapsuleSummaryResponse(time, count);
+    }
+
+    // 매시간마다 실행하여 수확 시점이 지난 캡슐에 대해 알림을 보냅니다.
+    @Scheduled(cron = "0 0 * * * ?") // 매 정시마다 실행
+    public void checkHarvestTimeAndNotify() {
+        LocalDateTime now = LocalDateTime.now();
+
+        // 수확 시점을 넘겼으나 아직 수확되지 않은 캡슐을 조회
+        List<RadishCapsule> overdueCapsules = radishCapsuleRepository.findByEndAtBeforeAndIsHarvestedFalse(now);
+
+        overdueCapsules.forEach(capsule -> {
+            // 해당 캡슐을 소유한 회원의 구독 토큰들을 조회
+            List<String> tokens = capsule.getMember().getPushSubscriptions().stream()
+                    .map(subscription -> subscription.getToken())
+                    .collect(Collectors.toList());
+
+            // 알림 전송
+            fcmService.sendHarvestTimeNotice(tokens);
+
+            // 수확 완료 상태로 업데이트하여 중복 알림 방지
+            capsule.harvest();
+            radishCapsuleRepository.save(capsule);
+        });
+
+        log.info("Sent harvest time notifications for {} overdue capsules.", overdueCapsules.size());
     }
 }
