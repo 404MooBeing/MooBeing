@@ -175,6 +175,7 @@ export const getLoanNumber = async () => {
   }
 };
 
+// 금리혜택 -> 사용 안함
 export const changeInterestRate = async () => {
   try {
     const response = await api.post("/loan/good");
@@ -184,10 +185,11 @@ export const changeInterestRate = async () => {
     console.error("금리혜택을 받는 함수 호출 실패", error);
   }
 };
+
 // 대출 상세 정보
 export const getLoanDetail = async (loanName) => {
   try {
-    const response = await api.get(`/loan/detail?loanName=${loanName}`);
+    const response = await api.get(`/loan/detail?loanProductName=${loanName}`);
     return response.data;
   } catch (error) {
     console.error("대출 상세 정보 불러오기 실패:", error);
@@ -195,3 +197,13 @@ export const getLoanDetail = async (loanName) => {
   }
 };
 
+// 대출별 상환 퍼센트
+export const getEachLoanPercent = async (loanName) => {
+  try {
+    const response = await api.get(`/loan/percent-name-detail?loanName=${loanName}`);
+    return response.data;
+  } catch (error) {
+    console.error("대출별 상환 퍼센트 불러오기 실패:", error);
+    throw error;
+  }
+}

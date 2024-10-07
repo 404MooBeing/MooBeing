@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { darken } from "polished"; // polished에서 darken 가져오기
 import radish from "../../assets/radishes/basicRad.svg";
 import { getCreditRate } from "../../apis/UserApi"; // API import
+import useUserStore from "../../store/UserStore";
 
 // 신용등급별 색상
 const GraphColors = {
@@ -109,14 +110,12 @@ const CreditText = styled.div`
 `;
 
 const CreditScore = () => {
+  const { userInfo } = useUserStore();
   const [creditInfo, setCreditInfo] = useState({
     ratingName: "A", // 기본값
     ratingPercent: 100, // 기본값
   });
 
-  const userInfo = {
-    radishImageUrl: radish, // 더미 이미지 URL
-  };
 
   // API 호출을 통한 신용등급 데이터 가져오기
   useEffect(() => {

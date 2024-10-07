@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import PercentBar from "../components/LoanJourney/PercentBar";
 import styled from "styled-components";
 import TotalLoanJourneyGraph from "../components/LoanJourney/TotalLoanJourneyGraph";
+import { useLocation } from "react-router-dom"; // useLocation 훅 추가
 import {
   getAllLoanMapByMonth,
   getAllLoanBuddy,
@@ -9,7 +10,6 @@ import {
   getYearLoanBuddy,
 } from "../apis/LoanApi";
 import Loading from "./LoadingPage";
-
 
 const Screen = styled.div`
   display: flex;
@@ -30,6 +30,9 @@ const Container = styled.div`
 `;
 
 const TotalLoanJourney = () => {
+  const location = useLocation(); // location 객체로부터 상태 값을 가져옴
+  const totalPercent = location.state?.totalPercent || 0; // totalPercent 값을 가져오거나 기본값 0 설정
+
   const [journeyData, setJourneyData] = useState([]);
   const [yearJourneyData, setYearJourneyData] = useState([]);
   const [peerData, setPeerData] = useState([]);
@@ -89,7 +92,8 @@ const TotalLoanJourney = () => {
         ) : (
           <div>데이터가 없습니다.</div>
         )}
-        <PercentBar/>
+        {/* PercentBar에 totalPercent 값을 전달 */}
+        <PercentBar percent={totalPercent} />
       </Container>
     </Screen>
   );
