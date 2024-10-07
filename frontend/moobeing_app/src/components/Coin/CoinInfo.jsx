@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import DropDownArrow from "../../assets/dropdown/DropdownArrow.png";
 import SortCoin from "./SortCoin";
 import { useNavigate } from "react-router-dom";
-import RadishCoinImg from "../../assets/coin/RadishCoin.png";
+import RadishCoinImg from "../../assets/coin/RadishCoin.png"
+import RightArrowBtn from "../../assets/button/rightButtonBlack.svg"
+import { getCoin } from "../../apis/CoinApi";
 
 const CoinHeader = styled.div`
   background-color: #F5F8F3;
@@ -114,7 +116,8 @@ const CoinInfo = ({
   const [isSortPopupOpen, setIsSortPopupOpen] = useState(false);
   const navigate = useNavigate();
 
-  const  coinCount = 10000;
+  // const  coinCount = 10000;
+  const [coinCount, setCoinCount] = useState(12000);
   const toggleSortPopup = () => {
     setIsSortPopupOpen(!isSortPopupOpen);
   };
@@ -124,6 +127,19 @@ const CoinInfo = ({
     setIsSortPopupOpen(false);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+         // Zustand 스토어에 저장
+         const data = await getCoin(); // 무 코인 가져오기
+         setCoinCount(data)
+
+      } catch (error) {
+        console.error("데이터 가져오기 실패:", error);
+      }
+    };
+    fetchData();
+  }, [setCoinCount]);
   return (
     <CoinHeader>
       <CoinBox>
