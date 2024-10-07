@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import CoinInfo from "../components/Coin/CoinInfo";
 import CoinList from "../components/Coin/CoinList";
+
 const Screen = styled.div`
   display: flex;
   flex-direction: column;
@@ -32,7 +33,6 @@ const CoinPage = () => {
   return (
     <Screen>
       <Container>
-        무코인
         <CoinInfo
           onSortSelect={handleSortSelect}
           sortCriteria={sortCriteria}

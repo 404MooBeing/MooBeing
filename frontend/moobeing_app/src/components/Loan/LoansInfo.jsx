@@ -18,7 +18,6 @@ const fadeOut = keyframes`
 const Container = styled.div`
   background-color: #f5fded;
   border-radius: 20px;
-  height: 280px; // 높이를 280px로 줄임
   width: 90%;
   margin-bottom: 5%;
   position: relative;
@@ -26,7 +25,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 8%; // 패딩 조정
+  padding: 8%;
   box-sizing: border-box;
   animation: ${(props) =>
     props.$isclosing
@@ -47,7 +46,7 @@ const SubHeader = styled.div`
 
 const SubTitle = styled.div`
   margin: 0;
-  font-size: 18px; // 폰트 크기 줄임
+  font-size: 22px; // 폰트 크기 줄임
   font-weight: 700;
 
   @media (min-width: 600px) {
@@ -110,8 +109,11 @@ const NavigateImage = styled.img`
 
 const LoanListContainer = styled.div`
   width: 100%;
-  overflow-y: auto;
-  max-height: 150px; // 최대 높이 설정
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
 `;
 
 const NoLoansContainer = styled.div`
