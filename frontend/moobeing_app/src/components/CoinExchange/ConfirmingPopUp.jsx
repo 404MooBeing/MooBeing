@@ -1,4 +1,7 @@
 import styled, { keyframes } from "styled-components";
+import { withdrawCoin } from "../../apis/CoinApi";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 const Container = styled.div`
@@ -13,7 +16,7 @@ const Container = styled.div`
 
 const PayButton = styled.button`
   padding: 10px 20px;
-  background-color: #c0dda6;
+  background-color: ${(props) => (props.type === "error" ? "#f5c6cb" : "#c0dda6")};  // error 시 배경색 변경
   color: white;
   border: none;
   cursor: pointer;
@@ -40,7 +43,7 @@ const PaymentPopup = styled.div`
   left: 50%;
   width: 80%;
   height: 20%;
-  background-color: #F5FDED;
+  background-color: ${(props) => (props.type === "error" ? "#f8d7da" : "#F5FDED")};  // error 시 배경색 변경
   transform: translateX(-50%);
   z-index: 100000;
   border-radius: 15px;
@@ -61,18 +64,55 @@ const Highlight = styled.span`
 `;
 
 
-const ConfirmingPopUp = ( {selectedAccount, coinAmmount}) => {
-    return (
 
-            <PaymentPopup>
-                <PopupMessage>
-                <p><strong>{selectedAccount}</strong> 계좌에</p>
-                <p><Highlight>{Number(coinAmmount).toLocaleString()}</Highlight>원을 송금하시겠습니까?</p>
-                </PopupMessage>
-                {/* 상환 API 호출 버튼으로 바꾸기 */}
-                <PayButton >상환하기</PayButton>
-          </PaymentPopup>
-    )
+const ConfirmingPopUp = ({ selectedAccount, coinAmmount, type, closeHandler }) => {
+
+  const [showMsg, setShowMsg] = useState("원을 송금하시겠습니까?")
+  const [showBtnMsg, setShowBtnMsg] = useState("송금하기")
+
+  const navigate = useNavigate();
+
+  const btnHandler = () => {
+    if (type == "error"){
+      closeHandler();
+    }else if (showBtnMsg == "확인"){
+      closeHandler();
+      navigate("/coin") 
+    }else{
+      repayMent()
+    }
+  }
+
+  const repayMent = async () => {
+    const requestBody = {
+      accountId : selectedAccount.id,
+      amount : coinAmmount
+    }
+    console.log(requestBody)
+    await withdrawCoin(requestBody)
+    setShowMsg("원을 송금했습니다!")
+    setShowBtnMsg("확인")
+  }
+
+  return (
+    <PaymentPopup type={type}>
+      <PopupMessage>
+        {type === "error" ? (  
+          <>
+            <p><strong>잘못된 요청입니다.</strong></p>
+          </>
+        ) : (
+          <>
+            <p><strong>{selectedAccount.displayName}</strong> 계좌에</p>
+            <p><Highlight>{Number(coinAmmount).toLocaleString()}</Highlight>{showMsg}</p>
+          </>
+        )}
+      </PopupMessage>
+      <PayButton type={type} onClick={btnHandler}>
+        {type === "error" ? "돌아가기" : showBtnMsg}
+      </PayButton>
+    </PaymentPopup>
+  );
 }
 
-export default ConfirmingPopUp
+export default ConfirmingPopUp;

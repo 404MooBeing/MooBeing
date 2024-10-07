@@ -21,7 +21,21 @@ export const getCoin = async () => {
 
 
   // 무 코인 개수 받아오기
-export const getCoinHistory = async (requestBody) => {
+export const withdrawCoin = async (requestBody) => {
+    try {
+        const response = await api.post('/point/withdraw', {
+            accountId : requestBody.accountId,
+            amount : requestBody.amount
+          });  
+      return response.data;
+    } catch (error) {
+      console.error("무 코인 사용 실패,", error);
+      throw error;
+    }
+  };
+
+
+  export const getCoinHistory = async (requestBody) => {
     try {
         const response = await api.post('/point/history', {
             months: requestBody.months,
@@ -34,4 +48,6 @@ export const getCoinHistory = async (requestBody) => {
       throw error;
     }
   };
+
+
   
