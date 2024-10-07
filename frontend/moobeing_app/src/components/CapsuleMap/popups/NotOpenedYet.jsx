@@ -1,4 +1,4 @@
-// OpenedPopup.jsx
+// NotOpenedYetPopup.jsx
 import React from "react";
 import styled from "styled-components";
 
@@ -29,7 +29,7 @@ const Message = styled.p`
 
 const CloseButton = styled.button`
   padding: 10px 20px;
-  background-color: #4caf50;
+  background-color: #f44336;
   color: white;
   border: none;
   border-radius: 4px;
@@ -37,14 +37,14 @@ const CloseButton = styled.button`
   font-size: 14px;
 `;
 
-function OpenedPopup({ data, onClose }) {
+function NotOpenedYetPopup({ data, onClose }) {
   return (
     <PopupContainer>
-      <Title>Radish Opened!</Title>
-      <Message>Congratulations! You have opened this radish.</Message>
+      <Title>Not Opened Yet</Title>
+      <Message>You are too far to open this radish.</Message>
       <CloseButton onClick={onClose}>Close</CloseButton>
     </PopupContainer>
   );
 }
 
-export default OpenedPopup;
+export default NotOpenedYetPopup;
