@@ -1,10 +1,29 @@
 import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 import PropTypes from "prop-types";
-  
-const PieGraph = ({ data, width = "100%", height = 300 }) => {
+import useSpendStore from "../../store/SpendStore";
+import styled from "styled-components";
+
+const NoSpendData = styled.div`
+  width: width;
+  height: height; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+`
+
+const PieGraph = ({ width = "100%", height = 300 }) => {
+  const data = useSpendStore((state) => state.pieChartData.getPieChartList || []);
+
   // 전체 합계 계산
-  const total = data.reduce((sum, item) => sum + item.value, 0);
+  const total = data.length > 0 ? data.reduce((sum, item) => sum + item.value, 0) : 1;
+
+  // 데이터가 없는 경우 이무것도 표시하지 않기
+  if (data.length === 0) {
+    return (
+      <NoSpendData></NoSpendData>
+    );
+  }
 
   return (
     <div style={{ width: width, height: height }}>

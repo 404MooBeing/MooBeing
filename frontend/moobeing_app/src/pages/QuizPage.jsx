@@ -4,7 +4,7 @@ import { getNotStartedQuiz, submitAnswer } from "../apis/QuizApi";
 import upArrow from "../assets/quiz/upArrow.svg";
 import downArrow from "../assets/quiz/downArrow.svg";
 import { useNavigate } from "react-router-dom";
-import { useUserStore } from "../store/UserStore";
+import useUserStore from "../store/UserStore";
 
 const PageContainer = styled.div`
   background-color: #e0eed2;

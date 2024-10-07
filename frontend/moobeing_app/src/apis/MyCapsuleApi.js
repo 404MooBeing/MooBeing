@@ -41,13 +41,14 @@ const dummyData = [
 ];
 
 // 특정 년월의 캡슐 정보 가져오기
-export const getCapsulesByYearMonth = async (year, month) => {
+export const getCapsulesByYearMonth = async (year, month, page) => {
   try {
-    // API 호출을 시뮬레이션하기 위한 지연
-    await new Promise(resolve => setTimeout(resolve, 500));
+    const response = await api.get('/radish/my-capsule', {
+      params: { year, month, page }
+    });
     
     console.log(`${year}년 ${month}월의 캡슐 정보를 가져옵니다.`);
-    return dummyData;
+    return response.data;
   } catch (error) {
     console.error("캡슐 정보 불러오기 실패:", error);
     throw error;
@@ -55,14 +56,14 @@ export const getCapsulesByYearMonth = async (year, month) => {
 };
 
 // 전체 캡슐 정보 가져오기
-export const getAllCapsules = async () => {
+export const getAllCapsules = async (page) => {
   try {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    console.log("전체 캡슐 정보를 가져옵니다.");
-    return dummyData;
+    const response = await api.get('/radish/my-capsule', {
+      params: { page }
+    });
+    return response.data;
   } catch (error) {
-    console.error("전체 캡슐 정보 불러오기 실패:", error);
+    console.error("캡슐 정보 불러오기 실패:", error);
     throw error;
   }
 };

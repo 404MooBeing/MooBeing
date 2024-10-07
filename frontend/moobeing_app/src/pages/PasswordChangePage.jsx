@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-// import { postPasswordChange } from "../../apis/UserApi"; // 비밀번호 변경 함수 가져오기
+import { postPasswordChange } from "../apis/UserApi"; // 비밀번호 변경 함수 가져오기
 import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 hook 가져오기
 
 const Container = styled.div`
@@ -153,7 +153,8 @@ const PasswordChange = () => {
     }
 
     try {
-    //   const response = await postPasswordChange(oldPassword, newPassword); // 비밀번호 변경 요청
+      console.log(oldPassword + " " + newPassword)
+      const response = await postPasswordChange(oldPassword, newPassword); // 비밀번호 변경 요청
       setSuccessMessage("비밀번호가 성공적으로 변경되었습니다."); // 성공 메시지 설정
       setErrorMessage(""); // 에러 메시지 리셋
       setIsPasswordChanged(true); // 비밀번호 변경 성공 상태 설정
@@ -190,16 +191,16 @@ const PasswordChange = () => {
         value={confirmNewPassword}
         onChange={handleConfirmNewPasswordChange}
       />
-      {/* {passwordMismatch && (
+      {passwordMismatch && (
         <PasswordMismatchMessage>
           비밀번호가 일치하지 않습니다
         </PasswordMismatchMessage>
-      )} */}
-      {/* {passwordSame && (
+      )}
+      {passwordSame && (
         <PasswordMismatchMessage>
           기존 비밀번호와 새 비밀번호가 일치합니다
         </PasswordMismatchMessage>
-      )} */}
+      )}
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
       {isPasswordChanged ? (

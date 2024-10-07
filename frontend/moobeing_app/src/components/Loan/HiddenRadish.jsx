@@ -8,7 +8,7 @@ import pot4th from "../../assets/pot/pot4th.svg";
 import pot5th from "../../assets/pot/pot5th.svg";
 import pot6th from "../../assets/pot/pot6th.svg";
 import GrayChatBubble from "../../assets/GrayChatBubble.svg";
-import { getLoanSum } from "../../apis/LoanApi";
+import { getLoanNumber } from "../../apis/LoanApi";
 
 // 더미 데이터 함수 추가
 const getDummyLoanSum = () => {
@@ -122,19 +122,22 @@ const Message = styled.div`
 `;
 
 function HiddenRadish() {
-  const [paidLoanNum, setPaidLoanNum] = useState(null);
-  const [totalLoanNum, setTotalLoanNum] = useState(null);
-  const [isPullAvailable, setIsPullAvailable] = useState(null);
+  const [paidLoanNum, setPaidLoanNum] = useState(0);
+  const [totalLoanNum, setTotalLoanNum] = useState(0);
+  const [isPullAvailable, setIsPullAvailable] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchLoanNum() {
       try {
-        // getLoanSum() 대신 getDummyLoanSum() 사용
-        const data = await getDummyLoanSum();
+        const data = await getLoanNumber();
         console.log("Loan data:", data);
-        setPaidLoanNum(data.completedCnt);
+        if (data.completedCnt > 6) {
+          setPaidLoanNum(6);
+        } else {
+          setPaidLoanNum(data.completedCnt);
+        }
         setTotalLoanNum(data.allLoanCnt);
         setIsPullAvailable(data.showButton);
       } catch (error) {

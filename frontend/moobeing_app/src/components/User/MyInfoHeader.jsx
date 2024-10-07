@@ -3,6 +3,8 @@ import styled from "styled-components";
 import RadishCoinImg from "../../assets/coin/RadishCoin.png";
 import RightArrowBtn from "../../assets/button/rightButtonBlack.svg"
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {getCoin} from "../../apis/UserApi"
 
 
 const SubHeader = styled.div`
@@ -62,13 +64,33 @@ const MyInfoHeader = ({userInfo}) => {
         navigate('/coin')
     }
 
+    const [coin, setCoin] = useState(0);
+
+
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+           // Zustand 스토어에 저장
+           const data = await getCoin(); // 무 코인 가져오기
+           setCoin(data)
+
+        } catch (error) {
+          console.error("데이터 가져오기 실패:", error);
+        }
+      };
+      fetchData();
+    }, [setCoin]);
+
+
+
     return (
     <SubHeader>
     <div><strong>{userInfo.name || "사용자"} 님</strong></div>
     <RadishCoin>
         <img src={RadishCoinImg}></img>
         <Label>무 코인</Label>
-        <Value>{userInfo.coin}개</Value>
+        <Value>{coin}개</Value>
         <img src={RightArrowBtn} height="20px" onClick={radishCoinClickHandler}/>
         <RadishCoinBtn onClick={() => {navigate('/coin-exchange')}}>송금하기</RadishCoinBtn>
     </RadishCoin>

@@ -2,17 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import radish from "../../assets/radishes/basicRad.svg";
 import { useNavigate } from "react-router-dom";
-// import { getStreamCnt } from "../../apis/UserApi";
+import { getStreamCnt } from "../../apis/UserApi";
 // import { changeInterestRate } from "../../apis/LoanApi";
-
-// 더미 데이터 함수 추가
-const getDummyStreamCnt = () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ streamCnt: 3 }); // 항상 3을 반환하도록 수정
-    }, 500);
-  });
-};
 
 const dummyChangeInterestRate = () => {
   return new Promise((resolve) => {
@@ -139,7 +130,7 @@ const LoanCoupon = () => {
   useEffect(() => {
     const fetchStreamCnt = async () => {
       try {
-        const response = await getDummyStreamCnt();
+        const response = await getStreamCnt();
         setStreamCnt(response.streamCnt);
       } catch (error) {
         console.error("Stream count를 가져오는 중 오류 발생:", error);
@@ -178,7 +169,7 @@ const LoanCoupon = () => {
     <>
       <MonthlyRecordContainer>
         <Subtitle>
-          {streamCnt === 6
+          {streamCnt >= 6
             ? "6개월동안 성실히 상환한 당신!"
             : `${streamCnt}개월째 성실히 상환중!`}
         </Subtitle>
@@ -193,7 +184,7 @@ const LoanCoupon = () => {
             completed={streamCnt === 6}
             onClick={handleLastCircleClick}
           >
-            {streamCnt === 6 ? (
+            {streamCnt >= 6 ? (
               <LastCircleText>
                 금리
                 <br />

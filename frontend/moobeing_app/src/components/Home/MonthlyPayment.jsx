@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import goToJourney from "../../assets/button/goToJourney.svg";
+import { getSpendSummary } from "../../apis/AccountApi";
 
 const Container = styled.div`
   background-color: #f5fded;
@@ -79,22 +80,35 @@ const TextContainer = styled.div`
 `
 
 const ComparisonText = styled.div`
-  background-color: #c0dda6;
-  color: white;
-  border: none;
-  padding: 10px 20px;
+  color: ${(props) => (props.isMorePaid ? '#348833' : '#FF5A0E')}; /* true면 초록색, false면 빨간색 */
+  padding: 5px 10px;
   font-size: 15px;
-  border-radius: 20px;
+  font-weight: 600;
   font-family: 'mainFont';
+  box-shadow: inset 0 -10px 0 #E0EED2;
 `;
 
 const MonthlyPayment = () => {
-  // eslint-disable-next-line
-  const [paymentSum, setLoanSum] = useState({ monthlyPaymentAmount: 300000 });
-  // eslint-disable-next-line
-  const [compareText, setCompareText] = useState('지난 달보다 3,022원 더 썼어요!')
+  const [paymentSum, setPaymentSum] = useState({ monthlyPaymentAmount: 0 });
+  const [compareText, setCompareText] = useState('지난 달 지출내역이 없습니다')
+  const [isMorePaid, setIsMorePaid] = useState(true);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchSpendSummary = async () => {
+      try {
+        const summary = await getSpendSummary();
+        setPaymentSum({ monthlyPaymentAmount: summary.monthlyPaymentAmount });
+        setCompareText(summary.compareText);
+        setIsMorePaid(summary.isMorePaid);
+      } catch (error) {
+        console.error("소비 요약 데이터를 가져오지 못했습니다.", error);
+      }
+    };
+
+    fetchSpendSummary();
+  }, []); // 빈 배열은 컴포넌트가 마운트될 때 한 번만 실행됨
 
   const goToLoanSpendPage = () => {
     navigate("/spend");
@@ -112,7 +126,7 @@ const MonthlyPayment = () => {
         {paymentSum.monthlyPaymentAmount.toLocaleString()} 원
       </PaymentSum>
       <TextContainer>
-        <ComparisonText>{compareText}</ComparisonText>
+        <ComparisonText isMorePaid={isMorePaid}>{compareText}</ComparisonText>
       </TextContainer>
     </Container>
   );

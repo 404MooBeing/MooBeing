@@ -18,7 +18,8 @@ import CapsuleSearch from "./pages/CapsuleSearchPage";
 import CoinExchange from "./pages/CoinExchangePage";
 import Coin from "./pages/CoinPage";
 import GetRadishCharacter from "./pages/GetRadishCharacterPage";
-import LoanJourney from "./pages/LoanJourneyPage";
+import TotalLoanJourney from "./pages/TotalLoanJourneyPage";
+import EachLoanJourney from "./pages/EachLoanJourneyPage";
 import Loan from "./pages/LoanPage";
 import LoanPayment from "./pages/LoanPaymentPage";
 import Menu from "./pages/MenuPage";
@@ -32,18 +33,12 @@ import QuizResult from "./pages/QuizResultPage";
 import Spend from "./pages/SpendPage";
 import TransactionHistory from "./pages/TransactionHistoryPage";
 import Welcome from "./pages/WelcomePage";
-
-import { useUserStore, testLogin } from "./store/UserStore";
+import useUserStore from "./store/UserStore";
 
 function Router() {
   const location = useLocation();
   const navigate = useNavigate();
   const userInfo = useUserStore((state) => state.userInfo);
-
-  // 무조건 로그인된 상태로 테스트하기 위해 testLogin 호출
-  useEffect(() => {
-    testLogin();
-  }, []);
 
   // 로그인되지 않았을 경우 로그인 페이지로 리디렉션
   useEffect(() => {
@@ -86,7 +81,8 @@ function Router() {
           <Route path="/coin-exchange" element={<CoinExchange />} />
           <Route path="/coin" element={<Coin />} />
           <Route path="/get-radishcharacter" element={<GetRadishCharacter />} />
-          <Route path="/loan-journey" element={<LoanJourney />} />
+          <Route path="/total-journey" element={<TotalLoanJourney />} />
+          <Route path="/each-journey/:loanName" element={<EachLoanJourney />} />
           <Route path="/loan" element={<Loan />} />
           <Route path="/loan-payment" element={<LoanPayment />} />
           <Route path="/menu" element={<Menu />} />

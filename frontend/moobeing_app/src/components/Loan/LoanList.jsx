@@ -6,7 +6,6 @@ import leftButton from "../../assets/button/leftButton.svg";
 import rightButton from "../../assets/button/rightButton.svg";
 import leftButtonBlack from "../../assets/button/leftButtonBlack.svg";
 import rightButtonBlack from "../../assets/button/rightButtonBlack.svg";
-import { getLoanSort } from "../../apis/LoanApi";
 
 const BankLogo = styled.img`
   width: 40px;
@@ -119,28 +118,40 @@ const PageInfo = styled.div`
   color: #858585;
 `;
 
-function LoanList() {
-  const [loans, setLoans] = useState([]);
+const TotalLoanAmount = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 260px;
+  font-size: 18px;
+  color: #858585;
+`;
+
+function LoanList({ loans }) {
   const [goodMember, setGoodMember] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loanData, setLoanData] = useState([]);
   const loansPerPage = 3;
-  const totalPages = Math.ceil(loans.length / loansPerPage);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchLoans = async () => {
-      try {
-        const response = await getLoanSort("amount");
-        console.log(response);
-        setLoans(response.getMemberLoanDtoList);
-        setGoodMember(response.goodMember);
-      } catch (error) {
-        console.error("대출 정보를 가져오는 중 오류 발생:", error);
-      }
-    };
+    if (loans && loans.length > 0) {
+      setLoanData(loans);
+      setIsLoading(false);
+    }
+  }, [loans]);
 
-    fetchLoans();
-  }, []);
+  if (isLoading) {
+    return <LoadingContainer>대출 정보를 불러오는 중...</LoadingContainer>;
+  }
 
   const handleScrollNext = () => {
     setCurrentIndex((prevIndex) => {
@@ -157,15 +168,16 @@ function LoanList() {
   };
 
   const handleLoanItemClick = (loanName) => {
-    navigate(`/loan-journey/${loanName}`);
+    navigate(`/each-journey/${loanName}`);
   };
 
-  const visibleLoans = loans.slice(currentIndex, currentIndex + loansPerPage);
+  const totalPages = Math.ceil(loanData.length / loansPerPage);
+  const visibleLoans = loanData.slice(currentIndex, currentIndex + loansPerPage);
   const currentPage = Math.floor(currentIndex / loansPerPage) + 1;
 
   return (
     <>
-      <LoanListContainer>
+      <LoanListContainer listLength={loanData.length}>
         <LoanListWrapper>
           {visibleLoans.map((loan, index) => (
             <LoanItem
@@ -189,21 +201,23 @@ function LoanList() {
           ))}
         </LoanListWrapper>
       </LoanListContainer>
-      <ScrollButton>
-        <DownImage
-          src={currentPage > 1 ? leftButtonBlack : leftButton}
-          alt="이전"
-          onClick={handleScrollPrev}
-        />
-        <PageInfo>
-          {currentPage} / {totalPages}
-        </PageInfo>
-        <DownImage
-          src={currentPage < totalPages ? rightButtonBlack : rightButton}
-          alt="다음"
-          onClick={handleScrollNext}
-        />
-      </ScrollButton>
+      {loanData.length > loansPerPage && (
+        <ScrollButton>
+          <DownImage
+            src={currentPage > 1 ? leftButtonBlack : leftButton}
+            alt="이전"
+            onClick={handleScrollPrev}
+          />
+          <PageInfo>
+            {currentPage} / {totalPages}
+          </PageInfo>
+          <DownImage
+            src={currentPage < totalPages ? rightButtonBlack : rightButton}
+            alt="다음"
+            onClick={handleScrollNext}
+          />
+        </ScrollButton>
+      )}
     </>
   );
 }

@@ -6,6 +6,8 @@ import leisureIcon from "../../assets/SpendIcons/leisureIcon.png";
 import loanIcon from "../../assets/SpendIcons/loanIcon.png";
 import pleasureIcon from "../../assets/SpendIcons/pleasureIcon.png";
 import trafficIcon from "../../assets/SpendIcons/trafficIcon.png";
+import basicRad from "../../assets/radishes/basicRad.svg";
+import useSpendStore from "../../store/SpendStore";
 
 const iconMapping = {
   식비: foodIcon,
@@ -18,8 +20,8 @@ const iconMapping = {
 
 const Category = styled.div`
   background-color: #f5fded;
-  width: 100%;
-  margin-top: 3vh;
+  width: 90%;
+  margin-top: 2cqb;
   margin-bottom: 3vh;
   border-radius: 20px;
   display: flex;
@@ -56,14 +58,44 @@ const LabelAccent = styled.span`
   margin-right: 8px;
 `;
 
-const MonthlyCategory = ({ data = [] }) => {
+const NoPaymentsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 25%;
+`;
+
+const NoPaymentsImage = styled.img`
+  width: 70px;
+  height: 70px;
+  margin-bottom: 10px;
+`;
+
+const NoPaymentsText = styled.p`
+  font-size: 14px;
+  color: #999;
+`;
+
+const MonthlyCategory = () => {
+  const data = useSpendStore((state) => state.pieChartData.getCategoryList || []);
+
+  if (data.length === 0) {
+    return (
+      <NoPaymentsContainer>
+        <NoPaymentsImage src={basicRad} alt="No payments" />
+        <NoPaymentsText>소비 내역이 없습니다.</NoPaymentsText>
+      </NoPaymentsContainer>
+    );
+  }
+
   return (
     <Category>
       {data.map((item, index) => {
-        const iconSrc = iconMapping[item.label] || ""; // Fallback to empty string if icon not found
-        const label = item.label || "기타"; // Default label to "기타" if undefined
-        const percent = item.percent || 0; // Default percent to 0 if undefined
-        const amount = item.amount || 0; // Default amount to 0 if undefined
+        const iconSrc = iconMapping[item.label] || basicRad;
+        const label = item.label || "기타";
+        const percent = item.percent || 0;
+        const amount = item.amount || 0;
 
         return (
           <CategoryItem key={item.id || index}>
@@ -71,7 +103,7 @@ const MonthlyCategory = ({ data = [] }) => {
               {iconSrc ? (
                 <Icon src={iconSrc} alt={`${label} icon`} />
               ) : (
-                <Icon src={foodIcon} alt="Default icon" /> // Show a default icon if not found
+                <Icon src={basicRad} alt="Default icon" />
               )}
               <LabelAccent>{label}</LabelAccent> {percent.toFixed(2)}%
             </ItemInfo>
