@@ -39,15 +39,6 @@ function Router() {
   const location = useLocation();
   const navigate = useNavigate();
   const userInfo = useUserStore((state) => state.userInfo);
-
-  // 로그인되지 않았을 경우 로그인 페이지로 리디렉션
-  useEffect(() => {
-    console.log()
-    if (!userInfo) {
-      navigate("/login");
-    }
-  }, [userInfo, navigate]);
-
   // Header와 Footer를 표시하지 않을 경로 목록
   const noHeaderFooterRoutes = ["/loading", "/login", "/signup", "/welcome"];
 

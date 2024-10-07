@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const config = {
-  apiKey: process.env.REACT_APP_FCM_API_KEY,
-  authDomain: process.env.REACT_APP_FCM_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FCM_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FCM_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FCM_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FCM_APP_ID,
-  measurementId: process.env.REACT_APP_FCM_MEASUREMENT_ID,
+    apiKey: "AIzaSyDf2tO7gYmnvDp0nnoClfhpJah74L0_Z8s",
+    authDomain: "moobeing-94714.firebaseapp.com",
+    projectId: "moobeing-94714",
+    storageBucket: "moobeing-94714.appspot.com",
+    messagingSenderId: "897587874738",
+    appId: "1:897587874738:web:6c65a9521f13b03735b2ab",
+    measurementId: "G-JKBHH3EN4Y"
 };
 
 const app = initializeApp(config);
@@ -17,7 +17,7 @@ const messaging = getMessaging();
 //토큰값 얻기
 getToken(messaging, {
   vapidKey:
-    process.env.VAPID_KEY, // 문자열에서 변수로 수정
+    "BGvIwfXXUWwvAoq56A2dp8iFU5k6PqxJ1c8CP9jmbvj7yrYX1KOO3AVsiZCSupVzZOHjN_MkWI-_lk-tlVdPKzo", // 문자열에서 변수로 수정
 })
   .then((currentToken) => {
     if (currentToken) {
