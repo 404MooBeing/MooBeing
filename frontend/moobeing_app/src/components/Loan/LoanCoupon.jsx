@@ -3,7 +3,6 @@ import styled, { keyframes } from "styled-components";
 import radish from "../../assets/radishes/basicRad.svg";
 import { useNavigate } from "react-router-dom";
 import { getStreamCnt } from "../../apis/UserApi";
-// import { changeInterestRate } from "../../apis/LoanApi";
 
 const dummyChangeInterestRate = () => {
   return new Promise((resolve) => {
@@ -16,16 +15,14 @@ const dummyChangeInterestRate = () => {
 const MonthlyRecordContainer = styled.div`
   width: 90%;
   max-width: 380px;
-  height: 150px;
   border-radius: 20px;
   border: 1px solid #b1da89;
   box-shadow: 0.3px 0.3px 6px rgba(0, 0, 0, 0.12);
-  padding: 20px;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 8%; /* 내부 여백 추가 */
+  padding: 3% 5%;
   box-sizing: border-box;
 `;
 
@@ -58,10 +55,8 @@ const Circle = styled.div`
   ${(props) =>
     props.last &&
     props.completed &&
-    `
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
-    cursor: pointer;
-  `}
+    `filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5)); cursor: pointer;`}
+  ${(props) => !props.completed && props.last && `cursor: not-allowed;`}
 `;
 
 const RadishImage = styled.img`
@@ -73,6 +68,7 @@ const LastCircleText = styled.div`
   font-size: 10px;
   text-align: center;
   line-height: 1.2;
+  font-weight: 700;
 `;
 
 const fadeInOut = keyframes`
@@ -182,21 +178,13 @@ const LoanCoupon = () => {
           <Circle
             last
             completed={streamCnt === 6}
-            onClick={handleLastCircleClick}
+            onClick={streamCnt === 6 ? handleLastCircleClick : null} // 6개월 이상이 되어야 클릭 가능
           >
-            {streamCnt >= 6 ? (
-              <LastCircleText>
-                금리
-                <br />
-                혜택
-              </LastCircleText>
-            ) : (
-              <LastCircleText>
-                금리
-                <br />
-                혜택
-              </LastCircleText>
-            )}
+            <LastCircleText>
+              코인
+              <br />
+              획득
+            </LastCircleText>
           </Circle>
         </CirclesContainer>
       </MonthlyRecordContainer>

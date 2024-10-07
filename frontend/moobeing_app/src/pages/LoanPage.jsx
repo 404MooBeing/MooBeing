@@ -17,7 +17,7 @@ const Screen = styled.div`
 const ScrollableContainer = styled.div`
   flex: 1;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; // iOS에서 부드러운 스크롤을 위해
+  -webkit-overflow-scrolling: touch;
 `;
 
 const ContentWrapper = styled.div`
@@ -25,7 +25,15 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding-bottom: 70px;
+`;
+
+const Rectangle = styled.div`
+  width: 100%;
+  height: 80px;
+  background-color: #c0dda5;
+  bottom: 120px;
+  z-index: 1;
+  padding-top: 130px;
 `;
 
 const LoanPage = () => {
@@ -40,6 +48,7 @@ const LoanPage = () => {
           <LoanCoupon />
           <HiddenRadish />
         </ContentWrapper>
+        < Rectangle/>
       </ScrollableContainer>
     </Screen>
   );
