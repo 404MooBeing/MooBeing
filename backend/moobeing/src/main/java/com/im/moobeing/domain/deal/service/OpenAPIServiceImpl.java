@@ -1,10 +1,9 @@
 package com.im.moobeing.domain.deal.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.im.moobeing.domain.deal.dto.CategoryPercentDto;
+import com.im.moobeing.domain.deal.dto.MoobtiCharacterDto;
 import com.im.moobeing.domain.deal.dto.request.OpenAIRequest;
 import com.im.moobeing.domain.deal.dto.response.GetDrawPiChartResponse;
 import com.im.moobeing.domain.deal.dto.response.MoobtiResponse;
@@ -46,13 +45,12 @@ public class OpenAPIServiceImpl implements OpenAPIService {
         // System 프롬프트
         promptList.add(
             new OpenAIRequest(OpenAIRole.system,
-                "우리 서비스에서 사용자의 소비 내역을 분석해서 MBTI 처럼 소비 유형을 알려주는 기능을 제공하고자해 \n"
-                    + "소비 내역 카테고리 별로 식비, 의료, 문화, 대출, 유흥 이렇게 5가지 항목이 있고\n"
-                    + "각각에 사용하는 금액 퍼센트에 따라서 소비 유형을 분류하려해\n"
-                    + "소비 카테고리가 5개이기 때문에 각 카테고리가 20%에서 얼마나 멀어져 있는지에 따라서 \n"
-                    + "해당 카테고리의 %을 0~ 100% 로 나타내려고해 \n"
-                    + "\n"
-                    + "20% 라면 50%, 0~20% 는 0~50% 로, 20~80% 는 50% ~ 100%로 변환할겨야\n"
+                "우리 서비스는 사용자의 소비 내역을 분석하여 소비 유형을 알려줍니다.\n" +
+                    "소비 카테고리는 식비, 의료, 문화, 대출, 유흥 이렇게 5가지이며, 각 카테고리의 소비 비율에 따라 소비 유형을 분류합니다.\n" +
+                    "각 카테고리의 소비 비율을 보정하기 위해 다음 공식을 사용합니다:\n" +
+                    "보정된 비율 y = 30 + ((x - 0.1) / 0.9) * 70\n" +
+                    "여기서 x는 원래의 소비 비율 / 100 입니다.\n" +
+                    "이 식을 사용하여 주어진 소비 비율에 맞는 보정 비율을 계산해주세요.\n"
                     + "그리고 카테고리들의 변환한%가 50을 넘는지 안넘는지에 따라서 사용자의 유형을 분류할거야\n"
                     + "5개의 유형이므로 32개의 카테고리가 있겠지?\n"
                     + "\n"
@@ -190,8 +188,8 @@ public class OpenAPIServiceImpl implements OpenAPIService {
                     + "}\n"
                     + "\n"
                     + "이제 너는 소비 내역 분석기가 되어 내가 주는 소비 내역을 보고 \n"
-                    + "유형 이름과 description, 각 카테고리별로 변환한 %을 , 으로 분리해서 보여줘\n "
-                    + "줄바꿈이랑 띄어쓰기 하지마 카테고리 들은 이름, 퍼센트  이렇게 차례대로 보내 식비, 의료, 문화, 대출, 유흥 순서대로 보내고 없어도 퍼센트 0 이라고 해서 보내  label 붙이지 말고 값들만 보여줘"));
+                    + "유형 이름과 description, 각 카테고리별로 변환한 %을 개행 으로 분리해서 보여줘 description 은 내가 준 내용을 참고해서 사용자의 소비 내용을 보고 너가 분석한 뒤  어울리는 멘트를 생성해서 20 ~ 30자 정도로 만들어줘야해 20자는 반드시 넘도록해\n "
+                    + "줄바꿈이랑 띄어쓰기 하지마 카테고리 들은 이름, 퍼센트  이렇게 차례대로 보내 식비, 의료, 문화, 대출, 유흥 순서대로 보내고 없어도 0 이라고 해서 보내  label 붙이지 말고 카테고리 이름도 빼고 순서만 유지하고 보내 값들만 보여줘 그러면 총 7줄이 나와야할거야 name, description 문자열 2줄, Percent 를 표시할 int 형  5줄"));
         // 사용자 정보 넣는 부분 추가
         LocalDateTime now = LocalDateTime.now();
         GetDrawPiChartResponse getDrawPiChartResponse = dealService.drawPiChart(member,
@@ -210,9 +208,9 @@ public class OpenAPIServiceImpl implements OpenAPIService {
                 entity, String.class);
             ObjectMapper objectMapper = new ObjectMapper();
             // JSON 문자열을 MoobtiResponse 객체로 변환
-
+            System.out.println(extractMessageField(response.getBody()));
             if (response.getStatusCode() == HttpStatus.OK) {
-                return parsingMoobTi(extractMessageField(response.getBody()));
+                return parsingMoobTi(extractMessageField(response.getBody()), member, now.getMonthValue() - 1);
             } else {
                 throw new OpenAIException("OpenAI 응답 오류");
             }
@@ -237,8 +235,8 @@ public class OpenAPIServiceImpl implements OpenAPIService {
         }
     }
 
-    private MoobtiResponse parsingMoobTi(String s){
-        String[] tokens = s.split(",");
+    private MoobtiResponse parsingMoobTi(String s, Member member, Integer month){
+        String[] tokens = s.split("\n");
         List<CategoryPercentDto> categoryPercentDtoList = new ArrayList<>();
         if (tokens.length != 7){
             throw new OpenAIException("OpenAI 파싱 오류");
@@ -250,7 +248,13 @@ public class OpenAPIServiceImpl implements OpenAPIService {
         categoryPercentDtoList.add(new CategoryPercentDto("문화", Double.parseDouble(tokens[4])));
         categoryPercentDtoList.add(new CategoryPercentDto("대출", Double.parseDouble(tokens[5])));
         categoryPercentDtoList.add(new CategoryPercentDto("유흥", Double.parseDouble(tokens[6])));
-        MoobtiResponse moobtiResponse = new MoobtiResponse(tokens[0], tokens[1], categoryPercentDtoList);
+        MoobtiCharacterDto moobtiCharacterDto = MoobtiCharacterDto.builder()
+            .type("소비 유형")
+            .imageUrl("FlexRad")
+            .name(tokens[0])
+            .description(tokens[1])
+                                                                  .build();
+        MoobtiResponse moobtiResponse = new MoobtiResponse(moobtiCharacterDto ,categoryPercentDtoList, member.getName(), month);
         return moobtiResponse;
     }
 
