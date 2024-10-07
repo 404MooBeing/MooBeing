@@ -1,5 +1,7 @@
 package com.im.moobeing.domain.loan.controller;
 
+import com.im.moobeing.domain.loan.dto.response.GetPercentLoanNameResponse;
+import com.im.moobeing.domain.loan.dto.response.GetPercentLoanResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -65,6 +67,15 @@ public class LoanController {
 	@GetMapping("/percent-name")
 	public ResponseEntity<?> getPercentLoanName(@AuthenticationPrincipal Member member){
 		return ResponseEntity.status(HttpStatus.OK).body(loanService.getPercentLoanName(member));
+	}
+
+	@Operation(summary = "특정 대출의 상환 퍼센트 확인", description = "몇 퍼센트 상환인지 체크하기")
+	@GetMapping("/percent-name-detail")
+	public ResponseEntity<GetPercentLoanResponse> getPercentLoanNameResponseResponse(
+			@AuthenticationPrincipal Member member,
+			@RequestParam String loanName
+	) {
+		return ResponseEntity.ok(loanService.getPercentLoanResponse(member, loanName));
 	}
 
 	@Operation(summary = "모든 대출금 또래 상환능력 조회", description = "모든 대출금 또래 상환능력 조회 하기")
