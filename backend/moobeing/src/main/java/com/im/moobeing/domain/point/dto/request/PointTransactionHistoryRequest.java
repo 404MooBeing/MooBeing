@@ -1,23 +1,21 @@
-package com.im.moobeing.domain.deal.dto.request;
+package com.im.moobeing.domain.point.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record TransactionHistoryRequest(
-        @Schema(description = "조회할 계좌 ID", example = "1") Long accountId,
+public record PointTransactionHistoryRequest (
         @Schema(description = "조회할 기간 (1개월, 3개월, 6개월, 1년 중 하나)", example = "3개월") Integer months,
         @Schema(description = "거래 유형 (전체, 입금, 출금 중 하나)", example = "전체") String transactionType,
         @Schema(description = "페이지 번호", example = "1") int page
 ) {
 
     @JsonCreator
-    public TransactionHistoryRequest(
-            @JsonProperty("accountId") Long accountId,
+    public PointTransactionHistoryRequest(
             @JsonProperty("months") String months,
             @JsonProperty("transactionType") String transactionType,
             @JsonProperty("page") int page) {
-        this(accountId, convertMonths(months), convertTransactionType(transactionType), page);
+        this(convertMonths(months), convertTransactionType(transactionType), page);
     }
 
     private static Integer convertMonths(String months) {

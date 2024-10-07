@@ -1,7 +1,7 @@
 package com.im.moobeing.domain.point.controller;
 
-import com.im.moobeing.domain.deal.dto.request.TransactionHistoryRequest;
 import com.im.moobeing.domain.member.entity.Member;
+import com.im.moobeing.domain.point.dto.request.PointTransactionHistoryRequest;
 import com.im.moobeing.domain.point.dto.response.PointTransactionHistoryResponse;
 import com.im.moobeing.domain.point.service.PointService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,7 +48,7 @@ public class PointController {
     )
     @PostMapping("/history")
     public ResponseEntity<List<PointTransactionHistoryResponse>> getPointTransactionHistory(
-            @RequestBody TransactionHistoryRequest request,
+            @RequestBody PointTransactionHistoryRequest request,
             @AuthenticationPrincipal Member member) {
         log.error(String.valueOf(member.getId()));
         return ResponseEntity.ok(pointService.getPointTransactionHistory(request, member));
