@@ -59,9 +59,17 @@ function CapsuleChooseLocationPage() {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [mapCenter, setMapCenter] = useState(null); // 지도 중심 상태 추가
+  const [customMarkers, setCustomMarkers] = useState([]);
   const navigate = useNavigate();
-  const { updateLocationInfo, dealId, description, type, imgFile, radishId } =
-    useCapsuleStore();
+  const {
+    updateLocationInfo,
+    dealId,
+    description,
+    type,
+    imgFile,
+    radishId,
+    radishImageUrl,
+  } = useCapsuleStore();
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -73,6 +81,20 @@ function CapsuleChooseLocationPage() {
           };
           setUserLocation(userCoords);
           setMapCenter(userCoords); // 초기 지도 중심을 사용자 위치로 설정
+          setCustomMarkers([
+            {
+              lat: userCoords.lat,
+              lng: userCoords.lng,
+              imageUrl: radishImageUrl,
+            },
+          ]);
+
+          updateLocationInfo(
+            userCoords.lat,
+            userCoords.lng,
+            "현재위치",
+            "사용자 위치"
+          );
         },
         (error) => {
           console.error("사용자 위치를 가져오는 데 실패했습니다:", error);
@@ -82,7 +104,7 @@ function CapsuleChooseLocationPage() {
     } else {
       alert("사용자의 브라우저가 위치 서비스를 지원하지 않습니다.");
     }
-  }, []);
+  }, [updateLocationInfo, radishImageUrl]);
 
   const searchPlaces = useCallback(
     (keyword) => {
@@ -127,6 +149,19 @@ function CapsuleChooseLocationPage() {
     setSelectedPlace(place);
     setMapCenter({ lat: place.y, lng: place.x }); // 선택한 장소를 지도 중심으로 설정
     setPlaces([]); // 검색 결과 리스트를 숨김
+
+    console.log("radishImageUrl (항목 선택 시):", radishImageUrl); // 이미지 URL 확인
+
+    // 사용자의 radishImageUrl로 마커쓰긔
+    setCustomMarkers([
+      {
+        lat: place.y,
+        lng: place.x,
+        imageUrl: radishImageUrl,
+      },
+    ]);
+
+    updateLocationInfo(place.y, place.x, place.address_name, place.place_name);
   };
 
   const handleDecision = async () => {
@@ -171,9 +206,7 @@ function CapsuleChooseLocationPage() {
         onSelectPlace={handleSelectPlace}
       />
       <MapComponent
-        markers={
-          selectedPlace ? [{ lat: selectedPlace.y, lng: selectedPlace.x }] : []
-        }
+        markers={customMarkers}
         userLocation={userLocation}
         center={mapCenter} // 중심 위치를 전달
       />
