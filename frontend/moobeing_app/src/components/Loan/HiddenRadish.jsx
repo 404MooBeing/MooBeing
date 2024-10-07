@@ -31,7 +31,6 @@ const RadishContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  margin-bottom: 130px; // 80px + 50px
 `;
 
 const PotRadish = styled.img`
@@ -44,8 +43,8 @@ const PotRadish = styled.img`
 
 const ChatBubbleContainer = styled.div`
   position: absolute;
-  top: 15px;
-  right: 40px;
+  top: 20px;
+  right: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -78,7 +77,7 @@ const ChatText = styled.p`
 `;
 
 const NumberText = styled.span`
-  font-size: 26px;
+  font-size: 20px;
   font-weight: bold;
   margin-top: 5px;
 `;

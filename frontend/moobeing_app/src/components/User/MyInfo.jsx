@@ -16,21 +16,22 @@ const Container = styled.div`
 `;
 
 const PasswordChangeButton = styled.button`
-  margin-top: 200px;
-  font-size: 12px;
-  padding: 8px 14px;
+  margin-top: 10vh;
+  font-size: 15px;
+  padding: 10px 15px;
   cursor: pointer;
   border: none;
   font-weight: 900;
-  font: 14px;
+  font-family: 'mainFont';
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   background-color: ${(props) =>
     props.isactive === "true" ? "#348833" : "#e0eed2"};
-  color: ${(props) => (props.isactive === "true" ? "#ffffff" : "#24272D")};
+  color: ${(props) => (props.isactive === "true" ? "#ffffff" : "#5E5054")};
   border-radius: 10px;
 
   @media (min-width: 600px) {
-    font-size: 14px;
+    font-size: 15px;
     padding: 10px;
   }
 `;

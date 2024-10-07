@@ -3,8 +3,7 @@ import styled from "styled-components";
 import DropDownArrow from "../../assets/dropdown/DropdownArrow.png";
 import SortCoin from "./SortCoin";
 import { useNavigate } from "react-router-dom";
-import RadishCoinImg from "../../assets/coin/RadishCoin.png"
-import RightArrowBtn from "../../assets/button/rightButtonBlack.svg"
+import RadishCoinImg from "../../assets/coin/RadishCoin.png";
 
 const CoinHeader = styled.div`
   background-color: #F5F8F3;
@@ -18,27 +17,38 @@ const CoinHeader = styled.div`
 `;
 
 const RadishCoin = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 24px;
-    height : 50%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 25px;
+`;
+
+const RadishCoinText = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const RadishCoinImage = styled.div`
+  background-image: url(${RadishCoinImg});
+  background-size: cover;
+  background-position: center;
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
 `;
 
 const RadishCoinBtn = styled.button`
-    margin-left:40px;
-    height: 50px;
-    margin-right: 35px;
-    margin-top: 20px;
-    width: 85px;
-    background-color: #e0eed2;
-    color: #24272d;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: bold;
-    justify-content: center;
-      border: none;
+  background-color: #E0EED2;
+  color: #5E5054;
+  border: none;
+  padding: 8px 10px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
   cursor: pointer;
+  font-family: 'mainFont';
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const CoinBox = styled.div`
@@ -54,29 +64,17 @@ const CoinBox = styled.div`
   box-sizing: border-box;
   box-shadow: 3px 3px 3px #d9d9d9;
   position: relative;
-  
 `;
 
 const Label = styled.div`
   font-weight: bold;
-  margin-left: 10px;
+  font-size: 20px;
 `;
 
 const Value = styled.div`
+  font-size: 20px;
   text-align: right;
-  margin-left : 100px
 `;
-
-const CoinRemain = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  font-size: 30px;
-  font-weight: 600;
-  margin-top: 30px;
-`;
-
 
 const Sort = styled.div`
   display: flex;
@@ -126,14 +124,15 @@ const CoinInfo = ({
     setIsSortPopupOpen(false);
   };
 
-
   return (
     <CoinHeader>
       <CoinBox>
         <RadishCoin>
-            <img src={RadishCoinImg}></img>
+          <RadishCoinText>
+            <RadishCoinImage />
             <Label>무 코인</Label>
-            <Value>{coinCount}개</Value>
+          </RadishCoinText>
+          <Value>{coinCount}개</Value>
         </RadishCoin>
         <RadishCoinBtn onClick={() => {navigate('/coin-exchange')}}>송금하기</RadishCoinBtn>
       </CoinBox>
