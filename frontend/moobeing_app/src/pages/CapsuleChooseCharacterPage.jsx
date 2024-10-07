@@ -155,7 +155,8 @@ function ChooseCharacter() {
     updateRadishInfo(
       sizes[currentSize].value,
       characters[currentCharacter].radishId,
-      harvestDate
+      harvestDate,
+      characters[currentCharacter].radishImageUrl
     );
     console.log(useCapsuleStore.getState());
 
