@@ -11,6 +11,7 @@ const MapContainer = styled.div`
 function MapComponent({
   onMapLoad,
   onBoundsChanged,
+  center,
   markers = [],
   userLocation,
   userLocationMarker,
@@ -42,10 +43,10 @@ function MapComponent({
 
   // 맵 초기화
   useEffect(() => {
-    if (kakao && mapRef.current && !map) {
+    if (kakao && mapRef.current && !map && center) {
       const options = {
-        center: new kakao.maps.LatLng(initialCenter.lat, initialCenter.lng),
-        level: initialLevel,
+        center: new kakao.maps.LatLng(center.lat, center.lng),
+        level: 3,
       };
       const newMap = new kakao.maps.Map(mapRef.current, options);
 
@@ -70,28 +71,12 @@ function MapComponent({
         });
       }
 
-      // 터치(탭) 이벤트
-      if (onLocationSelect) {
-        kakao.maps.event.addListener(newMap, "click", (target) => {
-          const latlng = target.latLng;
-          onLocationSelect({
-            lat: latlng.getLat(),
-            lng: latlng.getLng(),
-          });
-        });
-      }
-
       setMap(newMap);
+    } else if (map && center) {
+      // 지도 중심을 선택한 장소로 이동
+      map.setCenter(new kakao.maps.LatLng(center.lat, center.lng));
     }
-  }, [
-    kakao,
-    map,
-    onMapLoad,
-    onBoundsChanged,
-    onLocationSelect,
-    initialCenter,
-    initialLevel,
-  ]);
+  }, [kakao, map, center, onMapLoad, onBoundsChanged]);
 
   // 마커 업데이트
   useEffect(() => {
@@ -119,7 +104,13 @@ function MapComponent({
 
         markersRef.current.push(customOverlay);
       } else {
-        // 기본 마커 생성 (기존 코드와 동일)
+        // 기본 마커 생성
+        const marker = new kakao.maps.Marker({
+          position: position,
+          map: map,
+        });
+
+        markersRef.current.push(marker);
       }
     });
   }, [map, kakao, markers]);
@@ -147,6 +138,11 @@ function MapComponent({
       });
     }
   }, [map, kakao, userLocation, userLocationMarker]);
+
+  // center가 없을 때는 맵을 렌더링하지 않음
+  if (!center || !center.lat || !center.lng) {
+    return <div>현재 위치를 찾고 있습니다!</div>;
+  }
 
   return <MapContainer ref={mapRef} />;
 }

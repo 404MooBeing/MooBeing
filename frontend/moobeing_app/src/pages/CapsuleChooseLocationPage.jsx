@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Map from "../components/CapsuleMap/Map";
+import MapComponent from "../components/CapsuleMap/Map";
 import LocationSearch from "../components/CapsuleChooseLocation/LocationSearch";
 import useCapsuleStore from "../store/CapsuleStore";
 import { postPlantCapsule } from "../apis/CapsuleApi";
@@ -58,7 +58,7 @@ function CapsuleChooseLocationPage() {
   const [places, setPlaces] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
-  const [kakaoLoaded, setKakaoLoaded] = useState(false); // API 로드 상태
+  const [mapCenter, setMapCenter] = useState(null); // 지도 중심 상태 추가
   const navigate = useNavigate();
   const { updateLocationInfo, dealId, description, type, imgFile, radishId } =
     useCapsuleStore();
@@ -67,10 +67,12 @@ function CapsuleChooseLocationPage() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserLocation({
+          const userCoords = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-          });
+          };
+          setUserLocation(userCoords);
+          setMapCenter(userCoords); // 초기 지도 중심을 사용자 위치로 설정
         },
         (error) => {
           console.error("사용자 위치를 가져오는 데 실패했습니다:", error);
@@ -123,6 +125,8 @@ function CapsuleChooseLocationPage() {
 
   const handleSelectPlace = (place) => {
     setSelectedPlace(place);
+    setMapCenter({ lat: place.y, lng: place.x }); // 선택한 장소를 지도 중심으로 설정
+    setPlaces([]); // 검색 결과 리스트를 숨김
   };
 
   const handleDecision = async () => {
@@ -136,32 +140,15 @@ function CapsuleChooseLocationPage() {
 
       try {
         const formData = new FormData();
-
-        // integer($int64)
-        formData.append("dealId", dealId); // 정수값 그대로 전송
-
-        // string($binary)
+        formData.append("dealId", dealId);
         formData.append("imgFile", imgFile);
-
-        // string
         formData.append("description", description);
         formData.append("type", type);
-
-        // number($double)
-        formData.append("lat", selectedPlace.y); // 숫자값 그대로 전송
-        formData.append("lng", selectedPlace.x); // 숫자값 그대로 전송
-
-        // string
+        formData.append("lat", selectedPlace.y);
+        formData.append("lng", selectedPlace.x);
         formData.append("addressName", selectedPlace.address_name);
         formData.append("placeName", selectedPlace.place_name);
-
-        // integer($int64)
-        formData.append("radishId", radishId); // 정수값 그대로 전송
-
-        // 디버깅을 위한 로그
-        for (let [key, value] of formData.entries()) {
-          console.log(`${key}: ${value}`);
-        }
+        formData.append("radishId", radishId);
 
         const response = await postPlantCapsule(formData);
         console.log("서버 응답:", response);
@@ -182,13 +169,13 @@ function CapsuleChooseLocationPage() {
         onSearch={searchPlaces}
         places={places}
         onSelectPlace={handleSelectPlace}
-        kakaoLoaded={kakaoLoaded}
       />
-      <Map
-        places={places}
+      <MapComponent
+        markers={
+          selectedPlace ? [{ lat: selectedPlace.y, lng: selectedPlace.x }] : []
+        }
         userLocation={userLocation}
-        onSelectPlace={handleSelectPlace}
-        setKakaoLoaded={setKakaoLoaded} // API 로드 상태 전달
+        center={mapCenter} // 중심 위치를 전달
       />
       {selectedPlace && (
         <OverlayContainer>
