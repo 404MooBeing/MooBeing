@@ -130,6 +130,7 @@ const getIconContent = (iconName) => {
   }
 };
 
+
 const AlarmPage = () => {
   const [alarms, setAlarms] = useState([]);
 
@@ -163,7 +164,7 @@ const AlarmPage = () => {
                   <AlarmIcon>{getIconContent(alarm.iconName)}</AlarmIcon>
                   <AlarmItemTitle>{alarm.title}</AlarmItemTitle>
                 </AlarmIconTitle>
-                <AlarmTime>{formatTimeAgo(alarm.time)}</AlarmTime>
+                <AlarmTime>{formatTimeAgo(alarm.createdAt)}</AlarmTime>
               </AlarmItemHeader>
               <AlarmMessage>{alarm.message}</AlarmMessage>
             </AlarmItem>
