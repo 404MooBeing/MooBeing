@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { getMessaging, getToken } from "firebase/messaging";
 
 const config = {
     apiKey: "AIzaSyCTHRWWL50vqyNfYQnJofsEItQxl2fgI3I",
@@ -14,38 +14,21 @@ const config = {
 const app = initializeApp(config);
 const messaging = getMessaging();
 
-//토큰값 얻기
+// 토큰값 얻기
 getToken(messaging, {
   vapidKey:
-    "BKSLg2e8SNHqXlxXcufLmhbyE2IUJg3pyyG_aTt4NsLqvVopevgxg0e2jNaeXHG_vGGHbHdZklPwFlH2nOnCNfE", // 문자열에서 변수로 수정
+    "BKSLg2e8SNHqXlxXcufLmhbyE2IUJg3pyyG_aTt4NsLqvVopevgxg0e2jNaeXHG_vGGHbHdZklPwFlH2nOnCNfE",
 })
   .then((currentToken) => {
     if (currentToken) {
-      // Send the token to your server and update the UI if necessary
-      // ...
-      console.log(currentToken);
-      
-      // 클립보드에 토큰 복사
-      navigator.clipboard.writeText(currentToken).then(() => {
-          alert("토큰이 클립보드에 복사되었습니다: " + currentToken);
-      }).catch(err => {
-          console.error("토큰 복사 실패:", err);
-      });
+      console.log("Token:", currentToken);
+      navigator.clipboard.writeText(currentToken)
+        .then(() => alert("토큰이 클립보드에 복사되었습니다: " + currentToken))
+        .catch(err => console.error("토큰 복사 실패:", err));
     } else {
-      // Show permission request UI
-      console.log(
-        "No registration token available. Request permission to generate one."
-      );
-      // ...
+      console.log("No registration token available. Request permission to generate one.");
     }
   })
   .catch((err) => {
     console.log("An error occurred while retrieving token. ", err);
-    // ...
   });
-
-//포그라운드 메시지 수신
-onMessage(messaging, (payload) => {
-  console.log("Message received. ", payload);
-  // ...
-});
