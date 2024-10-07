@@ -24,17 +24,18 @@ const StyledHeader = styled.div`
   & .right-icons {
     display: flex;
     align-items: center;
+    margin-right: 15px;
   }
 
   & .alarm {
-    width: 28px;
+    width: 26px;
     cursor: pointer;
     margin-left: 5%;
     // visibility: ${(props) => (props.$isAlarmVisible ? "visible" : "hidden")};
   }
 
   & .auth {
-    width: 30px;
+    width: 28px;
     cursor: pointer;
     margin: 18px;
   }
