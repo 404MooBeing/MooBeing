@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import goToJourney from "../../assets/button/goToJourney.svg";
 import { getLoanSum } from "../../apis/LoanApi";
+import { getAccountBenefit } from "../../apis/AccountApi";
 
 const Container = styled.div`
   background-color: #f5fded;
@@ -87,6 +88,30 @@ const RepaymentButton = styled.button`
 const LoanInfo = () => {
   // eslint-disable-next-line
   const [loanSum, setLoanSum] = useState(0);
+  // eslint-disable-next-line
+  const [accountBenefit, setAccountBenefit] = useState({});
+  const [remainingBalance, setRemainingBalance] = useState(0);
+  const [loanList, setLoanList] = useState([]); // 초기값을 빈 배열로 설정
+  // eslint-disable-next-line
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAccountBenefitData();
+  }, []); // 컴포넌트가 마운트될 때만 실행
+
+  const fetchAccountBenefitData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getAccountBenefit();
+      setAccountBenefit(response);
+      setRemainingBalance(response.accountLeftMoney || 0);
+      setLoanList(Array.isArray(response.LoanList) ? response.LoanList : []); // 배열인지 확인 후 설정
+    } catch (error) {
+      console.error("계좌 혜택 데이터를 가져오는 중 오류 발생:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchLoanSum = async () => {
@@ -108,8 +133,17 @@ const LoanInfo = () => {
   };
 
   const goToLoanPaymentPage = () => {
-    navigate("/loan-payment");
+    if (loanList.length > 0) {
+      const firstLoan = loanList[0]; // 첫 번째 대출 상품을 선택
+      navigate('/loan-payment', { state: { loanList, remainingBalance, selectedLoan: firstLoan } }); // loanList와 잔액, 첫 번째 대출 상품 전달
+    } else {
+      alert("대출 목록이 없습니다.");
+    }
   };
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
  
   return (
     <Container>

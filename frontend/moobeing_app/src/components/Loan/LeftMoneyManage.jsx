@@ -154,36 +154,44 @@ function LeftMoneyManage() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const goToLoanPaymentPage = () => {
+    if (selectedLoan) {
+      navigate('/loan-payment', { state: { loanList, remainingBalance, selectedLoan } }); // loanList와 잔액을 전달
+    }
+  };
+
   if (isLoading) {
     return <div>로딩 중...</div>;
   }
 
   return (
     <Container>
-      <SubHeader>
-        <SubTitle>남은 돈 관리하기</SubTitle>
-        <LeftMoney>
-          잔액 <MoneySpan>{remainingBalance?.toLocaleString()}원</MoneySpan>
-        </LeftMoney>
-      </SubHeader>
+    <SubHeader>
+      <SubTitle>남은 돈 관리하기</SubTitle>
+      <LeftMoney>
+        잔액 <MoneySpan>{remainingBalance?.toLocaleString()}원</MoneySpan>
+      </LeftMoney>
+    </SubHeader>
 
-      <CustomDropdownContainer>
-        <CustomDropdownHeader onClick={toggleDropdown}>
-          {selectedLoan ? selectedLoan.loanName : "대출 상품 선택"} {/* 선택된 대출 상품 이름으로 설정 */}
-        </CustomDropdownHeader>
-        {isDropdownOpen && (
-          <CustomDropdownList>
-            {loanList.map((loan) => (
-              <CustomDropdownItem key={loan.loanName} onClick={() => {
+    <CustomDropdownContainer>
+      <CustomDropdownHeader onClick={toggleDropdown}>
+        {selectedLoan ? selectedLoan.loanName : "대출 상품 선택"}
+      </CustomDropdownHeader>
+      {isDropdownOpen && (
+        <CustomDropdownList>
+          {loanList.map((loan) => (
+            <CustomDropdownItem
+              key={loan.loanName}
+              onClick={() => {
                 setSelectedLoan(loan);
-                setIsDropdownOpen(false); // 드롭다운 숨기기
+                setIsDropdownOpen(false); 
               }}>
-                {loan.loanName}
-              </CustomDropdownItem>
-            ))}
-          </CustomDropdownList>
-        )}
-      </CustomDropdownContainer>
+              {loan.loanName}
+            </CustomDropdownItem>
+          ))}
+        </CustomDropdownList>
+      )}
+    </CustomDropdownContainer>
 
       <TextTag>
         {selectedLoan && (
@@ -194,7 +202,7 @@ function LeftMoneyManage() {
             </LastLine>
             대출잔액은 <MoneySpan>{selectedLoan.loanBalance.toLocaleString()}원</MoneySpan>입니다.
             <br />
-            <PayButton onClick={() => navigate('/repayment')}>상환하러 가기</PayButton>
+            <PayButton onClick={goToLoanPaymentPage}>상환하러 가기</PayButton>
           </>
         )}
       </TextTag>
