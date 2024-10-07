@@ -1,9 +1,9 @@
 //프로젝트 버전 확인
-importScripts("https://www.gstatic.com/firebasejs/10.14.0firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/10.14.0/firebase-messaging.js");
+importScripts("https://www.gstatic.com/firebasejs/9.5.0/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/9.5.0/firebase-messaging.js");
 
 const config = {
-  apiKey: import.meta.env.REACT_APP_FCM_API_KEY,
+  apiKey: import.meta.env.REACT_APP_FCM_APIKEY,
   authDomain: import.meta.env.REACT_APP_FCM_AUTH_DOMAIN,
   projectId: import.meta.env.REACT_APP_FCM_PROJECT_ID,
   storageBucket: import.meta.env.REACT_APP_FCM_STORAGE_BUCKET,
