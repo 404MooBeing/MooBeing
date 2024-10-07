@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import radishImage from "../../assets/radishes/basicRad.svg";
+import useUserStore from "../../store/UserStore";
 
 const BarContainer = styled.div`
   width: 85%;
@@ -25,7 +26,7 @@ const GraphFill = styled.div`
   background-color: #658b65; /* 배경색보다 더 진한 색 */
   height: 100%;
   border-radius: 20px;
-  width: ${({ fillpercent }) => fillpercent}%;
+  width: ${({ fillpercent }) => fillpercent}% ;
   transition: width 2s ease; /* 부드러운 채우기 애니메이션 */
   position: relative;
   display: flex;
@@ -46,25 +47,19 @@ const Text = styled.div`
   font-weight: 600;
 `;
 
-function PercentBar() {
-  // 하드코딩된 사용자 데이터
-  const userInfo = {
-    radishImageUrl: radishImage, // 기본 이미지 사용
-  };
-
-  const [fillpercent, setFillPercent] = useState(0); // 기본값을 0으로 설정
+function PercentBar({ percent }) {
+  const { userInfo } = useUserStore();
+  const [fillPercent, setFillPercent] = useState(0); // 기본값을 0으로 설정
   const [error, setError] = useState(false); // 데이터 유무를 판단하기 위한 에러 상태
 
   useEffect(() => {
-    // API 대신 하드코딩된 값으로 상태 업데이트
-    const remainingPercent = 45.5; // 임의의 하드코딩된 상환 퍼센트 값
-
-    if (remainingPercent > 0) {
-      setFillPercent(remainingPercent); // 데이터를 받아올 경우 상태 업데이트
+    // percent 값이 유효한 경우 상태 업데이트
+    if (percent > 0) {
+      setFillPercent(percent); // props로 넘겨받은 percent 값 사용
     } else {
-      setError(true); // 데이터가 없는 경우 에러 상태를 true로 설정
+      setError(true); // percent 값이 없거나 0 이하일 때 에러 상태
     }
-  }, []);
+  }, [percent]); // percent 값이 변경될 때마다 effect 실행
 
   // 기본 무 이미지 설정
   const radishImgUrl = userInfo?.radishImageUrl || radishImage;
@@ -72,14 +67,14 @@ function PercentBar() {
   return (
     <BarContainer>
       <GraphContainer>
-        <GraphFill fillpercent={fillpercent}>
+        <GraphFill fillpercent={fillPercent}>
           <Radish src={radishImgUrl} alt="Radish" />
         </GraphFill>
       </GraphContainer>
       {error ? (
-        <Text>상환 내역이 없습니다.</Text> // 데이터가 없을 경우 표시할 텍스트
+        <Text>상환 내역이 없습니다.</Text> // 데이터가 없는 경우 표시할 텍스트
       ) : (
-        <Text>{fillpercent.toFixed(2)}% 상환했습니다!</Text> // 데이터가 있을 경우 표시할 텍스트
+        <Text>{fillPercent.toFixed(2)}% 상환했습니다!</Text> // 데이터가 있는 경우 표시할 텍스트
       )}
     </BarContainer>
   );

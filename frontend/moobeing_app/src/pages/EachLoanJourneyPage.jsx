@@ -6,11 +6,13 @@ import {
   getProductLoanBuddy,
   getProductYearLoanBuddy,
   getLoanDetail,
+  getEachLoanPercent,
 } from "../apis/LoanApi";
 import { useParams } from "react-router-dom";
 import Loading from "./LoadingPage";
 import EachLoanProductInfo from "../components/LoanJourney/EachLoanProductInfo";
 import EachLoanJourneyGraph from "../components/LoanJourney/EachLoanJourneyGraph";
+import PercentBar from "../components/LoanJourney/PercentBar";
 
 const Screen = styled.div`
   display: flex;
@@ -38,6 +40,7 @@ const EachLoanJourney = () => {
   const [yearPeerData, setYearPeerData] = useState([]);
   const [loanDetail, setLoanDetail] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loanPercent, setLoanPercent] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,12 +54,14 @@ const EachLoanJourney = () => {
           yearResponse,
           yearPeerResponse,
           detailResponse,
+          percentResponse,
         ] = await Promise.all([
           getLoanMapByProductName(loanName), // loan 데이터 호출
           getProductLoanBuddy(loanName), // peer 데이터 호출
           getYearByProductName(loanName), // 연도별 loan 데이터 호출
           getProductYearLoanBuddy(loanName), // 연도별 peer 데이터 호출
           getLoanDetail(loanName), // loan 세부 데이터 호출
+          getEachLoanPercent(loanName), // loan 퍼센트 데이터 호출
         ]);
 
         const { getAllJourneyList: allJourneyList } = loanResponse;
@@ -70,6 +75,7 @@ const EachLoanJourney = () => {
         setYearJourneyData(yearJourneyList);
         setYearPeerData(yearPeerJourneyList);
         setLoanDetail(detailResponse);
+        setLoanPercent(percentResponse.remainingPercent); // loanPercent 상태 업데이트
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
       } finally {
@@ -86,16 +92,19 @@ const EachLoanJourney = () => {
     <Screen>
       <Container>
         {loanData.length > 0 ? (
-          <EachLoanJourneyGraph
-            data={loanData}
-            peerData={loanPeerData}
-            yearData={yearJourneyData}
-            yearPeerData={yearPeerData}
-          />
+          <>
+            <EachLoanJourneyGraph
+              data={loanData}
+              peerData={loanPeerData}
+              yearData={yearJourneyData}
+              yearPeerData={yearPeerData}
+            />
+            <PercentBar percent={loanPercent}/>
+            <EachLoanProductInfo loanDetail={loanDetail}/>
+          </>
         ) : (
             <div>데이터가 없습니다.</div>
         )}
-        <EachLoanProductInfo loanDetail={loanDetail}/>
       </Container>
     </Screen>
   );

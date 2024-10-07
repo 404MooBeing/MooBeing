@@ -8,87 +8,111 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
-  max-width: 767px;
   margin: 0 auto;
   background-color: #ffffff;
 `;
 
 const KimpaPanel = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   background-color: #F5FDED;
-  padding: 15px 20px;
-  margin: 10px 20px;
+  padding: 20px 30px;
+  margin: 20px 20px 10px 20px;
   border-radius: 20px;
+`;
+
+const KimpaInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 15px;
 `;
 
 const KimpaText = styled.span`
   font-weight: bold;
   display: flex;
-  align-items: center;
+  align-items: center; 
   cursor: pointer;
 `;
 
 const KimpaArrow = styled.span`
-  margin-left: 8px; // 화살표와 텍스트 사이의 간격
+  margin-left: 8px; /* 화살표와 텍스트 사이의 간격 */
 `;
 
 const LogoutButton = styled.button`
-  background-color: #E0EED2;
-  border: none;
-  border-radius: 15px;
-  padding: 7px 12px; // 상하 패딩을 7px로, 좌우 패딩을 12px로 증가
-  font-size: 12px; // 기존 글자 크기에서 2px 줄임 (일반적으로 14px이 기본값이므로 12px로 설정)
+  font-size: 13px;
+  padding: 8px 10px;
   cursor: pointer;
+  border: none;
+  font-weight: 900;
+  font-family: 'mainFont';
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  background-color: ${(props) =>
+    props.isactive === "true" ? "#348833" : "#e0eed2"};
+  color: ${(props) => (props.isactive === "true" ? "#ffffff" : "#5E5054")};
+  border-radius: 10px;
+
+  @media (min-width: 600px) {
+    font-size: 15px;
+    padding: 10px;
+  }
 `;
 
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  margin: 20px 20px 10px; // 상단 마진을 20px로 유지
+  position: relative;
+  width: 100%;
+  margin: 15px 0 10px 0;
   height: 40px;
 `;
 
 const SearchInput = styled.input`
   flex: 1;
-  border: 1px solid #4CAF50;
+  border: 2px solid #e0eed2;
   border-radius: 17px;
-  padding: 0 15px;
   font-size: 16px;
   height: 100%;
   outline: none;
-`;
-
-const SearchIconContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background-color: white;
-  border: 1px solid #4CAF50; // 테두리 색상을 초록색으로 변경
-  border-radius: 17px;
-  margin-left: 10px;
+  padding: 0 40px 0 15px;
+  font-family: 'mainFont';
 `;
 
 const SearchIcon = styled.img`
+  position: absolute;  /* SearchInput 안에서 고정 위치 */
+  right: 15px;         /* 오른쪽에서 15px 떨어짐 */
   width: 20px;
   height: 20px;
+  cursor: pointer;
 `;
+
+const MenuTitle = styled.div`
+  margin-left: 4px;
+  margin-bottom: 10px;
+  color: #a2a2a2;
+`
 
 const MenuList = styled.ul`
   list-style-type: none;
-  padding: 0 20px;
-  margin: 20px 0 0; // 상단 마진을 20px로 설정
-  flex: 1;
+  padding: 0;
+  margin: 20px auto 0;  /* 상단에 20px, 좌우는 자동으로 중앙 정렬 */
+  width: 85%;           /* 화면 너비의 85%로 설정 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   overflow-y: auto;
 `;
 
 const MenuItem = styled.li`
-  padding: 12px 0 10px 20px;
-  border-bottom: ${props => props.isLast ? 'none' : '1px solid #E0E0E0'};
+  padding: 12px 0 10px 5px;
+  border-bottom: ${(props) => (props.isLast ? 'none' : '1px solid #E0E0E0')};
   cursor: pointer;
+  text-align: left;
+  font-weight: 600;
 `;
 
 const MenuPage = () => {
@@ -104,7 +128,6 @@ const MenuPage = () => {
     { name: '챗봇', path: '/quiz' },
   ];
 
-  // 초성 변환 함수 개선
   const getChosung = (str) => {
     const cho = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
     return str.split('').map(char => {
@@ -114,7 +137,6 @@ const MenuPage = () => {
     }).join('');
   };
 
-  // 검색 함수 개선
   const filterMenuItems = (items, term) => {
     if (!term) return items;
     const lowerTerm = term.toLowerCase();
@@ -128,10 +150,8 @@ const MenuPage = () => {
     });
   };
 
-  // 실시간으로 필터링된 메뉴 아이템
   const filteredItems = filterMenuItems(menuItems, searchTerm);
 
-  // 마이페이지로 이동하는 함수
   const goToMyPage = () => {
     navigate('/user');
   };
@@ -139,27 +159,29 @@ const MenuPage = () => {
   return (
     <PageContainer>
       <KimpaPanel>
-        <KimpaText onClick={goToMyPage}>
-          김싸피님 
-          <KimpaArrow>
-            <img src={RightButton} alt="오른쪽 화살표" width="20" height="20" style={{ verticalAlign: 'middle' }} />
-          </KimpaArrow>
-        </KimpaText>
-        <LogoutButton>로그아웃</LogoutButton>
-      </KimpaPanel>
-
+        <KimpaInfo>
+          <KimpaText onClick={goToMyPage}>
+            김싸피님 
+            <KimpaArrow>
+              <img src={RightButton} alt="오른쪽 화살표" width="20" height="20" style={{ verticalAlign: 'middle' }} />
+            </KimpaArrow>
+          </KimpaText>
+          <LogoutButton>로그아웃</LogoutButton>
+        </KimpaInfo>
       <SearchContainer>
         <SearchInput 
           placeholder="검색어를 입력하세요" 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <SearchIconContainer>
-          <SearchIcon src={SearchIconSvg} alt="검색" />
-        </SearchIconContainer>
+        <SearchIcon src={SearchIconSvg} alt="검색"/>
       </SearchContainer>
+      </KimpaPanel>
 
       <MenuList>
+        <MenuTitle>
+          전체 메뉴
+        </MenuTitle>
         {filteredItems.map((item, index, array) => (
           <MenuItem 
             key={index} 
