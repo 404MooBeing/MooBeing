@@ -7,6 +7,7 @@ import com.im.moobeing.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,8 +65,12 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Account> accounts = new ArrayList<>();
 
+    @Setter
+    @Column
+    private LocalDate lastSolvedAt;
+
     @Builder
-    public Member(Long id, String email, String password, Long totalPoints, String name, String gender, String birthday, String userKey, Long selectedRadishId, String nickname) {
+    public Member(Long id, String email, String password, Long totalPoints, String name, String gender, String birthday, String userKey, Long selectedRadishId, String nickname, LocalDate lastSolvedAt, Boolean isGoodMember) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -76,6 +81,7 @@ public class Member extends BaseTimeEntity {
         this.userKey = userKey;
         this.selectedRadishId = selectedRadishId;
         this.nickname = nickname;
+        this.lastSolvedAt = lastSolvedAt;
     }
 
     public void changeMember(MemberChangeRequest memberChangeRequest){

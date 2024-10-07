@@ -32,6 +32,7 @@ public enum ErrorCode {
 	QZ_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "QZ002", "해당 퀴즈에 대한 접근 권한이 없습니다."),
 	INVALID_QUIZ_TYPE(HttpStatus.BAD_REQUEST, "QZ002", "올바르지 않은 퀴즈 타입입니다."),
 	INVALID_STATUS_TYPE(HttpStatus.BAD_REQUEST, "QZ003", "올바르지 않은 퀴즈 상태입니다."),
+	QZ_ALREADY_SOLVE(HttpStatus.BAD_REQUEST, "QZ004", "이미 푼 퀴즈입니다."),
 
 	// MemberLoan
 	ML_NOT_FOUND(HttpStatus.NOT_FOUND, "ML001", "해당 맴버 대출은 존재하지 않습니다."),
