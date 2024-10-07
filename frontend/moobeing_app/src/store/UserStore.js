@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { createJSONStorage } from "zustand/middleware";
 
 // Zustand 스토어 생성
 const useUserStore = create(
@@ -25,8 +26,8 @@ const useUserStore = create(
         set({ userInfo: null, creditRate: null, canAccessQuiz: false }),
     }),
     {
-      name: "user-store", // 이름은 localStorage에 저장될 key
-      getStorage: () => localStorage, // 상태를 저장할 storage (기본값은 localStorage)
+      name: "user-store", // 이름은 SessionStorage에 저장될 key
+      storage: createJSONStorage(()=> sessionStorage), // 상태를 저장할 storage (기본값은 SessionStorage)
       // 특정 state만 persist 하고 싶다면 이 transformer를 사용할 수 있음
       partialize: (state) => ({
         userInfo: state.userInfo,
