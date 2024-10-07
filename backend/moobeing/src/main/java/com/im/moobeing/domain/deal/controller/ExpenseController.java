@@ -1,5 +1,7 @@
 package com.im.moobeing.domain.deal.controller;
 
+import com.im.moobeing.domain.deal.dto.response.MoobtiResponse;
+import com.im.moobeing.domain.deal.service.OpenAPIService;
 import java.util.List;
 
 import com.im.moobeing.domain.account.service.AccountService;
@@ -39,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 @Slf4j
 public class ExpenseController {
 	private final DealService dealService;
+	private final OpenAPIService openAPIService;
 	private final AccountService accountService;
 
 	@Operation(summary = "소비 카테고리별 조회", description = "사용자의 한달간 소비를 카테고리별로 조회한다.")
@@ -120,5 +123,11 @@ public class ExpenseController {
 	@GetMapping("/summary")
 	public ResponseEntity<PaymentSummaryResponse> getPaymentSummary(@AuthenticationPrincipal Member member) {
 		return ResponseEntity.ok(dealService.getPaymentSummary(member));
+	}
+
+	@GetMapping("/moobti")
+	public ResponseEntity<MoobtiResponse> getMoobti(@AuthenticationPrincipal Member member) {
+		MoobtiResponse moobti = openAPIService.getMoobti(member);
+		return ResponseEntity.ok(moobti);
 	}
 }

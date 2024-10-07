@@ -45,3 +45,7 @@ spring:
       com.app: debug
 
 SSAFY_APIKEY: ${SSAFY_APIKEY}
+
+openai:
+  api:
+    key: ${OPENAI_KEY}

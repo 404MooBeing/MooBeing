@@ -17,4 +17,9 @@ public class GetCategoryListDto {
 			.amount(amount)
 			.build();
 	}
+
+	@Override
+	public String toString() {
+		return "type : " + label + ", " + "percent : " + percent;
+	}
 }
