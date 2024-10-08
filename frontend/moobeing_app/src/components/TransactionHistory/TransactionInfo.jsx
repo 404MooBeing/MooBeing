@@ -101,7 +101,7 @@ const AccountNumContainer = styled.div`
 `;
 
 const AccountNum = styled.div`
-  font-size: 18px;
+  font-size: 17px;
   margin-right: 8px;
 `;
 
@@ -110,7 +110,7 @@ const AccountRemain = styled.div`
   justify-content: flex-end;
   align-items: flex-end;
   width: 100%;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   margin-top: 30px;
 `;
