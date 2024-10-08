@@ -78,8 +78,9 @@ const NoPaymentsText = styled.p`
 `;
 
 const MonthlyCategory = () => {
-  const data = useSpendStore((state) => state.pieChartData.getCategoryList || []);
-
+  const pieChartData = useSpendStore((state) => state.pieChartData);
+  const data = pieChartData?.getCategoryList || [];
+  
   if (data.length === 0) {
     return (
       <NoPaymentsContainer>

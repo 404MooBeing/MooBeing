@@ -177,7 +177,7 @@ const Calendar = () => {
             onMonthChange={handleMonthChange}
             slots={{ day: CustomDay }}
             slotProps={{
-              day: { monthlySpendData: spendData },  // spendData 전달
+              day: { monthlySpendData: spendData },
             }}
           />
         </CalendarContainer>

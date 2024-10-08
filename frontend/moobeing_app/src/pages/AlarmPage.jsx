@@ -5,7 +5,7 @@ import { getAllAlarms, getAlarmsByCategory } from '../apis/AlarmApi';
 import basicRadish from '../assets/radishes/basicRad.svg';
 
 const AlarmContainer = styled.div`
-  padding: 10px 20px;
+  padding: 30px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,10 +35,21 @@ const AlarmTitleWrapper = styled.div`
 
 const AlarmList = styled.ul`
   list-style-type: none;
-  padding: 0;
-  margin: 0 0 150px 0;
+  padding: 10px;
+  margin: 20px 0 150px 0;
   overflow-y: auto;
   flex-grow: 1;
+
+  /* 크롬, 사파리, 오페라 */
+  &::-webkit-scrollbar {
+  display: none;
+  }
+
+  /* IE와 Edge */
+  -ms-overflow-style: none;
+
+  /* Firefox */
+  scrollbar-width: none;
 `;
 
 const AlarmListContent = styled.div`

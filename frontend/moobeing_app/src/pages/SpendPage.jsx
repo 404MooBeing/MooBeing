@@ -9,6 +9,7 @@ import MonthlyCategory from "../components/Spend/MonthlyCategory";
 import { getSpendDataByMonth, getPieChart, getSpendCategory } from "../apis/SpendApi";
 import useDateStore from "../store/DateStore";
 import useSpendStore from "../store/SpendStore";
+import { SyncLoader } from "react-spinners";
 
 const Screen = styled.div`
   display: flex;
@@ -62,15 +63,20 @@ const transitionStyles = `
 
 const LoadingOrError = styled.div`
   margin-top: 30%;
-`
+`;
 
 const Spend = () => {
   const { selectedDate } = useDateStore();
-  const { pieChartData, setSpendData, setPieChartData, setSpendCategory } = useSpendStore();
-  const [viewMode, setViewMode] = useState("차트 보기");
+  const { spendData, spendCategory, pieChartData, setSpendData, setPieChartData, setSpendCategory } = useSpendStore();
+  const [viewMode, setViewMode] = useState("캘린더 보기");
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const [error, setError] = useState(null); // 에러 상태 추가
-
+  
+  // 더미 데이터를 가져옴 (spendStore에 정의된 더미 데이터)
+  const dummySpendData = spendData;
+  const dummyPieChartData = pieChartData;
+  const dummySpendCategory = spendCategory;
+  
   // API 호출 함수들 최적화
   const fetchSpendData = useCallback(async (year, month) => {
     try {
@@ -78,44 +84,49 @@ const Spend = () => {
       setSpendData(data);
     } catch (error) {
       setError("소비 데이터 가져오기 실패");
+      setSpendData(dummySpendData); // 실패 시 빈 배열로 처리
     }
-  }, [setSpendData]);
-
+  }, [setSpendData, dummySpendData]);
+  
   const fetchPieChartData = useCallback(async (year, month) => {
     try {
       const pieData = await getPieChart(year, month);
       setPieChartData(pieData);
     } catch (error) {
       setError("파이 차트 가져오기 실패");
+      setPieChartData(dummyPieChartData);  // 실패 시 더미 데이터 사용
     }
-  }, [setPieChartData]);
-
+  }, [setPieChartData, dummyPieChartData]);
+  
   const fetchSpendCategory = useCallback(async (year, month) => {
     try {
       const spendCategoryData = await getSpendCategory(year, month);
       setSpendCategory(spendCategoryData);
     } catch (error) {
       setError("소비 데이터 조회 실패");
+      setSpendCategory(dummySpendCategory);  // 실패 시 더미 데이터 사용
     }
-  }, [setSpendCategory]);
-
+  }, [setSpendCategory, dummySpendCategory]);
+  
   useEffect(() => {
-    const year = selectedDate.year();
-    const month = selectedDate.month() + 1;
-
+    // 이미 에러가 발생했다면 API 호출을 중단
+    if (error) return;
+    
     // 로딩 상태 시작
     setIsLoading(true);
     setError(null);
 
-    // API 호출 실행
+    const year = Number(selectedDate?.year ? selectedDate.year() : new Date().getFullYear());
+    const month = Number(selectedDate?.month ? selectedDate.month() + 1 : new Date().getMonth() + 1);
+    
+    // 개별적으로 API 호출 (각각 실패해도 다른 API는 정상 작동)
     Promise.all([
       fetchSpendData(year, month),
       fetchPieChartData(year, month),
       fetchSpendCategory(year, month),
-    ])
-    .finally(() => setIsLoading(false)); // 로딩 상태 종료
+    ]).finally(() => setIsLoading(false)); // 로딩 상태 종료
     
-  }, [selectedDate, fetchSpendData, fetchPieChartData, fetchSpendCategory]);
+  }, [selectedDate, fetchSpendData, fetchPieChartData, fetchSpendCategory, error]);
     
 
   return (
@@ -128,9 +139,9 @@ const Spend = () => {
         />
         <style>{transitionStyles}</style>
         {isLoading ? (
-          <LoadingOrError>로딩 중...</LoadingOrError>
-        ) : error ? (
-          <LoadingOrError>로딩 중...</LoadingOrError>
+          <LoadingOrError>
+            <SyncLoader color="#348833" size={8} />
+          </LoadingOrError>
         ) : (
           <TransitionGroup component={null}>
             {viewMode === "캘린더 보기" ? (
