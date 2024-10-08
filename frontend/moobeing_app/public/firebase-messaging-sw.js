@@ -33,20 +33,6 @@ messaging.onBackgroundMessage((payload) => {
     payload
   );
 
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
-    // body: payload.notification.body,
-    body: "test_back",
-    icon: "/firebase-logo.png", // 원하는 아이콘으로 변경
-  };
-
-  // // 기존 알림 닫기
-  // self.registration.getNotifications().then((notifications) => {
-  //   if (notifications.length > 0) {
-  //     notifications[notifications.length - 1].close(); // 마지막 알림만 닫기
-  //   }
-  // });
-
   // 새 알림 표시
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
