@@ -3,8 +3,7 @@ import Logo from "../assets/logo/HorizontalLogo.png";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { postLogin } from "../apis/UserApi";
-import { postFCMRegister } from "../apis/FCMApi";
-import useFCMStore from "../store/FCMStore"; // 기본 내보내기에서 가져오기
+import { requestToken } from "../utils/fcm"
 
 const ScreenWrapper = styled.div`
   display: flex;
@@ -152,11 +151,7 @@ const Login = () => {
       if (response && response.name) {
         console.log("로그인 성공:", response);
         navigate("/");
-        const token = useFCMStore.getState().token; // FCM 토큰 가져오기
-        const formData = {
-          token: token,
-        };
-        postFCMRegister(formData); // formData를 전달
+        requestToken();
       } else {
         // 오류 처리: response.data와 response.data.message의 존재 여부를 확인
         const errorMessage =
