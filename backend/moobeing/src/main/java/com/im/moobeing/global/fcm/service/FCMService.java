@@ -29,24 +29,36 @@ public class FCMService {
     // 구독 추가 및 갱신
     @Transactional
     public SubscriptionResponse registerOrUpdateSubscription(Member member, SubscriptionRequest request) {
+        // 사용자 ID로 기존 구독 정보 조회
         Optional<PushSubscription> existingSubscription = subscriptionRepository.findByMemberId(member.getId());
 
-        PushSubscription subscription;
         if (existingSubscription.isPresent()) {
-            subscription = existingSubscription.get();
-            log.info("Existing subscription found for memberId {}. Updating lastUpdated time.", member.getId());
-            subscription.setLastUpdated(LocalDateTime.now());
+            PushSubscription subscription = existingSubscription.get();
+
+            // 현재 토큰과 요청된 토큰이 같은지 확인
+            if (subscription.getToken().equals(request.getToken())) {
+                // 같은 경우 lastUpdated만 갱신
+                log.info("Existing subscription with same token for memberId {}. Updating lastUpdated time.", member.getId());
+                subscription.setLastUpdated(LocalDateTime.now());
+            } else {
+                // 다른 경우 새로운 토큰으로 변경하고 lastUpdated 갱신
+                log.info("Existing subscription with different token for memberId {}. Updating token and lastUpdated time.", member.getId());
+                subscription.setToken(request.getToken());
+                subscription.setLastUpdated(LocalDateTime.now());
+            }
         } else {
-            log.info("New subscription for memberId: {}. Registering token: {}", member.getId(), request.getToken());
-            subscription = new PushSubscription();
-            subscription.setToken(request.getToken());
-            subscription.setMember(member);  // Member와 연관 설정
-            subscription.setLastUpdated(LocalDateTime.now());
+            // 사용자의 기존 구독이 없는 경우 새로운 구독 생성 및 저장
+            log.info("No existing subscription for memberId: {}. Registering new token: {}", member.getId(), request.getToken());
+            PushSubscription subscription = PushSubscription.builder()
+                    .token(request.getToken())
+                    .member(member)
+                    .lastUpdated(LocalDateTime.now())
+                    .build();
+            subscriptionRepository.save(subscription);
         }
 
-        PushSubscription savedSubscription = subscriptionRepository.save(subscription);
-        return new SubscriptionResponse(savedSubscription.getToken(), savedSubscription.getLastUpdated());
-
+        // 응답을 위해 SubscriptionResponse 반환
+        return new SubscriptionResponse(request.getToken(), LocalDateTime.now());
     }
 
     // 구독 삭제
