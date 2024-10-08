@@ -10,21 +10,8 @@ import pot6th from "../../assets/pot/pot6th.svg";
 import GrayChatBubble from "../../assets/GrayChatBubble.svg";
 import { getLoanNumber } from "../../apis/LoanApi";
 
-// 더미 데이터 함수 추가
-const getDummyLoanSum = () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        completedCnt: 6, // 상환 완료된 대출 개수
-        allLoanCnt: 6,   // 총 대출 개수 (6으로 고정)
-        showButton: false // 버튼 표시 여부
-      });
-    }, 500);
-  });
-};
-
 const RadishContainer = styled.div`
-  height: 250px;
+  height: 300px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -38,13 +25,13 @@ const PotRadish = styled.img`
   height: auto;
   max-width: 150px;
   object-fit: contain;
-  margin-bottom: -30px;
+  margin-bottom: -40px;
 `;
 
 const ChatBubbleContainer = styled.div`
   position: absolute;
   top: 20px;
-  right: 50px;
+  right: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,30 +43,26 @@ const ChatBubbleContainer = styled.div`
 `;
 
 const ChatBubble = styled.img`
-  width: 100px;
+  width: 125px;
   height: auto;
 `;
 
 const ChatText = styled.p`
   position: absolute;
-  top: 50%;
-  left: calc(50% + 2px); // 여기를 수정했습니다
+  top: 47%;
+  left: calc(50% + 3px); // 여기를 수정했습니다
   transform: translate(-50%, calc(-50% - 10px));
   margin: 0;
   text-align: center;
-  font-size: 13px;
-  color: #333;
+  font-size: 12px;
+  color: #5E5054;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`;
-
-const NumberText = styled.span`
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 5px;
+  font-family: 'NPSfontBold';
+  line-height: 20px;
 `;
 
 const PullRadishButton = styled.button`
@@ -195,8 +178,7 @@ function HiddenRadish() {
       <ChatBubbleContainer>
         <ChatBubble src={GrayChatBubble} alt="Chat bubble" />
         <ChatText>
-          만나기까지
-          <NumberText>{`${paidLoanNum} / ${totalLoanNum}`}</NumberText>
+          대출금을 갚으시면 <br/> 제가 조금씩 자라요!
         </ChatText>
       </ChatBubbleContainer>
       <PotRadish src={getPotImage()} alt="Radish pot" />

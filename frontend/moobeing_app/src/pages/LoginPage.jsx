@@ -154,7 +154,6 @@ const Login = () => {
         navigate("/");
         const token = useFCMStore.getState().token; // FCM 토큰 가져오기
         const formData = {
-          email: email,
           token: token,
         };
         postFCMRegister(formData); // formData를 전달

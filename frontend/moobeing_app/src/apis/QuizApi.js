@@ -27,3 +27,33 @@ export const submitAnswer = async (quizNum, answer) => {
     throw error;
   }
 };
+
+
+// 경제 퀴즈 가져오기
+export const getNotStartedEconomicQuiz = async () => {
+  try {
+    const response = await api.get("/quiz/economic");
+    return response.data;
+  } catch (error) {
+  }
+};
+
+export const submitEconomicQuizAnswer = async (quizNum, answer) => {
+  try {
+    const response = await api.post(`/quiz/economic/${quizNum}`, { answer });
+    return response.data;
+  } catch (error) {
+    console.error("정답 제출 실패:", error);
+    throw error;
+  }
+};
+
+export const getColdQuiz = async () => {
+  try {
+    const response = await api.get(`/quiz/cold`);
+    return response.data;
+  } catch (error) {
+    console.error("정답 제출 실패:", error);
+    throw error;
+  }
+};

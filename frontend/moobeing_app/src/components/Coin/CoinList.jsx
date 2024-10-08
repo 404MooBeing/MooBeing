@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import styled from "styled-components";
 
 const ListContainer = styled.div`
@@ -17,7 +16,7 @@ const CoinItem = styled.div`
   transition: background-color 0.3s ease, opacity 0.3s ease;
 
   &:hover {
-    background-color: "transparent"
+    background-color: "transparent";
   }
 `;
 
@@ -62,32 +61,16 @@ const Remain = styled.span`
   font-size: 12px;
 `;
 
-const SelectButton = styled.button`
-  position: fixed;
-  bottom: 15%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 20px;
-  background-color: #348833;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  z-index: 1000;
-  font-family: 'mainFont';
-`;
-
-
 const CoinList = ({ isRadishSelected, sortCriteria, coinList }) => {
-  const navigate = useNavigate();
   let Coins = coinList;
 
+  console.log("여기", Coins);
+
   // sortCriteria에 따라 입금/출금 또는 전체 필터링
-  if (sortCriteria.type === '적립') {
-    Coins = Coins.filter(Coin => Coin.amount > 0);
-  } else if (sortCriteria.type === '사용') {
-    Coins = Coins.filter(Coin => Coin.amount < 0);
+  if (sortCriteria.type === "적립") {
+    Coins = Coins.filter((Coin) => Coin.amount > 0);
+  } else if (sortCriteria.type === "사용") {
+    Coins = Coins.filter((Coin) => Coin.amount < 0);
   }
 
   return (
@@ -100,7 +83,7 @@ const CoinList = ({ isRadishSelected, sortCriteria, coinList }) => {
           <CoinItem>
             <TitleAndTime>
               <Time>{Coin.time}</Time>
-              <Title>{Coin.title}</Title>
+              <Title>{Coin.amount > 0 ? "코인 적립" : "코인 사용"}</Title>
             </TitleAndTime>
             <AmountAndRemain>
               <Amount amount={Coin.amount}>
