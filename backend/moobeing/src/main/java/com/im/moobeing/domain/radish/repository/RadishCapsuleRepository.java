@@ -1,5 +1,6 @@
 package com.im.moobeing.domain.radish.repository;
 
+import com.im.moobeing.domain.member.entity.MemberRadish;
 import com.im.moobeing.domain.radish.entity.RadishCapsule;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,4 +34,7 @@ public interface RadishCapsuleRepository extends JpaRepository<RadishCapsule, Lo
 
     // 종료 시간이 지나고 수확되지 않은 캡슐을 찾는 메서드
     List<RadishCapsule> findByEndAtBeforeAndIsHarvestedFalse(LocalDateTime now);
+
+    @Query("SELECT rc FROM radish_capsule rc WHERE rc.member.id = :memberId AND rc.isHarvested = false")
+    List<RadishCapsule> findByMemberAndNotHarvested(Long memberId);
 }
