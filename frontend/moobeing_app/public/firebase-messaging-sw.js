@@ -8,13 +8,13 @@ importScripts(
 
 // Firebase 설정 객체 (firebase.ts와 동일한 값 사용)
 const firebaseConfig = {
-  apiKey: "AIzaSyDf2tO7gYmnvDp0nnoClfhpJah74L0_Z8s",
-  authDomain: "moobeing-94714.firebaseapp.com",
-  projectId: "moobeing-94714",
-  storageBucket: "moobeing-94714.appspot.com",
-  messagingSenderId: "897587874738",
-  appId: "1:897587874738:web:6c65a9521f13b03735b2ab",
-  measurementId: "G-JKBHH3EN4Y"
+  apiKey: "AIzaSyCTHRWWL50vqyNfYQnJofsEItQxl2fgI3I",
+  authDomain: "moobeing-ee0eb.firebaseapp.com",
+  projectId: "moobeing-ee0eb",
+  storageBucket: "moobeing-ee0eb.appspot.com",
+  messagingSenderId: "830764540752",
+  appId: "1:830764540752:web:aa3e3215695f7b78288255",
+  measurementId: "G-2MW15Q9GCQ"
 };
 
 firebase.initializeApp(firebaseConfig);
