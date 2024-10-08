@@ -31,6 +31,22 @@ public class AlarmService {
     }
 
     @Transactional
+    public List<AlarmResponse> getAndDeleteAlarms(Member member) {
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+
+        // 한 달 내의 알림 조회
+        List<Alarm> alarms = alarmRepository.findAllByMemberAndCreatedAtAfter(member, oneMonthAgo);
+        List<AlarmResponse> responses = alarms.stream()
+                .map(AlarmResponse::of)
+                .toList();
+
+        // 조회된 알림 삭제
+        alarmRepository.deleteAllByMember(member);
+
+        return responses;
+    }
+
+    @Transactional
     public void createAlarm(Member member, AlarmIconType iconType) {
         Alarm alarm = Alarm.builder()
                 .member(member)
@@ -46,5 +62,10 @@ public class AlarmService {
     @Transactional
     public void deleteAllAlarm(Member member) {
         alarmRepository.deleteAllByMember(member);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean hasUnreadAlarms(Member member) {
+        return alarmRepository.existsByMember(member);
     }
 }
