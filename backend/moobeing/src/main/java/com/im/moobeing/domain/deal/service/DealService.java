@@ -140,12 +140,21 @@ public class DealService {
         LocalDateTime end = YearMonth.of(year, month).atEndOfMonth().atTime(23, 59, 59);
         List<Deal> deals = dealRepository.findAllExpenseByMemberAndDateRange(member, start, end);
 
-        Map<DealCategory, Long> totalAmountsByCategory = deals.stream()
-                .collect(Collectors.groupingBy(
-                        Deal::getDealCategory,
-                        Collectors.summingLong(Deal::getAbsPrice)
-                ));
+        // LinkedHashMap을 사용하여 순서를 유지
+        Map<DealCategory, Long> totalAmountsByCategory = new LinkedHashMap<>();
 
+        // DealCategory enum에 정의된 순서대로 처리
+        for (DealCategory category : DealCategory.values()) {
+            long totalAmount = deals.stream()
+                    .filter(deal -> deal.getDealCategory() == category)
+                    .mapToLong(Deal::getAbsPrice)
+                    .sum();
+            if (totalAmount > 0) {
+                totalAmountsByCategory.put(category, totalAmount);
+            }
+        }
+
+        // PiChart DTO 생성
         List<GetDrawPiChartDto> getDrawPiChartDtoList = totalAmountsByCategory.entrySet().stream()
                 .map(entry -> {
                     DealCategory category = entry.getKey();
@@ -155,8 +164,10 @@ public class DealService {
                 })
                 .collect(Collectors.toList());
 
+        // 전체 금액 계산
         long totalAmount = totalAmountsByCategory.values().stream().mapToLong(Long::longValue).sum();
 
+        // 카테고리 리스트 DTO 생성
         List<GetCategoryListDto> getCategoryListDtoList = totalAmountsByCategory.entrySet().stream()
                 .map(entry -> {
                     DealCategory category = entry.getKey();
