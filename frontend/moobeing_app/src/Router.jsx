@@ -34,6 +34,7 @@ import Spend from "./pages/SpendPage";
 import TransactionHistory from "./pages/TransactionHistoryPage";
 import Welcome from "./pages/WelcomePage";
 import useUserStore from "./store/UserStore";
+import ChatBot from "./assets/radishes/chatbotRad.png";
 
 function Router() {
   const location = useLocation();
@@ -54,6 +55,11 @@ function Router() {
     location.pathname
   );
 
+  // 챗봇 클릭 시 챗봇 페이지로 이동
+  // const handleChatbotClick = () => {
+  //   navigate("/chatbot");
+  // };
+
   return (
     <>
       {shouldShowHeaderFooter && <Header />}
@@ -63,15 +69,13 @@ function Router() {
         }}
       >
         <Routes>
+          {/* Routes 설정 */}
           <Route path="/" element={<Home />} />
           <Route path="/loading" element={<Loading />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/alarm" element={<Alarm />} />
-          <Route
-            path="/choose-character"
-            element={<CapsuleChooseCharacter />}
-          />
+          <Route path="/choose-character" element={<CapsuleChooseCharacter />} />
           <Route path="/choose-location" element={<CapsuleChooseLocation />} />
           <Route path="/capsule-harvest" element={<CapsuleHarvest />} />
           <Route path="/capsule-intro" element={<CapsuleIntro />} />
@@ -99,9 +103,26 @@ function Router() {
             element={<TransactionHistory />}
           />
           <Route path="/welcome" element={<Welcome />} />
+          {/* <Route path="/welcome" element={<Welcome />} /> */}
         </Routes>
       </div>
       {shouldShowHeaderFooter && <Footer />}
+      {/* Chatbot 이미지 */}
+      <img
+        src={ChatBot}
+        alt="Chatbot"
+        style={{
+          position: "fixed",
+          bottom: "90px",
+          right: "23px",
+          width: "70px",
+          height: "80px",
+          zIndex: 1000,
+          cursor: "pointer",
+          filter: "drop-shadow(4px 3px 3px #c3c3c3)",
+        }}
+        // onClick={handleChatbotClick}
+      />
     </>
   );
 }
