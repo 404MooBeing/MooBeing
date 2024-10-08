@@ -164,7 +164,7 @@ public class OpenAPIServiceImpl implements OpenAPIService {
     public MoobtiResponse getMoobti(Member member) {
         // 사용자 정보 넣는 부분 추가
         LocalDateTime now = LocalDateTime.now();
-        GetDrawPiChartResponse getDrawPiChartResponse = dealService.drawPiChart(member,
+        GetDrawPiChartResponse getDrawPiChartResponse = dealService.drawSortedPiChart(member,
             now.getYear(), now.getMonthValue() - 1);
         List<GetCategoryListDto> categoryList = getDrawPiChartResponse.getGetCategoryListDtoList();
         int[] ary = new int[5];
