@@ -82,7 +82,7 @@ const Footer = () => {
     navigate("/spend");
   };
   const handleMapClick = () => {
-    navigate("/capsule-intro");
+    navigate("/my-map");
   };
   const handleAllMenuClick = () => {
     navigate("/menu");

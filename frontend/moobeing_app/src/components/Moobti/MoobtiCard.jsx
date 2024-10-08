@@ -31,13 +31,13 @@ const CharacterName = styled.h2`
   margin-bottom: 8px;
 
   span {
-    font-size: 28px;
+    font-size: 26px;
     color: #348833;
   }
 `;
 
-const Description = styled.p` 
-  font-size: clamp(12px, 3vw, 16px);
+const Description = styled.div` 
+  font-size: clamp(12px, 3vw, 15px);
   font-weight: bold;
   line-height: 160%;
   color: #333;
@@ -62,6 +62,7 @@ const TraitContainer = styled.div`
 `;
 
 const TraitTitle = styled.div`
+  font-size: 14px;
   margin-bottom: 8px;
 `
 
@@ -107,7 +108,7 @@ const StyledDownloadButton = styled.img`
   margin-bottom: 10px;
 `;
 
-const MoobtiCard = forwardRef(({ character, traits, onDownload }, ref) => {
+const MoobtiCard = forwardRef(({ onDownload, categories, character }, ref) => {
   return (
     <Card ref={ref}>
       <Buttondiv>
@@ -118,23 +119,34 @@ const MoobtiCard = forwardRef(({ character, traits, onDownload }, ref) => {
           {character.type}<br />
           <span>{character.name}</span>
         </CharacterName>
-        <CharacterImage src={character.imageUrl} alt={character.name} />
+        <CharacterImage src={character.imageUrl} alt={character.name === "FlexRad" ? "FlexRad" : character.name} />
         <Description>{character.description}</Description>
       </CardHeader>
       <StatusSection>
         <StatusTitle>성향</StatusTitle>
-        {traits.map((trait, index) => (
-          <TraitContainer key={index}>
-            <TraitTitle>{trait.category}: {trait.percentage}%</TraitTitle>
-            <StatusBar color={trait.color}>
-              <StatusDot percentage={trait.percentage} color={trait.color} />
-            </StatusBar>
-            <StatusLabel>
-              <span>{trait.left}</span>
-              <span>{trait.right}</span>
-            </StatusLabel>
-          </TraitContainer>
-        ))}
+        {[ 
+          { category: "식비", left: "소식형", middle: "든든형", right: "든든형", percentage: categories[0].percent, color: "#FF9999" },
+          { category: "의료", left: "건강형", middle: "건강형", right: "아파형", percentage: categories[1].percent, color: "#FFFF99" },
+          { category: "문화", left: "조용형", middle: "멋쟁형", right: "멋쟁형", percentage: categories[2].percent, color: "#99FF99" },
+          { category: "대출", left: "괜찮형", middle: "괜찮형", right: "필요형", percentage: categories[3].percent, color: "#99CCFF" },
+          { category: "유흥", left: "차분형", middle: "활발형", right: "활발형", percentage: categories[4].percent, color: "#CC99FF" }
+        ].map((trait, index) => {
+          const isLeftCloser = trait.percentage <= 50; 
+          return (
+            <TraitContainer key={index}>
+              <TraitTitle>
+                {trait.percentage}%
+              </TraitTitle>
+              <StatusBar color={trait.color}>
+                <StatusDot percentage={trait.percentage} color={trait.color} />
+              </StatusBar>
+              <StatusLabel>
+                <span style={{ fontWeight: isLeftCloser ? 'bold' : 'normal' }}>{trait.left}</span>
+                <span style={{ fontWeight: !isLeftCloser ? 'bold' : 'normal' }}>{trait.right}</span>
+              </StatusLabel>
+            </TraitContainer>
+          );
+        })}
       </StatusSection>
     </Card>
   );
