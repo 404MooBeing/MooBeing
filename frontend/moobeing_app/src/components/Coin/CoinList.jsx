@@ -16,7 +16,7 @@ const CoinItem = styled.div`
   transition: background-color 0.3s ease, opacity 0.3s ease;
 
   &:hover {
-    background-color: "transparent";
+    background-color: #f5f5f5;
   }
 `;
 
@@ -61,10 +61,9 @@ const Remain = styled.span`
   font-size: 12px;
 `;
 
-const CoinList = ({ isRadishSelected, sortCriteria, coinList }) => {
+// CoinList 컴포넌트에서 lastCoinElementRef를 받아 마지막 요소에 추가
+const CoinList = ({ isRadishSelected, sortCriteria, coinList, lastCoinElementRef }) => {
   let Coins = coinList;
-
-  console.log("여기", Coins);
 
   // sortCriteria에 따라 입금/출금 또는 전체 필터링
   if (sortCriteria.type === "적립") {
@@ -75,25 +74,30 @@ const CoinList = ({ isRadishSelected, sortCriteria, coinList }) => {
 
   return (
     <ListContainer selected={isRadishSelected}>
-      {Coins.map((Coin, index) => (
-        <div key={index}>
-          {index === 0 || Coins[index - 1].date !== Coin.date ? (
-            <DateHeader>{Coin.date}</DateHeader>
-          ) : null}
-          <CoinItem>
-            <TitleAndTime>
-              <Time>{Coin.time}</Time>
-              <Title>{Coin.amount > 0 ? "코인 적립" : "코인 사용"}</Title>
-            </TitleAndTime>
-            <AmountAndRemain>
-              <Amount amount={Coin.amount}>
-                {Coin.amount.toLocaleString()} 개
-              </Amount>
-              <Remain>잔액 {Coin.remainBalance} 개</Remain>
-            </AmountAndRemain>
-          </CoinItem>
-        </div>
-      ))}
+      {Coins.map((Coin, index) => {
+        // 마지막 코인 요소에 lastCoinElementRef를 전달
+        const isLastElement = Coins.length === index + 1;
+
+        return (
+          <div key={index} ref={isLastElement ? lastCoinElementRef : null}>
+            {index === 0 || Coins[index - 1].date !== Coin.date ? (
+              <DateHeader>{Coin.date}</DateHeader>
+            ) : null}
+            <CoinItem>
+              <TitleAndTime>
+                <Time>{Coin.time}</Time>
+                <Title>{Coin.amount > 0 ? "코인 적립" : "코인 사용"}</Title>
+              </TitleAndTime>
+              <AmountAndRemain>
+                <Amount amount={Coin.amount}>
+                  {Coin.amount.toLocaleString()} 개
+                </Amount>
+                <Remain>잔액 {Coin.remainBalance} 개</Remain>
+              </AmountAndRemain>
+            </CoinItem>
+          </div>
+        );
+      })}
     </ListContainer>
   );
 };

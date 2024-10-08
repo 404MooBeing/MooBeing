@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import CoinInfo from "../components/Coin/CoinInfo";
 import CoinList from "../components/Coin/CoinList";
@@ -22,45 +22,60 @@ const Container = styled.div`
 `;
 
 const CoinPage = () => {
-
-   // 조회 조건 관리
+  // 조회 조건 관리
   const [sortCriteria, setSortCriteria] = useState({ period: "1개월", type: "전체" });
-  const [coinList, setCoinList] = useState([
-    // 하나은행 일반 계좌
-    {date: "2024.09.20 (금)", title: "무 뽑기", time: "12:30", amount: 4000, remainBalance: "8000" },
-    {date: "2024.09.20 (금)", title: "출석체크", time: "10:55", amount: 1000, remainBalance: "9000" },
-    {date: "2024.09.19 (목)", title: "출석체크", time: "18:15", amount: 1000, remainBalance: "4000" },
-    {date: "2024.09.19 (목)", title: "무 뽑기", time: "14:45", amount: 2000, remainBalance: "3000" },
-    {date: "2024.09.18 (수)", title: "출석체크", time: "08:25", amount: 1000, remainBalance: "1000" },
-    {date: "2024.09.18 (수)", title: "환전", time: "20:10", amount: -21500, remainBalance: "0" },
-  ]);
+  const [coinList, setCoinList] = useState([]);
   
+  const [page, setPage] = useState(1); // 페이지 상태 추가
+  const [hasMore, setHasMore] = useState(true); // 더 많은 데이터가 있는지 여부
+  const observer = useRef();
+
   // 정렬 기준 변경 함수
   const handleSortSelect = (selectedSort) => {
     setSortCriteria(selectedSort); // 정렬 기준 업데이트
-    // fetchData();
+    setPage(1); // 새로운 기준으로 첫 페이지부터 다시 로드
+    setCoinList([]); // 코인 리스트 초기화
+    setHasMore(true); // 새로운 데이터를 로드할 수 있도록 hasMore 상태 초기화
   };
 
-  const fetchData = async () => {
+  // 데이터를 가져오는 함수
+  const fetchData = async (currentPage) => {
     try {
-       // Zustand 스토어에 저장
-       console.log(sortCriteria)
       const requestBody = {
         months: sortCriteria.period,
         transactionType: sortCriteria.type,
-        page: 1
+        page: currentPage,
+      };
+      const data = await getCoinHistory(requestBody);
+      
+      if (data.length > 0) {
+        setCoinList((prevList) => [...prevList, ...data]); // 이전 데이터에 새 데이터 추가
+      } else {
+        setHasMore(false); // 데이터가 더 이상 없으면 hasMore 상태 false로 설정
       }
-      const data = await getCoinHistory(requestBody)
-      setCoinList(data);
     } catch (error) {
       console.error("데이터 가져오기 실패:", error);
     }
   };
 
+  // 페이지가 변경될 때마다 데이터를 가져오는 useEffect
   useEffect(() => {
-    
-    fetchData();
-  }, [setCoinList]);
+    fetchData(page);
+  }, [page, sortCriteria]);
+
+  // 무한 스크롤 구현: 마지막 요소에 ref를 연결하여 IntersectionObserver 사용
+  const lastCoinElementRef = useCallback(
+    (node) => {
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1); // 페이지를 증가시켜 데이터 추가 요청
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [hasMore]
+  );
 
   return (
     <Screen>
@@ -72,6 +87,7 @@ const CoinPage = () => {
         <CoinList 
           sortCriteria={sortCriteria} 
           coinList={coinList}
+          lastCoinElementRef={lastCoinElementRef} // 마지막 요소에 ref를 전달
         />
       </Container>
     </Screen>
