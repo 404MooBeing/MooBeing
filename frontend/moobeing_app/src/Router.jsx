@@ -29,6 +29,7 @@ import MyMap from "./pages/MyMap";
 import User from "./pages/MyPage";
 import PasswordChange from "./pages/PasswordChangePage";
 import Quiz from "./pages/QuizPage";
+import EconomyQuiz from "./pages/EconomyQuizPage"
 import QuizResult from "./pages/QuizResultPage";
 import Spend from "./pages/SpendPage";
 import TransactionHistory from "./pages/TransactionHistoryPage";
@@ -87,6 +88,7 @@ function Router() {
           <Route path="/user" element={<User />} />
           <Route path="/password-change" element={<PasswordChange />} />
           <Route path="/quiz" element={<Quiz />} />
+          <Route path="/economy-quiz" element={<EconomyQuiz />} />
           <Route path="/quiz/result/:quizId" element={<QuizResult />} />
           <Route path="/spend" element={<Spend />} />
           <Route
