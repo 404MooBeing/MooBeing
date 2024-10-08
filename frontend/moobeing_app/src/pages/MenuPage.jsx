@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import SearchIconSvg from '../assets/button/SearchButton.svg';
 import RightButton from '../assets/button/rightButtonBlack.svg';
+import useUserStore from '../store/UserStore';
 
 const PageContainer = styled.div`
   display: flex;
@@ -18,16 +19,15 @@ const KimpaPanel = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: #F5FDED;
-  padding: 20px 30px;
-  margin: 20px 20px 10px 20px;
-  border-radius: 20px;
+  padding: 25px 30px;
+  margin-bottom: 10px;
 `;
 
 const KimpaInfo = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 100%;
+  width: 90%;
   margin-bottom: 15px;
 `;
 
@@ -39,7 +39,7 @@ const KimpaText = styled.span`
 `;
 
 const KimpaArrow = styled.span`
-  margin-left: 8px; /* 화살표와 텍스트 사이의 간격 */
+  margin-left: 7px; /* 화살표와 텍스트 사이의 간격 */
 `;
 
 const LogoutButton = styled.button`
@@ -66,9 +66,11 @@ const SearchContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  width: 100%;
+  width: 90%;
+  max-width: 450px;
   margin: 15px 0 10px 0;
   height: 40px;
+  box-sizing: border-box;
 `;
 
 const SearchInput = styled.input`
@@ -80,11 +82,12 @@ const SearchInput = styled.input`
   outline: none;
   padding: 0 40px 0 15px;
   font-family: 'mainFont';
+  box-sizing: border-box;
 `;
 
 const SearchIcon = styled.img`
-  position: absolute;  /* SearchInput 안에서 고정 위치 */
-  right: 15px;         /* 오른쪽에서 15px 떨어짐 */
+  position: absolute;
+  right: 10px;
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -117,12 +120,13 @@ const MenuItem = styled.li`
 
 const MenuPage = () => {
   const navigate = useNavigate();
+  const { userInfo, logout } = useUserStore();
   const [searchTerm, setSearchTerm] = useState('');
 
   const menuItems = [
     { name: '내 소비 현황', path: '/spend' },
     { name: '내 대출 현황', path: '/loan' },
-    { name: '내 무 ZIP', path: '/capsule-search' },
+    { name: '내 무 ZIP', path: '/user?tab=collection' },
     { name: '내 무 캡슐', path: '/my-capsule' },
     { name: '내 무비티아이', path: '/moobti' },
     { name: '챗봇', path: '/quiz' },
@@ -153,7 +157,12 @@ const MenuPage = () => {
   const filteredItems = filterMenuItems(menuItems, searchTerm);
 
   const goToMyPage = () => {
-    navigate('/user');
+    navigate('/user?tab=info');
+  };
+
+  const handleLogout = () => {
+    logout(); // Zustand의 logout 액션 호출
+    navigate('/login'); // 로그아웃 후 로그인 페이지로 리디렉션
   };
 
   return (
@@ -161,21 +170,21 @@ const MenuPage = () => {
       <KimpaPanel>
         <KimpaInfo>
           <KimpaText onClick={goToMyPage}>
-            김싸피님 
+            {userInfo.name || "사용자"} 님
             <KimpaArrow>
               <img src={RightButton} alt="오른쪽 화살표" width="20" height="20" style={{ verticalAlign: 'middle' }} />
             </KimpaArrow>
           </KimpaText>
-          <LogoutButton>로그아웃</LogoutButton>
+          <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
         </KimpaInfo>
-      <SearchContainer>
-        <SearchInput 
-          placeholder="검색어를 입력하세요" 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <SearchIcon src={SearchIconSvg} alt="검색"/>
-      </SearchContainer>
+        <SearchContainer>
+          <SearchInput 
+            placeholder="검색어를 입력하세요" 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <SearchIcon src={SearchIconSvg} alt="검색"/>
+        </SearchContainer>
       </KimpaPanel>
 
       <MenuList>

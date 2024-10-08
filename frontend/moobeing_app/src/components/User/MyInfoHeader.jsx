@@ -27,12 +27,12 @@ const UserInfo = styled.div`
 
 const Label = styled.div`
   font-weight: bold;
-  font-size: 18px;
-  margin-right: 10px;
+  font-size: 16px;
+  margin-right: 8px;
 `;
 
 const Value = styled.div`
-  font-size: 18px;
+  font-size: 16px;
 `;
 
 const RadishCoinContainer = styled.div`
@@ -53,7 +53,7 @@ const RadishCoinBtn = styled.button`
   color: #5E5054;
   border: none;
   padding: 8px 10px;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
   border-radius: 10px;
   cursor: pointer;
@@ -65,8 +65,8 @@ const RadishCoinImg = styled.div`
   background-image: url(${RadishCoinImgSrc});
   background-size: cover;
   background-position: center;
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   margin-right: 10px;
 `;
 
@@ -76,7 +76,7 @@ const RightArrowButton = styled.div`
   background-position: center;
   width: 20px;
   height: 20px;
-  margin-left: 10px;
+  margin-left: 5px;
   cursor: pointer;
 `;
 
