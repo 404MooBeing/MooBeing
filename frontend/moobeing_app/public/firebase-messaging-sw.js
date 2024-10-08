@@ -17,20 +17,33 @@ const firebaseConfig = {
   measurementId: "G-2MW15Q9GCQ"
 };
 
+// Firebase 초기화
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
+// 기존 알림 닫기 이벤트 리스너 등록
+self.addEventListener("notificationclose", () => {
+  console.log("이전 알림이 닫혔습니다.");
+});
+
+// background message 수신 처리
 messaging.onBackgroundMessage((payload) => {
   console.log(
     "[firebase-messaging-sw.js] Received background message ",
     payload
   );
+
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
     icon: "/firebase-logo.png", // 원하는 아이콘으로 변경
   };
 
+  // 기존 알림 닫기
+  self.registration.getNotifications().then((notifications) => {
+    notifications.forEach((notification) => notification.close());
+  });
+
+  // 새 알림 표시
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
-
