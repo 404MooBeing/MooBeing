@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { postAccountHistory } from "../../apis/AccountApi"; // API 함수 가져오기
+import { postAccountHistory } from "../../apis/AccountApi";
 import useTransactionStore from "../../store/TransactionStore";
 import basicRad from "../../assets/radishes/basicRad.svg";
 import useCapsuleStore from "../../store/CapsuleStore";
@@ -116,31 +116,39 @@ const TransactionList = () => {
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
   const [selectedTransactionIndex, setSelectedTransactionIndex] = useState(null);
+  const [page, setPage] = useState(1); // 페이지 상태 추가
+  const [hasMore, setHasMore] = useState(true); // 추가 데이터가 있는지 여부
+  const observer = useRef();
 
   // Zustand에서 필요한 상태와 함수들 가져오기
   const { account, isRadishSelected, sortCriteria } = useTransactionStore();
 
   // 거래 내역 불러오기
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      if (account?.id) {
-        try {
-          const accountHistoryData = {
-            accountId: account.id,
-            months: sortCriteria.period,
-            transactionType: sortCriteria.type,
-            page: 1,
-          };
-          const response = await postAccountHistory(accountHistoryData);
-          setTransactions(response); // 받아온 거래 내역 저장
-        } catch (error) {
-          console.error("거래 내역을 불러오는 중 오류가 발생했습니다:", error);
+  const fetchTransactions = async (currentPage) => {
+    if (account?.id && hasMore) {
+      try {
+        const accountHistoryData = {
+          accountId: account.id,
+          months: sortCriteria.period,
+          transactionType: sortCriteria.type,
+          page: currentPage, // 현재 페이지로 요청
+        };
+        const response = await postAccountHistory(accountHistoryData);
+        
+        if (response.length > 0) {
+          setTransactions((prevTransactions) => [...prevTransactions, ...response]); // 이전 데이터에 추가
+        } else {
+          setHasMore(false); // 더 이상 데이터가 없을 경우
         }
+      } catch (error) {
+        console.error("거래 내역을 불러오는 중 오류가 발생했습니다:", error);
       }
-    };
+    }
+  };
 
-    fetchTransactions(); // 컴포넌트 마운트 시 거래 내역 불러오기
-  }, [account, sortCriteria]); // account와 sortCriteria가 변경될 때마다 호출
+  useEffect(() => {
+    fetchTransactions(page); // 페이지가 변경될 때마다 데이터 가져오기
+  }, [account, sortCriteria, page]);
 
   useEffect(() => {
     if (!isRadishSelected) {
@@ -148,17 +156,29 @@ const TransactionList = () => {
     }
   }, [isRadishSelected]);
 
+  // 스크롤 끝에 도달했을 때 페이지를 증가시키는 함수
+  const lastTransactionRef = useCallback(
+    (node) => {
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1); // 페이지 증가
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [hasMore]
+  );
+
   const handleSelectTransaction = (index) => {
     if (isRadishSelected) {
       setSelectedTransactionIndex(index);
-  
-      // 선택된 거래 정보를 가져와서 updateTransactionInfo 호출
       const selectedTransaction = transactions[index];
       updateTransactionInfo(
-        selectedTransaction.id,               // 거래 ID
-        selectedTransaction.title,            // 거래 이름 (상호명 등)
-        selectedTransaction.amount,           // 거래 금액
-        selectedTransaction.date              // 거래 날짜
+        selectedTransaction.id,
+        selectedTransaction.title,
+        selectedTransaction.amount,
+        selectedTransaction.date
       );
     }
   };
@@ -178,7 +198,7 @@ const TransactionList = () => {
     <ListContainer selected={isRadishSelected}>
       {transactions.length > 0 ? (
         transactions.map((transaction, index) => (
-          <div key={index}>
+          <div key={index} ref={index === transactions.length - 1 ? lastTransactionRef : null}>
             {index === 0 || transactions[index - 1].date !== transaction.date ? (
               <DateHeader>{transaction.date}</DateHeader>
             ) : null}
@@ -204,7 +224,7 @@ const TransactionList = () => {
         <NoTransactionContainer>
           <NoTransactionImage src={basicRad} alt="계좌 내역이 없습니다." />
           <NoTransactionText>계좌 내역이 없습니다.</NoTransactionText>
-      </NoTransactionContainer>
+        </NoTransactionContainer>
       )}
       {isRadishSelected && <SelectButton onClick={handleSelectButton}>선택하기</SelectButton>}
     </ListContainer>

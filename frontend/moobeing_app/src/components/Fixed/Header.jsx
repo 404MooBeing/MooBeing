@@ -1,11 +1,13 @@
 // Header.jsx
 import styled from "styled-components";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import alarm from "../../assets/button/alarmButton.svg";
 import logo from "../../assets/logo/ColumnLogo.png";
 import auth from "../../assets/button/AuthButton.svg";
+import useAlarmStore from "../../store/AlarmStore";
+import { getIsAlarm } from "../../apis/AlarmApi";
 
-// StyledHeader 컴포넌트 정의
 const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -24,6 +26,7 @@ const StyledHeader = styled.div`
   & .right-icons {
     display: flex;
     align-items: center;
+    position: relative;
     margin-right: 15px;
   }
 
@@ -31,7 +34,6 @@ const StyledHeader = styled.div`
     width: 26px;
     cursor: pointer;
     margin-left: 5%;
-    // visibility: ${(props) => (props.$isAlarmVisible ? "visible" : "hidden")};
   }
 
   & .auth {
@@ -39,10 +41,21 @@ const StyledHeader = styled.div`
     cursor: pointer;
     margin: 18px;
   }
+
+  & .notification-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+    position: absolute;
+    top: -4px;
+    right: -5px;
+  }
 `;
 
-const Header = ({ isAlarmVisible }) => {
+const Header = () => {
   const navigate = useNavigate();
+  const isAlarm = useAlarmStore((state) => state.isAlarm); // 상태 구독
 
   const handleHomeClick = () => {
     navigate("/");
@@ -53,19 +66,37 @@ const Header = ({ isAlarmVisible }) => {
   };
 
   const handleAlarmClick = () => {
+    useAlarmStore.getState().setIsAlarm(false); // 알림 확인 시 isAlarm을 false로 설정
     navigate("/alarm");
   };
+
+  const fetchAlarmStatus = async () => {
+    try {
+      const fetchedIsAlarm = await getIsAlarm();
+      useAlarmStore.getState().setIsAlarm(fetchedIsAlarm);
+    } catch (error) {
+      console.error("Error fetching alarm status:", error);
+      useAlarmStore.getState().setIsAlarm(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAlarmStatus();
+  }, []);
 
   return (
     <StyledHeader>
       <img className="logo" alt="logo" src={logo} onClick={handleHomeClick} />
       <div className="right-icons">
-        <img
-          className="alarm"
-          alt="alarm"
-          src={alarm}
-          onClick={handleAlarmClick}
-        />
+        <div style={{ position: "relative" }}>
+          {isAlarm && <div className="notification-dot" />} {/* isAlarm이 true일 때만 빨간 점 표시 */}
+          <img
+            className="alarm"
+            alt="alarm"
+            src={alarm}
+            onClick={handleAlarmClick}
+          />
+        </div>
         <img
           className="auth"
           alt="auth"
@@ -78,3 +109,4 @@ const Header = ({ isAlarmVisible }) => {
 };
 
 export default Header;
+

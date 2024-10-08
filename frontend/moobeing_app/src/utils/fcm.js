@@ -1,7 +1,11 @@
+// firebase.js
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import useFCMStore from "../store/FCMStore";
 import { postFCMRegister } from "../apis/FCMApi";
+import useIsAlarm from "../store/AlarmStore";
+import { getIsAlarm } from "../apis/AlarmApi";
+import useAlarmStore from "../store/AlarmStore";
 
 const config = {
   apiKey: "AIzaSyCTHRWWL50vqyNfYQnJofsEItQxl2fgI3I",
@@ -16,25 +20,16 @@ const config = {
 const app = initializeApp(config);
 const messaging = getMessaging();
 
-// 토큰 요청 함수
-export function requestToken() { // 내보내기 추가
+export function requestToken() {
   getToken(messaging, {
     vapidKey:
       "BKSLg2e8SNHqXlxXcufLmhbyE2IUJg3pyyG_aTt4NsLqvVopevgxg0e2jNaeXHG_vGGHbHdZklPwFlH2nOnCNfE",
   })
     .then((currentToken) => {
       if (currentToken) {
-        // 전역 상태에 currentToken 저장
-        useFCMStore.getState().setToken(currentToken); // 추가된 코드
+        useFCMStore.getState().setToken(currentToken);
         console.log("Token:", currentToken);
-        const token = useFCMStore.getState().token; // FCM 토큰 가져오기
-        const formData = {
-          token: token,
-        };
-        postFCMRegister(formData); // formData를 전달
-        // navigator.clipboard.writeText(currentToken)
-        //   .then(() => alert("토큰이 클립보드에 복사되었습니다: " + currentToken))
-        //   .catch(err => console.error("토큰 복사 실패:", err));
+        postFCMRegister({ token: currentToken });
       } else {
         console.log("No registration token available. Request permission to generate one.");
       }
@@ -44,8 +39,8 @@ export function requestToken() { // 내보내기 추가
     });
 }
 
-// 포그라운드 메시지 수신
 onMessage(messaging, (payload) => {
-  console.log("Message received. ", payload);
-  // ...
+  console.log("Message received: ", payload);
+  useAlarmStore.getState().setIsAlarm(true); // 알림 수신 시 isAlarm을 true로 설정
 });
+
