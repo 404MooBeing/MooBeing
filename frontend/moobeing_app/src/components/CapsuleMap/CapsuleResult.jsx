@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const Card = styled.div`
   width: 300px;
-  height: 500px;
+  height: auto;
   background-color: #f5fded;
   border-radius: 20px;
   position: relative;
@@ -20,13 +20,15 @@ const TransactionInfoContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 10px;
   margin-bottom: 10px;
 `;
 
 const TransactionDetails = styled.div`
   display: flex;
   flex-direction: column;
+  margin-left: 20px;
+  gap: 8px;
 `;
 
 const TransactionName = styled.p`
@@ -38,16 +40,16 @@ const TransactionAmount = styled.p`
   margin: 0;
 `;
 
-const TransactionDate = styled.p`
-  margin: 0;
+const TransactionDate = styled.h2`
+  margin-right: 20px;
   align-self: flex-end;
-  font-size: 12px;
+  font-size: 24px;
 `;
 
 const ImageContainer = styled.div`
   width: 78%;
   height: 200px;
-  background-color: #effedf;
+  /* background-color: #effedf0; */
   border-radius: 20px;
   position: relative;
   display: flex;
@@ -60,17 +62,20 @@ const CharacterImage = styled.img`
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  border-radius: 20px;
 `;
 
 const OpenButton = styled.button`
   width: 80%;
   padding: 10px;
   font-size: 16px;
+  font-weight: bold;
   border-radius: 10px;
   border: none;
-  background-color: #a8d5ba;
+  background-color: #e0eed2;
   cursor: pointer;
   margin-top: 10px;
+  margin-bottom: 10px;
 
   &:hover {
     background-color: #8bc8a5;

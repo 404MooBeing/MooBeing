@@ -3,6 +3,8 @@ import styled, { keyframes, css } from "styled-components";
 import plantingRad from "../assets/radishes/PlantingRad.svg";
 import Planting from "../components/CapsulePlanting/Planting";
 import Planted from "../components/CapsulePlanting/Planted";
+import { useLocation } from "react-router-dom";
+import RadishCoinImgSrc from "../assets/coin/RadishCoin.png";
 
 const Container = styled.div`
   display: flex;
@@ -21,6 +23,47 @@ const RadishInSoil = styled.img`
   max-height: 50vh;
   object-fit: cover;
   margin-bottom: 35%;
+`;
+
+const slideInOut = keyframes`
+  0% {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  20% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(50%);
+    opacity: 0;
+  }
+`;
+
+const CoinPopUp = styled.div`
+  position: absolute;
+  bottom: 60%;
+  width: 80%;
+  background-color: #00000044;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 이미지와 텍스트를 수직 중앙 정렬 */
+  animation: ${slideInOut} 4s ease-in-out forwards;
+  z-index: 1000;
+`;
+
+const CoinImage = styled.img`
+  width: 24px; /* 문구 높이와 일치하도록 조정 */
+  height: 24px;
+  margin-left: 10px; /* 텍스트와 이미지 간의 간격 */
 `;
 
 const ZContainer = styled.div`
@@ -64,17 +107,26 @@ const Z3 = styled(ZText)`
 `;
 
 function CapsulePlanting() {
+  const location = useLocation();
+  const coin = location.state?.coin || 0;
   const [showPlanted, setShowPlanted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(true);
+  const [showCoinPopUp, setShowCoinPopUp] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPlanted(true);
       setIsAnimating(false);
+      if (coin > 0) {
+        setShowCoinPopUp(true);
+        setTimeout(() => {
+          setShowCoinPopUp(false);
+        }, 4000);
+      }
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [coin]);
 
   return (
     <>
@@ -92,6 +144,12 @@ function CapsulePlanting() {
             Z
           </Z3>
         </ZContainer>
+        {showCoinPopUp && (
+          <CoinPopUp>
+            {coin} 코인을 획득하였습니다!
+            <CoinImage src={RadishCoinImgSrc} alt="Coin" />
+          </CoinPopUp>
+        )}
       </Container>
     </>
   );

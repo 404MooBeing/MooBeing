@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled, { keyframes, css } from "styled-components";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { postHarvestCapsule } from "../apis/CapsuleApi";
-
 import confetti from "canvas-confetti";
 import soil from "../assets/capsules/Soil.png";
 import radish from "../assets/radishes/basicRad.svg";
@@ -79,6 +78,58 @@ const CapsuleResultCardWrapper = styled.div`
   animation: ${fadeIn} 0.8s ease-out;
 `;
 
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9;
+`;
+
+const slideInOut = keyframes`
+  0% {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  20% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(50%);
+    opacity: 0;
+  }
+`;
+
+const CoinPopUp = styled.div`
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+  width: 80%;
+  background-color: #0000006a;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ${slideInOut} 4s ease-in-out forwards;
+  z-index: 1000;
+`;
+
+const CoinImage = styled.img`
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+`;
+
 const ConfettiCanvas = styled.canvas`
   position: fixed;
   top: 0;
@@ -94,6 +145,7 @@ function CapsuleHarvest() {
   const [radishImageUrl, setRadishImageUrl] = useState("");
   const [harvestResponse, setHarvestResponse] = useState(null);
   const [showResult, setShowResult] = useState(false);
+  const [showCoinPopUp, setShowCoinPopUp] = useState(false);
   const confettiCanvasRef = useRef(null);
 
   useEffect(() => {
@@ -116,10 +168,16 @@ function CapsuleHarvest() {
     const timer = setTimeout(() => {
       setShowResult(true);
       fireConfetti();
+      if (harvestResponse && harvestResponse.coin > 0) {
+        setShowCoinPopUp(true);
+        setTimeout(() => {
+          setShowCoinPopUp(false);
+        }, 4000); // 4초 후 팝업 사라짐
+      }
     }, 4000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [harvestResponse]);
 
   const fireConfetti = () => {
     const myConfetti = confetti.create(confettiCanvasRef.current, {
@@ -143,6 +201,12 @@ function CapsuleHarvest() {
   return (
     <Container>
       <ConfettiCanvas ref={confettiCanvasRef} />
+      {showCoinPopUp && (
+        <CoinPopUp>
+          {harvestResponse.coin} 코인을 획득하였습니다!
+          <CoinImage src={radish} alt="Coin" />
+        </CoinPopUp>
+      )}
       {!showResult ? (
         <>
           <Title>무를 수확중입니다.</Title>
@@ -151,9 +215,12 @@ function CapsuleHarvest() {
         </>
       ) : (
         harvestResponse && (
-          <CapsuleResultCardWrapper>
-            <CapsuleResult response={harvestResponse} />
-          </CapsuleResultCardWrapper>
+          <>
+            <Overlay />
+            <CapsuleResultCardWrapper>
+              <CapsuleResult response={harvestResponse} />
+            </CapsuleResultCardWrapper>
+          </>
         )
       )}
     </Container>

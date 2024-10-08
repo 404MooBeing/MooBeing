@@ -187,7 +187,7 @@ function CapsuleChooseLocationPage() {
 
         const response = await postPlantCapsule(formData);
         console.log("서버 응답:", response);
-        navigate("/capsule-planting");
+        navigate("/capsule-planting", { state: { coin: response.coin } });
       } catch (error) {
         console.error("캡슐 심기 실패:", error);
         if (error.response) {
