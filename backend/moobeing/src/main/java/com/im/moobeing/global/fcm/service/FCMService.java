@@ -112,6 +112,7 @@ public class FCMService {
                 .setNotification(Notification.builder()
                         .setTitle(title)
                         .setBody(body)
+                        .setImage("https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9")
                         .build())
                 .build();
     }
