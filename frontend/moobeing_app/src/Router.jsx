@@ -76,7 +76,7 @@ function Router() {
           <Route path="/capsule-search" element={<CapsuleSearch />} />
           <Route path="/coin-exchange" element={<CoinExchange />} />
           <Route path="/coin" element={<Coin />} />
-          <Route path="/get-radishcharacter" element={<GetRadishCharacter />} />
+          <Route path="/get-radish" element={<GetRadishCharacter />} />
           <Route path="/total-journey" element={<TotalLoanJourney />} />
           <Route path="/each-journey/:loanName" element={<EachLoanJourney />} />
           <Route path="/loan" element={<Loan />} />
