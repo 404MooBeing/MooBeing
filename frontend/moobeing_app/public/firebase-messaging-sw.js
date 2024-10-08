@@ -20,11 +20,16 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
+// 중복된 알림 방지 로직 추가
+let lastNotificationData = null;
+
 messaging.onBackgroundMessage((payload) => {
-  console.log(
-    "[firebase-messaging-sw.js] Received background message ",
-    payload
-  );
+  console.log("[firebase-messaging-sw.js] Received background message ", payload);
+
+  const notificationData = JSON.stringify(payload.notification);
+  if (lastNotificationData === notificationData) return;
+  lastNotificationData = notificationData;
+
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
