@@ -33,6 +33,9 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
      * @return 참여하지 않은 퀴즈가 있는지 여부
      */
     boolean existsByMemberAndStatus(Member member, QuizStatus status);
+
+    boolean existsByMemberAndStatusAndQuizType(Member member, QuizStatus status, QuizType quizType);
+
     Optional<Quiz> findByMemberAndQuizDataId(Member member, Long quizDataId);
     Optional<Quiz> findByStatusAndMemberAndQuizType(QuizStatus quizStatus, Member member, QuizType quizType);
 }
