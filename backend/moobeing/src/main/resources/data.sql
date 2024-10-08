@@ -322,10 +322,10 @@ INSERT IGNORE INTO deal (deal_id, member_id, deal_category, title, price, create
 INSERT IGNORE INTO account (account_id, account_num, member_id, account_balance, account_product_id)
 VALUES
 (1, '110-1234-5678', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 7550750, 7), -- 신한 MY 통장
-(2, '110-2345-6789', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 2000000, 8), -- 신한 S 드림 적금
-(3, '110-3456-7890', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 3000000, 9), -- 신한 S 행복 적금
-(4, '110-4567-8901', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 4000000, 10), -- 신한 주니어 저축예금
-(5, '110-5678-9012', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 5000000, 11); -- 신한 S-20 정기예금
+(2, '110-2345-6789', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 900000, 8), -- 신한 S 드림 적금
+(3, '110-3456-7890', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 1090752, 9), -- 신한 S 행복 적금
+(4, '110-4567-8901', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 486889, 10), -- 신한 주니어 저축예금
+(5, '110-5678-9012', (SELECT member_id FROM member WHERE email = 'test@gmail.com'), 86631400, 11); -- 신한 S-20 정기예금
 
 
 -- 9. Expense 테이블에 더미 데이터 삽입 (이미 존재할 경우 삽입 무시)
