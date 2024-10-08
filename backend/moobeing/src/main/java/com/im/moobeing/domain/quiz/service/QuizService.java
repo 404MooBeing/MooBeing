@@ -63,7 +63,16 @@ public class QuizService {
 
 	@Transactional(readOnly = true)
 	public QuizColdResponse getQuizCold(Member member) {
-		return QuizColdResponse.from(quizRepository.existsByMemberAndStatus(member, QuizStatus.NOT_STARTED));
+		// 소비내역 퀴즈가 있다면 제일 우선
+		if (quizRepository.findByStatusAndMemberAndQuizType(QuizStatus.NOT_STARTED, member,
+			QuizType.EXPENSE).isPresent()) {
+			return QuizColdResponse.from(true, QuizType.EXPENSE);
+		} else if (quizRepository.findByStatusAndMember(QuizStatus.NOT_STARTED, member)
+								 .isPresent()) {
+			return QuizColdResponse.from(true, QuizType.ECONOMY);
+		}
+		// 없을 경우
+		return QuizColdResponse.from(false, null);
 	}
 
 	@Transactional
