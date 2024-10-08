@@ -71,6 +71,7 @@ const Spend = () => {
   const [viewMode, setViewMode] = useState("캘린더 보기");
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const [error, setError] = useState(null); // 에러 상태 추가
+  const [hasFetchedData, setHasFetchedData] = useState(false);
   
   // 더미 데이터를 가져옴 (spendStore에 정의된 더미 데이터)
   const dummySpendData = spendData;
@@ -109,24 +110,35 @@ const Spend = () => {
   }, [setSpendCategory, dummySpendCategory]);
   
   useEffect(() => {
-    // 이미 에러가 발생했다면 API 호출을 중단
-    if (error) return;
+    // 이미 에러가 발생했거나 데이터가 이미 로드되었다면 API 호출을 중단
+    if (error || hasFetchedData) return;
     
     // 로딩 상태 시작
     setIsLoading(true);
     setError(null);
 
-    const year = Number(selectedDate?.year ? selectedDate.year() : new Date().getFullYear());
-    const month = Number(selectedDate?.month ? selectedDate.month() + 1 : new Date().getMonth() + 1);
+    const year = selectedDate?.year() || new Date().getFullYear();
+    const month = (selectedDate?.month() || new Date().getMonth()) + 1;
     
     // 개별적으로 API 호출 (각각 실패해도 다른 API는 정상 작동)
-    Promise.all([
-      fetchSpendData(year, month),
-      fetchPieChartData(year, month),
-      fetchSpendCategory(year, month),
-    ]).finally(() => setIsLoading(false)); // 로딩 상태 종료
+    const fetchData = async () => {
+      try {
+        await Promise.all([
+          fetchSpendData(year, month),
+          fetchPieChartData(year, month),
+          fetchSpendCategory(year, month),
+        ]);
+        setHasFetchedData(true);
+      } catch (err) {
+        setError("데이터 로드 중 오류 발생");
+      } finally {
+        setIsLoading(false); // 로딩 상태 종료
+      }
+    };
+
+    fetchData();
     
-  }, [selectedDate, fetchSpendData, fetchPieChartData, fetchSpendCategory, error]);
+  }, [selectedDate, fetchSpendData, fetchPieChartData, fetchSpendCategory, error, hasFetchedData]);
     
 
   return (
