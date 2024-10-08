@@ -54,4 +54,9 @@ public class Deal extends BaseTimeEntity {
 	public Long getAbsPrice() {
 		return Math.abs(price);
 	}
+
+	@Override
+	public String toString() {
+		return title + " " + price;
+	}
 }
