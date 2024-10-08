@@ -133,13 +133,21 @@ public class RadishService {
 
     public CapsuleSummaryResponse getRadishSummary(Member member) {
         Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
-        List<RadishCapsule> capsules = radishCapsuleRepository.findAllByIsHarvestedAndMemberIdOrderByCreateAtDesc(false, member.getId(), pageable);
-        int count = capsules.size();
-        LocalDateTime time = capsules.stream()
+        List<RadishCapsule> capsules = radishCapsuleRepository
+                .findAllByIsHarvestedAndMemberIdOrderByCreateAtDesc(false, member.getId(), pageable);
+
+        List<RadishCapsule> filteredCapsules = capsules.stream()
+                .filter(capsule -> capsule.getEndAt().isAfter(LocalDateTime.now()))
+                .toList();
+
+        int count = filteredCapsules.size();
+
+        LocalDateTime time = filteredCapsules.stream()
                 .map(RadishCapsule::getEndAt)
                 .sorted()
                 .findFirst()
                 .orElseThrow(() -> new BadRequestException(ErrorCode.INTERNAL_SERVER_ERROR));
+
         return new CapsuleSummaryResponse(time, count);
     }
 }
