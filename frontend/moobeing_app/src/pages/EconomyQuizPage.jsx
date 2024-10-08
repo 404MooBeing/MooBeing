@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getNotStartedEconomicQuiz, submitEconomicQuizAnswer } from "../apis/QuizApi";
-import upArrow from "../assets/quiz/upArrow.svg";
-import downArrow from "../assets/quiz/downArrow.svg";
+import upArrow from "../assets/quiz/circle.svg";
+import downArrow from "../assets/quiz/x.svg";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../store/UserStore";
 

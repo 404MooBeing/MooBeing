@@ -35,14 +35,22 @@ export const getNotStartedEconomicQuiz = async () => {
     const response = await api.get("/quiz/economic");
     return response.data;
   } catch (error) {
-    console.error("경제 퀴즈 정보 불러오기 실패했어요 슬퍼요", error);
-    throw error;
   }
 };
 
 export const submitEconomicQuizAnswer = async (quizNum, answer) => {
   try {
     const response = await api.post(`/quiz/economic/${quizNum}`, { answer });
+    return response.data;
+  } catch (error) {
+    console.error("정답 제출 실패:", error);
+    throw error;
+  }
+};
+
+export const getColdQuiz = async () => {
+  try {
+    const response = await api.get(`/quiz/cold`);
     return response.data;
   } catch (error) {
     console.error("정답 제출 실패:", error);
