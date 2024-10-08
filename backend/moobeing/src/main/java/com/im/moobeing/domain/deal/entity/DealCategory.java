@@ -5,11 +5,12 @@ import lombok.Getter;
 @Getter
 public enum DealCategory {
     FOOD("식비"),
-    LOAN("대출"),
+    HEALTH("건강"),
     CULTURE("문화"),
+    LOAN("대출"),
     ENTERTAINMENT("유흥"),
-    TRANSPORT("교통"),
-    HEALTH("건강");
+    TRANSPORT("교통")
+    ;
 
     private final String description;
 
