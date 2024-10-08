@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Header from "./components/Fixed/Header";
 import Footer from "./components/Fixed/Footer";
 import Home from "./pages/HomePage";
@@ -34,25 +34,23 @@ import Spend from "./pages/SpendPage";
 import TransactionHistory from "./pages/TransactionHistoryPage";
 import Welcome from "./pages/WelcomePage";
 import useUserStore from "./store/UserStore";
+import ChatBot from "./assets/radishes/chatbotRad.png";
 
 function Router() {
   const location = useLocation();
   const navigate = useNavigate();
   const userInfo = useUserStore((state) => state.userInfo);
-
-  // 로그인되지 않았을 경우 로그인 페이지로 리디렉션
-  useEffect(() => {
-    if (!userInfo) {
-      navigate("/login");
-    }
-  }, [userInfo, navigate]);
-
   // Header와 Footer를 표시하지 않을 경로 목록
   const noHeaderFooterRoutes = ["/loading", "/login", "/signup", "/welcome"];
 
   const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(
     location.pathname
   );
+
+  // 챗봇 클릭 시 챗봇 페이지로 이동
+  // const handleChatbotClick = () => {
+  //   navigate("/chatbot");
+  // };
 
   return (
     <>
@@ -63,15 +61,12 @@ function Router() {
         }}
       >
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={userInfo ? <Home /> : <Navigate replace to="/login" />} />
           <Route path="/loading" element={<Loading />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/alarm" element={<Alarm />} />
-          <Route
-            path="/choose-character"
-            element={<CapsuleChooseCharacter />}
-          />
+          <Route path="/choose-character" element={<CapsuleChooseCharacter />} />
           <Route path="/choose-location" element={<CapsuleChooseLocation />} />
           <Route path="/capsule-harvest" element={<CapsuleHarvest />} />
           <Route path="/capsule-intro" element={<CapsuleIntro />} />
@@ -99,9 +94,26 @@ function Router() {
             element={<TransactionHistory />}
           />
           <Route path="/welcome" element={<Welcome />} />
+          {/* <Route path="/welcome" element={<Welcome />} /> */}
         </Routes>
       </div>
       {shouldShowHeaderFooter && <Footer />}
+      {/* Chatbot 이미지 */}
+      <img
+        src={ChatBot}
+        alt="Chatbot"
+        style={{
+          position: "fixed",
+          bottom: "90px",
+          right: "23px",
+          width: "70px",
+          height: "80px",
+          zIndex: 1000,
+          cursor: "pointer",
+          filter: "drop-shadow(4px 3px 3px #c3c3c3)",
+        }}
+        // onClick={handleChatbotClick}
+      />
     </>
   );
 }
