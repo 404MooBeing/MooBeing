@@ -10,6 +10,7 @@ import com.im.moobeing.domain.member.repository.MemberRadishRepository;
 import com.im.moobeing.domain.member.repository.MemberRepository;
 import com.im.moobeing.domain.member.repository.NicknameRepository;
 import com.im.moobeing.domain.member.repository.NicknameWordRepository;
+import com.im.moobeing.domain.point.service.PointService;
 import com.im.moobeing.domain.radish.entity.Radish;
 import com.im.moobeing.domain.radish.entity.RadishTime;
 import com.im.moobeing.domain.radish.repository.RadishRepository;
@@ -40,6 +41,7 @@ public class MemberService {
     private final RadishTimeRepository radishTimeRepository;
     private final NicknameRepository nicknameRepository;
     private final AccountService accountService;
+    private final PointService pointService;
 
     @Transactional
     public MemberCreateResponse createMember(MemberCreateRequest memberCreateRequest) {
@@ -321,6 +323,11 @@ public class MemberService {
                 streamCnt++;
                 break;
             }
+        }
+
+        if (streamCnt == 6) {
+            pointService.depositPoints(member, 1000L);
+            return StreamCntMemberResponse.of(1000L, streamCnt);
         }
 
         return StreamCntMemberResponse.of(streamCnt);

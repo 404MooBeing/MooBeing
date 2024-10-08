@@ -18,8 +18,9 @@ public class RadishCapsuleResponse {
     private String imageUrl;
     private String iconUrl;
     private String content;
+    private Long coin;
 
-    public static RadishCapsuleResponse of(RadishCapsule capsule) {
+    public static RadishCapsuleResponse of(RadishCapsule capsule, Long coin) {
         return RadishCapsuleResponse.builder()
                 .id(capsule.getId())
                 .date(formatDate(capsule.getCreateAt().toLocalDate()))
@@ -28,6 +29,7 @@ public class RadishCapsuleResponse {
                 .imageUrl(capsule.getImgUrl())
                 .iconUrl(capsule.getCharacter().getRadishImageUrl())
                 .content(capsule.getDescription())
+                .coin(coin)
                 .build();
     }
     private static String formatDate(LocalDate date) {
