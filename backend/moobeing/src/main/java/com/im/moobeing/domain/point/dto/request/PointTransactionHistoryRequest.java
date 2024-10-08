@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record PointTransactionHistoryRequest (
         @Schema(description = "조회할 기간 (1개월, 3개월, 6개월, 1년 중 하나)", example = "3개월") Integer months,
-        @Schema(description = "거래 유형 (전체, 입금, 출금 중 하나)", example = "전체") String transactionType,
+        @Schema(description = "거래 유형 (전체, 적립, 사용 중 하나)", example = "전체") String transactionType,
         @Schema(description = "페이지 번호", example = "1") int page
 ) {
 
@@ -31,8 +31,8 @@ public record PointTransactionHistoryRequest (
     private static String convertTransactionType(String transactionType) {
         return switch (transactionType.toLowerCase()) {
             case "전체" -> "all";
-            case "입금" -> "deposit";
-            case "출금" -> "withdrawal";
+            case "적립" -> "deposit";
+            case "사용" -> "withdrawal";
             default -> throw new IllegalArgumentException("유효하지 않은 거래 유형입니다: " + transactionType);
         };
     }
