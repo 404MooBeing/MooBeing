@@ -9,9 +9,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CategoryPercentDto {
     private String label;
-    private Double percent;
+    private Integer percent;
 
-    public static CategoryPercentDto of(String label, Double percent) {
+    public static CategoryPercentDto of(String label, Integer percent) {
         return CategoryPercentDto.builder()
                                  .label(label)
                                  .percent(percent)
