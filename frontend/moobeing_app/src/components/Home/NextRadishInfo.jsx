@@ -15,6 +15,7 @@ const Container = styled.div`
   align-items: flex-start;
   padding: 8%;
   box-sizing: border-box;
+  margin-bottom: 170px;
 `;
 
 const SubHeader = styled.div`
