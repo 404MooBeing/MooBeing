@@ -78,20 +78,10 @@ const SelectButton = styled.button`
   font-family: 'mainFont';
 `;
 
-const Coins = [
-  // 하나은행 일반 계좌
-  {date: "2024.09.20 (금)", title: "무 뽑기", time: "12:30", amount: 4000, remain: "8000" },
-  {date: "2024.09.20 (금)", title: "출석체크", time: "10:55", amount: 1000, remain: "9000" },
-  {date: "2024.09.19 (목)", title: "출석체크", time: "18:15", amount: 1000, remain: "4000" },
-  {date: "2024.09.19 (목)", title: "무 뽑기", time: "14:45", amount: 2000, remain: "3000" },
-  {date: "2024.09.18 (수)", title: "출석체크", time: "08:25", amount: 1000, remain: "1000" },
-  {date: "2024.09.18 (수)", title: "환전", time: "20:10", amount: -21500, remain: "0" },
-];
 
-
-const CoinList = ({ isRadishSelected, sortCriteria }) => {
+const CoinList = ({ isRadishSelected, sortCriteria, coinList }) => {
   const navigate = useNavigate();
-
+  let Coins = coinList;
 
   // sortCriteria에 따라 입금/출금 또는 전체 필터링
   if (sortCriteria.type === '적립') {
@@ -116,7 +106,7 @@ const CoinList = ({ isRadishSelected, sortCriteria }) => {
               <Amount amount={Coin.amount}>
                 {Coin.amount.toLocaleString()} 개
               </Amount>
-              <Remain>잔액 {Coin.remain}</Remain>
+              <Remain>잔액 {Coin.remainBalance} 개</Remain>
             </AmountAndRemain>
           </CoinItem>
         </div>

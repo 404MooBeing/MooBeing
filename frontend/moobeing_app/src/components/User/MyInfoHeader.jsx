@@ -3,7 +3,8 @@ import RadishCoinImgSrc from "../../assets/coin/RadishCoin.png";
 import RightArrowBtn from "../../assets/button/rightButtonBlack.svg";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getCoin } from "../../apis/UserApi";
+import {getCoin} from "../../apis/CoinApi"
+
 
 const SubHeader = styled.div`
   background-color: #f5fded;

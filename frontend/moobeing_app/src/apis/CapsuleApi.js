@@ -53,35 +53,30 @@ export const postCapsulesOnMap = async (bounds) => {
       lngBottomLeft: bounds.lngBottomLeft,
     });
 
-    // response.data의 형태를 예상하여 타입 체크 및 변환
+    console.log("API Response:", response.data); // 응답 데이터 로깅
+
     const radishes = response.data;
 
-    // 데이터 유효성 검사 (선택적)
+    // 데이터 유효성 검사
     if (!Array.isArray(radishes)) {
       throw new Error("Invalid response format");
     }
 
-    return radishes.map((radish) => ({
-      id: radish.id,
-      lat: parseFloat(radish.lat),
-      lng: parseFloat(radish.lng),
-      radishImage: radish.radishImage,
-      remainingDays: radish.remainingDays,
-    }));
+    const processedRadishes = radishes.map((radish) => {
+      const processed = {
+        id: radish.id,
+        lat: parseFloat(radish.lat),
+        lng: parseFloat(radish.lng),
+        radishImageUrl: radish.radishImageUrl,
+        remainingDays: radish.remainingDays,
+      };
+      console.log("Processed radish:", processed); // 각 처리된 무 데이터 로깅
+      return processed;
+    });
+
+    return processedRadishes;
   } catch (error) {
     console.error("지도 위 캡슐 조회 실패", error);
-
-    // 에러 종류에 따른 처리
-    if (error.response) {
-      // 서버가 응답을 반환했지만 2xx 범위가 아닌 경우
-      console.error("서버 응답 에러:", error.response.data);
-      throw new Error(error.response.data.message || "서버 응답 에러");
-    } else if (error.request) {
-      // 요청은 보냈지만 응답을 받지 못한 경우
-      throw new Error("서버에서 응답이 없습니다");
-    } else {
-      // 요청 설정 중 문제가 발생한 경우
-      throw new Error("요청 설정 중 에러가 발생했습니다");
-    }
+    throw error;
   }
 };
