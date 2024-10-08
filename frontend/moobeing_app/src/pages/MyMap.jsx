@@ -132,10 +132,8 @@ function MyMap() {
           latBottomLeft: bounds.getSouthWest().getLat(),
           lngBottomLeft: bounds.getSouthWest().getLng(),
         });
-
         markersRef.current.forEach((marker) => marker.setMap(null));
         markersRef.current = [];
-
         radishes.forEach((radish) => {
           const distance = userLocation
             ? calculateDistance(
@@ -254,7 +252,16 @@ function MyMap() {
       popupType = "Opened";
     }
 
-    setPopupData({ type: popupType, data: radish });
+    setPopupData({
+      type: popupType,
+      data: {
+        id: radish.id,
+        addressName: radish.addressName,
+        createdAt: radish.createdAt,
+        radishImageUrl: radish.radishImageUrl,
+        ...radish,
+      },
+    });
   };
 
   const closePopup = () => {
@@ -268,6 +275,10 @@ function MyMap() {
         <PopupComponent
           popupType={popupData.type}
           data={popupData.data}
+          id={popupData.data.id}
+          addressName={popupData.data.addressName}
+          radishImageUrl={popupData.data.radishImageUrl}
+          createdAt={popupData.data.createdAt}
           onClose={closePopup}
         />
       )}

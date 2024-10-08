@@ -5,11 +5,13 @@ import useCapsuleStore from "../store/CapsuleStore";
 
 const Container = styled.div`
   display: flex;
+  justify-content: center;
   flex-direction: column;
-  width: 100%;
+  width: 80%;
   max-width: 500px;
   margin: 0 auto;
-  margin-top: 10%;
+  margin-top: 2vh;
+  height: 80vh;
 `;
 
 const TransactionBox = styled.div`
@@ -44,7 +46,7 @@ const TransactionTime = styled.p`
 
 const ImgForm = styled.div`
   background-color: #f5fded;
-  height: 200px;
+  height: 20vh;
   padding: 20px;
   display: flex;
   justify-content: center;
@@ -84,7 +86,7 @@ const ReselectionButton = styled.button`
 
 const TextForm = styled.div`
   background-color: #f5fded;
-  height: 200px;
+  height: 20vh;
   padding: 15px;
   border: 1px solid #ccc;
   border-top: none;

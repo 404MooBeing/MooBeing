@@ -22,6 +22,17 @@ export const postPlantCapsule = async (formData) => {
   }
 };
 
+// 무수확
+export const postHarvestCapsule = async (capsuleId) => {
+  try {
+    const response = await api.post(`/radish/harvest/${capsuleId}`);
+    return response.data;
+  } catch (error) {
+    console.error("무수확하기 axios 요청 실패요ㅠ", error);
+    throw error;
+  }
+};
+
 // 무심기용 캐릭터 조회
 export const getCharacter = async () => {
   try {
@@ -53,8 +64,6 @@ export const postCapsulesOnMap = async (bounds) => {
       lngBottomLeft: bounds.lngBottomLeft,
     });
 
-    console.log("API Response:", response.data); // 응답 데이터 로깅
-
     const radishes = response.data;
 
     // 데이터 유효성 검사
@@ -68,9 +77,10 @@ export const postCapsulesOnMap = async (bounds) => {
         lat: parseFloat(radish.lat),
         lng: parseFloat(radish.lng),
         radishImageUrl: radish.radishImageUrl,
+        addressName: radish.addressName,
+        createdAt: radish.createdAt,
         remainingDays: radish.remainingDays,
       };
-      console.log("Processed radish:", processed); // 각 처리된 무 데이터 로깅
       return processed;
     });
 

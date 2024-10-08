@@ -1,9 +1,12 @@
-// NotOpenedYetPopup.jsx
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 const PopupContainer = styled.div`
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   top: 15%;
   left: 50%;
   transform: translateX(-50%);
@@ -27,24 +30,107 @@ const Message = styled.p`
   margin: 10px 0;
 `;
 
-const CloseButton = styled.button`
-  padding: 10px 20px;
-  background-color: #f44336;
-  color: white;
+const RadishImage = styled.img`
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 10px 0;
+`;
+
+const InfoText = styled.div`
+  font-size: 14px;
+  color: #333;
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+`;
+
+const CopyButton = styled.button`
+  margin-left: 10px;
+  padding: 4px 8px;
+  font-size: 12px;
+  background-color: #f0f0f0;
   border: none;
   border-radius: 4px;
+  cursor: pointer;
+`;
+
+const DateText = styled.div`
+  font-size: 14px;
+  color: #666;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  padding: 8px;
+  margin: 10px 0;
+  width: fit-content;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   font-size: 14px;
 `;
 
-function NotOpenedYetPopup({ data, onClose }) {
+const ToastMessage = styled.div`
+  position: fixed;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  z-index: 2000;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+`;
+
+function NotGrownYetPopup({ data, onClose }) {
+  const [showToast, setShowToast] = useState(false);
+
+  const handleCopyAddress = () => {
+    navigator.clipboard
+      .writeText(data.addressName)
+      .then(() => {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 2000);
+      })
+      .catch(() => alert("복사 실패! 다시 시도해주세요."));
+  };
+
   return (
-    <PopupContainer>
-      <Title>Not Opened Yet</Title>
-      <Message>You are too far to open this radish.</Message>
-      <CloseButton onClick={onClose}>Close</CloseButton>
-    </PopupContainer>
+    <>
+      <PopupContainer>
+        <CloseButton onClick={onClose}>X</CloseButton>
+        <Title>아직 열 수 없습니다</Title>
+        <Message>이런, 무를 열기에 멀리 계시네요</Message>
+        <DateText>D-{data.remainingDays}</DateText>
+        <InfoText>
+          {data.addressName}
+          <CopyButton onClick={handleCopyAddress}>복사</CopyButton>
+        </InfoText>
+        <InfoText>
+          Created At: {new Date(data.createdAt).toLocaleString()}
+        </InfoText>
+      </PopupContainer>
+      {showToast && (
+        <ToastMessage style={{ opacity: 1 }}>
+          무캡슐을 열으러 가볼까요?
+        </ToastMessage>
+      )}
+    </>
   );
 }
 
-export default NotOpenedYetPopup;
+export default NotGrownYetPopup;
