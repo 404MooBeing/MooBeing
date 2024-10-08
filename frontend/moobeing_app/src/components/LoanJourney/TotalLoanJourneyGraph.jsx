@@ -176,6 +176,7 @@ const CustomDropdownHeader = styled.div`
   overflow: hidden;
   background-color: #e0eed2;
   border-radius: 10px;
+  padding: 10px;
 
   &:focus {
     border-bottom: 2px solid #4caf50;
@@ -462,7 +463,7 @@ function TotalLoanJourneyGraph({
             />
             <Tooltip content={<CustomTooltip isYearly={isYearly} />} />
             <Legend
-              wrapperStyle={{ fontSize: 12, paddingTop: 20, paddingLeft: 50 }}
+              wrapperStyle={{ fontSize: 12, paddingTop: 20, paddingLeft: 10 }}
             />
             <Line
               type="monotone"

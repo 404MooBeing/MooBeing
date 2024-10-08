@@ -15,6 +15,7 @@ const Screen = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh; /* 전체 화면을 차지 */
+  width: 100%;
 `;
 
 const Container = styled.div`

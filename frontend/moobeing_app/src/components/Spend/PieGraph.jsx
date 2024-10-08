@@ -13,8 +13,9 @@ const NoSpendData = styled.div`
 `
 
 const PieGraph = ({ width = "100%", height = 300 }) => {
-  const data = useSpendStore((state) => state.pieChartData.getPieChartList || []);
-
+  const pieChartData = useSpendStore((state) => state.pieChartData);
+  const data = pieChartData?.getPieChartList || [];
+  
   // 전체 합계 계산
   const total = data.length > 0 ? data.reduce((sum, item) => sum + item.value, 0) : 1;
 

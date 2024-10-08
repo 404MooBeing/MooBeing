@@ -67,7 +67,7 @@ const SearchContainer = styled.div`
   align-items: center;
   position: relative;
   width: 90%;
-  max-width: 450px;
+  max-width: 400px;
   margin: 15px 0 10px 0;
   height: 40px;
   box-sizing: border-box;
