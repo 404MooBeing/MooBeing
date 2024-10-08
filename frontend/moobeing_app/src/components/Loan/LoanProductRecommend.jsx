@@ -125,8 +125,8 @@ const LoanProductRecommend = () => {
   };
 
   const dummyProducts = [
-    { name: "참대출", rate: "금리 3.1%" },
-    { name: "대출고민바이", rate: "금리 2.9%" },
+    { name: "참신한", rate: "금리 11.9%", url: "https://www.shinhansavings.com/PD_0139" },
+    { name: "BEST 신용대출", rate: "금리 6.5", url: "https://www.kebhana.com/cont/mall/mall08/mall0802/mall080204/1431602_115200.jsp" },
   ];
 
   if (!isVisible) return null;
@@ -146,7 +146,7 @@ const LoanProductRecommend = () => {
                 <InterestRate>{product.rate}</InterestRate>
               </ProductDetails>
             </ProductInfo>
-            <ApplyButton>가입하기</ApplyButton>
+            <ApplyButton onClick={() => window.open(product.url, "_blank")}>가입하기</ApplyButton>
           </ProductItem>
         ))}
     </Container>
