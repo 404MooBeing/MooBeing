@@ -11,4 +11,6 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     List<Alarm> findAllByMemberAndCreatedAtAfter(Member member, LocalDateTime createdAt);
 
     void deleteAllByMember(Member member);
+
+    boolean existsByMember(Member member);
 }
