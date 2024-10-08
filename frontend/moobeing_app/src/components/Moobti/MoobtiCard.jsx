@@ -36,8 +36,8 @@ const CharacterName = styled.h2`
   }
 `;
 
-const Description = styled.p`
-  font-size: 15px;
+const Description = styled.p` 
+  font-size: clamp(12px, 3vw, 16px);
   font-weight: bold;
   line-height: 160%;
   color: #333;
