@@ -20,32 +20,21 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// 중복된 알림 방지 로직 추가
-let lastNotificationData = null;
-let lastNotificationTimestamp = 0;
-const THROTTLE_TIME = 1000; // 알림 중복 제한 시간 (밀리초 단위)
-
-// background 메시지 처리
 messaging.onBackgroundMessage((payload) => {
-  console.log("[firebase-messaging-sw.js] Received background message ", payload);
+  console.log(
+    "[firebase-messaging-sw.js] Received background message ",
+    payload
+  );
+  
+  // 백그라운드에서만 알림을 표시
+  if (!self.window) {
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+      body: payload.notification.body,
+      icon: "/firebase-logo.png", // 원하는 아이콘으로 변경
+      tag: payload.messageId // 메시지 ID를 태그로 사용하여 중복 알림 방지
+    };
 
-  const currentTime = Date.now();
-  const notificationData = JSON.stringify(payload.notification);
-
-  // 중복 확인: 같은 알림이고 설정된 시간 내일 경우 표시하지 않음
-  if (lastNotificationData === notificationData && (currentTime - lastNotificationTimestamp) < THROTTLE_TIME) {
-    return;
+    self.registration.showNotification(notificationTitle, notificationOptions);
   }
-
-  // 알림 표시 및 마지막 알림 정보 업데이트
-  lastNotificationData = notificationData;
-  lastNotificationTimestamp = currentTime;
-
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
-    body: payload.notification.body,
-    icon: "/firebase-logo.png", // 원하는 아이콘으로 변경
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
 });
