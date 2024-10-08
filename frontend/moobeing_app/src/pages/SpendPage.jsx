@@ -66,7 +66,7 @@ const LoadingOrError = styled.div`
 
 const Spend = () => {
   const { selectedDate } = useDateStore();
-  const { spendData, pieChartData, spendCategory, setSpendData, setPieChartData, setSpendCategory } = useSpendStore();
+  const { pieChartData, setSpendData, setPieChartData, setSpendCategory } = useSpendStore();
   const [viewMode, setViewMode] = useState("차트 보기");
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const [error, setError] = useState(null); // 에러 상태 추가
@@ -113,14 +113,16 @@ const Spend = () => {
       fetchPieChartData(year, month),
       fetchSpendCategory(year, month),
     ])
-      .finally(() => setIsLoading(false)); // 로딩 상태 종료
+    .finally(() => setIsLoading(false)); // 로딩 상태 종료
+    
   }, [selectedDate, fetchSpendData, fetchPieChartData, fetchSpendCategory]);
+    
 
   return (
     <Screen>
       <Container>
         <PageTitle
-          totalExpense={useSpendStore.getState().pieChartData.totalExpense || 0}
+          totalExpense={pieChartData.totalExpense || 0}
           setViewMode={setViewMode}
           viewMode={viewMode}
         />
@@ -131,7 +133,7 @@ const Spend = () => {
           <LoadingOrError>로딩 중...</LoadingOrError>
         ) : (
           <TransitionGroup component={null}>
-            {viewMode === "차트 보기" ? (
+            {viewMode === "캘린더 보기" ? (
               <CSSTransition key="calendar" timeout={500} classNames="fade">
                 <CalendarWrapper>
                   <Calendar />

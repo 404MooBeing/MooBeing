@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes, css } from "styled-components";
 import babyRad from "../../assets/radishes/babyRad.svg";
 import closeButton from "../../assets/button/closeButton.svg";
 import useUserStore from "../../store/UserStore";
+import { getColdQuiz, getNotStartedEconomicQuiz } from "../../apis/QuizApi";
 
 const fadeOut = keyframes`
   from {
@@ -41,11 +42,11 @@ const Container = styled.div`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 8px;
-  right: 12px;
+  top: 6px;
+  right: 5px;
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   cursor: pointer;
 `;
 
@@ -95,8 +96,9 @@ const QuizButton = styled.button`
 `;
 
 const QuizPopup = () => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [quizType, setQuizType] = useState("");
   const navigate = useNavigate();
   const quizId = null; // 실제로는 API 호출 또는 다른 방법으로 설정될 것
   const user = useUserStore();
@@ -107,10 +109,37 @@ const QuizPopup = () => {
     }, 500);
   };
 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getColdQuiz()
+        if (!data.exist){
+          // 경제 퀴즈 만들기
+          const quiz = await getNotStartedEconomicQuiz();
+        }
+        const check = await getColdQuiz()
+        if (check.exist){
+          setIsVisible(true)
+          setQuizType(data.quizType)
+        }
+      } catch (error) {
+        console.error("퀴즈 데이터 가져오기 실패:", error);
+      }
+    };  
+    fetchData();
+  }, []);
+
+
+  
+
   console.log(useUserStore.getState())
 
   const handleQuiz = () => {
-    navigate(`/quiz/result/${quizId}`);
+    if (quizType === "expense")
+      navigate(`/quiz`);
+    else 
+      navigate('/economy-quiz')
   };
 
   if (!isVisible) return null;
@@ -121,7 +150,7 @@ const QuizPopup = () => {
         <CloseImg src={closeButton} alt="닫기" />
       </CloseButton>
       <SubTitle>
-        {user.userInfo.name || "사용자"}님, "내 소비내역 맞추기"
+        {user.userInfo.name || "사용자"}님, {quizType === "expense" ? "소비내역 맞추기" : "경제 단어 맞추기"}
         <br />
         퀴즈가 도착했어요!
       </SubTitle>

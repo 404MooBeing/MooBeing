@@ -1,31 +1,19 @@
 import React, { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import radish from "../../assets/radishes/basicRad.svg";
-import { useNavigate } from "react-router-dom";
 import { getStreamCnt } from "../../apis/UserApi";
-// import { changeInterestRate } from "../../apis/LoanApi";
-
-const dummyChangeInterestRate = () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ success: true, message: "금리 혜택이 적용되었습니다." });
-    }, 500);
-  });
-};
+import CoinPopUp from "../../components/CoinPopUp/PopUp";
 
 const MonthlyRecordContainer = styled.div`
-  width: 90%;
-  max-width: 380px;
-  height: 150px;
+  width: 85%;
   border-radius: 20px;
   border: 1px solid #b1da89;
   box-shadow: 0.3px 0.3px 6px rgba(0, 0, 0, 0.12);
-  padding: 20px;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 8%; /* 내부 여백 추가 */
+  padding: 3% 5%;
   box-sizing: border-box;
 `;
 
@@ -58,10 +46,8 @@ const Circle = styled.div`
   ${(props) =>
     props.last &&
     props.completed &&
-    `
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
-    cursor: pointer;
-  `}
+    `filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5)); cursor: pointer;`}
+  ${(props) => !props.completed && props.last && `cursor: not-allowed;`}
 `;
 
 const RadishImage = styled.img`
@@ -73,65 +59,20 @@ const LastCircleText = styled.div`
   font-size: 10px;
   text-align: center;
   line-height: 1.2;
-`;
-
-const fadeInOut = keyframes`
-  0% { opacity: 0; }
-  15% { opacity: 1; }
-  85% { opacity: 1; }
-  100% { opacity: 0; }
-`;
-
-const AlertContainer = styled.div`
-  position: fixed;
-  top: 80px;
-  left: 50%;
-  width: 100%;
-  transform: translateX(-50%);
-  z-index: 100000;
-  background-color: rgba(144, 144, 144, 0.8);
-  padding: 10px 20px;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: bold;
-  color: #ffffff;
-`;
-
-const AlertButton = styled.button`
-  background-color: transparent;
-  border: none;
-  color: #ffffff;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 10px;
-  text-decoration: underline;
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  background-color: transparent;
-  border: none;
-  color: #ffffff;
-  font-size: 16px;
-  cursor: pointer;
+  font-weight: 700;
 `;
 
 const LoanCoupon = () => {
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const navigate = useNavigate();
   const [streamCnt, setStreamCnt] = useState(0); // 초기값을 0으로 설정
+  const [coin, setCoin] = useState(0); // 초기값을 0으로 설정
+  const [showCoinPopUp, setShowCoinPopUp] = useState(false); // CoinPopUp 상태 관리
+
   useEffect(() => {
     const fetchStreamCnt = async () => {
       try {
         const response = await getStreamCnt();
         setStreamCnt(response.streamCnt);
+        setCoin(response.coin);
       } catch (error) {
         console.error("Stream count를 가져오는 중 오류 발생:", error);
       }
@@ -140,29 +81,10 @@ const LoanCoupon = () => {
     fetchStreamCnt();
   }, []);
 
-  const handleLastCircleClick = async () => {
+  const handleLastCircleClick = () => {
     if (streamCnt === 6) {
-      try {
-        const response = await dummyChangeInterestRate();
-        if (response.success) {
-          setAlertMessage(response.message);
-          setShowAlert(true);
-        }
-      } catch (error) {
-        console.error("금리 혜택 적용 중 오류 발생:", error);
-      }
-    } else {
-      setAlertMessage("아직 금리 혜택을 받을 수 없습니다.");
-      setShowAlert(true);
+      setShowCoinPopUp(true); // 코인 팝업 띄우기
     }
-  };
-
-  const closeAlert = () => {
-    setShowAlert(false);
-  };
-
-  const handleGoHome = () => {
-    navigate("/");
   };
 
   return (
@@ -182,31 +104,17 @@ const LoanCoupon = () => {
           <Circle
             last
             completed={streamCnt === 6}
-            onClick={handleLastCircleClick}
+            onClick={streamCnt === 6 ? handleLastCircleClick : null} // 6개월 이상이 되어야 클릭 가능
           >
-            {streamCnt >= 6 ? (
-              <LastCircleText>
-                금리
-                <br />
-                혜택
-              </LastCircleText>
-            ) : (
-              <LastCircleText>
-                금리
-                <br />
-                혜택
-              </LastCircleText>
-            )}
+            <LastCircleText>
+              코인
+              <br />
+              획득
+            </LastCircleText>
           </Circle>
         </CirclesContainer>
       </MonthlyRecordContainer>
-      {showAlert && (
-        <AlertContainer>
-          {alertMessage}
-          <AlertButton onClick={handleGoHome}>보러가기</AlertButton>
-          <CloseButton onClick={closeAlert}>X</CloseButton>
-        </AlertContainer>
-      )}
+      {showCoinPopUp && <CoinPopUp coin={coin}/>}
     </>
   );
 };

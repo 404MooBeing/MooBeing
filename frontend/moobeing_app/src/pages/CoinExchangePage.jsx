@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import DropDownArrow from "../assets/dropdown/DropdownArrow.png";
 import ConfirmingPopUp from "../components/CoinExchange/ConfirmingPopUp";
+import {getAccountInfo} from "../apis/AccountApi"
+import { getCoin } from "../apis/CoinApi";
 
 const Container = styled.div`
   display: flex;
@@ -11,6 +13,12 @@ const Container = styled.div`
   min-height: 100vh;
   overflow-y: auto;
   box-sizing: border-box;
+`;
+
+const CoinTitle = styled.div`
+  font-size: 30px;
+  font-weight: 700;
+  margin-top: 8vh;
 `;
 
 const MainContent = styled.div`
@@ -24,16 +32,15 @@ const MainContent = styled.div`
 const RepaymentComponent = styled.div`
   background-color: #f5fded;
   width: 90%;
-  height: 50vh;
-  margin: 50px 0;
+  margin: 40px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 40px 30px;
   box-sizing: border-box;
   border-radius: 5%;
-  gap: 20px;
+  gap: 30px;
 `;
 
 const Row = styled.div`
@@ -47,6 +54,7 @@ const Row = styled.div`
 const Label = styled.label`
   font-size: 1rem;
   margin-right: 20px;
+  margin-top: 10px;
   white-space: nowrap;
 `;
 
@@ -58,7 +66,7 @@ const CustomDropdownContainer = styled.div`
 const CustomDropdownHeader = styled.div`
   width: 100%;
   padding: 8px 0;
-  font-size: 18px;
+  font-size: 15px;
   background-color: transparent;
   border: none;
   border-bottom: 1px solid #ccc;
@@ -115,7 +123,7 @@ const Balance = styled.div`
   text-align: right;
   color: gray;
   font-size: 12px;
-  margin-top: -25px;
+  margin-top: -30px;
   margin-right : 4px;
 `;
 
@@ -162,6 +170,7 @@ const AmountButtons = styled.div`
   justify-content: flex-end;
   width: 100%;
   margin-bottom: 10px;
+  margin-top: -10px;
 `;
 
 const AmountButton = styled.button`
@@ -180,26 +189,18 @@ const AmountButton = styled.button`
 `;
 
 const PayButton = styled.button`
-  padding: 10px 20px;
-  background-color: #c0dda6;
-  color: white;
+  background-color: #E0EED2;
+  width: 100px;
+  color: #5E5054;
   border: none;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 1rem;
-  margin: 30px 0px -40px 0px;
-  border-radius: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transform: translateY(0);
-  }
+  font-family: 'mainFont';
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
 `;
 
 const fadeInOut = keyframes`
@@ -241,38 +242,57 @@ const AlertMessage = styled.div`
 
 const CoinExchangePage = () => {
   const [accounts, setAccounts] = useState([]);
+  const [accountList, setAccountList] = useState([
+    {id : 1 ,accountName: "계좌1", accountNum: "123-456-789", balance: 1000000 },
+    {id : 2 , accountName: "계좌2", accountNum: "123-456-790", balance: 2000000 },
+    {id : 3 , accountName: "계좌3", accountNum: "123-456-791", balance: 3000000 },
+    {id : 4 , accountName: "계좌4", accountNum: "123-456-792", balance: 4000000 },
+    {id : 5 , accountName: "계좌5", accountNum: "123-456-793", balance: 5000000 },
+  ])
+  const [popupType, setPopupType] = useState("");
   const [selectedAccount, setSelectedAccount] = useState({});
   const [repaymentAmount, setRepaymentAmount] = useState(0);
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-
+  const [coinCount, setCoinCount] = useState(0);
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const accountList = [
-          { accountName: "계좌1", accountNum: "123-456-789", balance: 1000000 },
-          { accountName: "계좌2", accountNum: "123-456-790", balance: 2000000 },
-          { accountName: "계좌3", accountNum: "123-456-791", balance: 3000000 },
-          { accountName: "계좌4", accountNum: "123-456-792", balance: 4000000 },
-          { accountName: "계좌5", accountNum: "123-456-793", balance: 5000000 },
-        ];
-
-        const fetchedAccounts = accountList.map((account, index) => ({
-          id: index + 1,
-          name: `${account.accountName}\n(${account.accountNum})`,
-          displayName: `${account.accountName}`,
-          balance: `${account.balance}`,
-        }));
-        setAccounts(fetchedAccounts);
+        const data = await getAccountInfo();
+        setAccountList(data.getAccountDtoList);
+  
+        // data.getAccountDtoList가 배열인지 확인
+        if (Array.isArray(data.getAccountDtoList)) {
+          const fetchedAccounts = data.getAccountDtoList.map((account, index) => ({
+            id: index + 1,
+            name: `${account.accountName}\n(${account.accountNum})`,
+            displayName: `${account.accountName}`,
+            balance: `${account.remainingBalance}`,
+          }));
+  
+          setAccounts(fetchedAccounts);  // 필요한 경우 계좌 정보 설정
+        } else {
+          console.log("Data is not an array");
+        }
       } catch (error) {
         console.error("계좌 정보를 가져오는 중 오류가 발생했습니다:", error);
       }
     };
 
+    const fetchCoin = async () => {
+      try {
+        const data = await getCoin();
+        setCoinCount(data);
+      } catch (error) {
+        
+      }
+    }
+    fetchCoin();
     fetchAccounts();
-  }, []);
-
+  }, []);  // 빈 배열을 의존성 배열로 설정
+  
+  
   const handleAccountSelect = (account) => {
     setSelectedAccount(account);
     setIsAccountDropdownOpen(false);
@@ -284,7 +304,7 @@ const CoinExchangePage = () => {
   };
 
   const handleAddAmount = (amount) => {
-    setRepaymentAmount((prevAmount) => parseInt(prevAmount) + amount);
+    setRepaymentAmount((prevAmount) => coinCount >= parseInt(prevAmount) + amount ?  parseInt(prevAmount) + amount : coinCount);
   };
 
   const formatAmount = (amount) => {
@@ -292,8 +312,20 @@ const CoinExchangePage = () => {
   };
 
   const handlePaymentBtn = () => {
+    if (repaymentAmount <= coinCount && repaymentAmount > 0){
+      setPopupType("")
+    }
+    else{
+      setPopupType("error")
+      setRepaymentAmount(0)
+    }
     setShowPopup(true);
   };
+
+  const closePopup = () => {
+    setShowPopup(false)
+    setPopupType("")
+  }
 
   return (
     <Container>
@@ -301,11 +333,11 @@ const CoinExchangePage = () => {
       {showPopup && (
         <>
           <Backdrop onClick={() => setShowPopup(false)} />
-          <ConfirmingPopUp selectedAccount={selectedAccount.displayName} coinAmmount={repaymentAmount} />
+          <ConfirmingPopUp selectedAccount={selectedAccount} coinAmmount={repaymentAmount} type={popupType} closeHandler={closePopup}/>
         </>
       )}
       <MainContent>
-        <h1>코인 송금</h1>
+        <CoinTitle>코인 송금</CoinTitle>
         <RepaymentComponent>
           <Row>
             <Label>입금계좌</Label>
@@ -341,13 +373,14 @@ const CoinExchangePage = () => {
               <CurrencyLabel>개</CurrencyLabel>
             </InputContainer>
           </Row>
+          <Balance>보유 {Number(coinCount || 0).toLocaleString()}개</Balance>
           <AmountButtons>
             {[100, 1000, 10000, 50000].map((amount) => (
               <AmountButton key={amount} onClick={() => handleAddAmount(amount)}>
                 + {amount.toLocaleString()}
               </AmountButton>
             ))}
-            <AmountButton onClick={() => setRepaymentAmount(0)}>전액</AmountButton>
+            <AmountButton onClick={() => setRepaymentAmount(coinCount)}>전액</AmountButton>
           </AmountButtons>
           <PayButton onClick={handlePaymentBtn}>다음</PayButton>
         </RepaymentComponent>

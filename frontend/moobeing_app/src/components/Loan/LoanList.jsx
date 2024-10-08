@@ -28,6 +28,8 @@ const LoanInfo = styled.div`
 const LoanName = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
   font-size: 13px;
 
   @media (min-width: 600px) {
@@ -67,10 +69,10 @@ const InterestRate = styled.div`
   margin-left: auto;
   font-size: 10px;
   font-weight: bold;
-  background-color: ${(props) => (props.isGoodMember ? "#FFD600" : "#e0eed2")};
+  background-color: #e0eed2;
   padding: 5px 8px;
   border-radius: 10px;
-  color: ${(props) => (props.isGoodMember ? "#24272D" : "white")};
+  color: white;
   border: 2px solid transparent;
 
   @media (min-width: 600px) {
@@ -101,9 +103,9 @@ const ScrollButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  border-radius: 10px;
   display: flex;
   align-items: center;
+  justify-content: center;
 `;
 
 const DownImage = styled.img`
@@ -118,13 +120,6 @@ const PageInfo = styled.div`
   color: #858585;
 `;
 
-const TotalLoanAmount = styled.div`
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-align: center;
-`;
-
 const LoadingContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -135,7 +130,6 @@ const LoadingContainer = styled.div`
 `;
 
 function LoanList({ loans }) {
-  const [goodMember, setGoodMember] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [loanData, setLoanData] = useState([]);
@@ -194,7 +188,7 @@ function LoanList({ loans }) {
                 </LoanName>
                 <div>{loan.remainingBalance.toLocaleString()} 원</div>
               </LoanInfo>
-              <InterestRate isGoodMember={goodMember}>
+              <InterestRate>
                 {loan.interestRate.toFixed(2)}%
               </InterestRate>
             </LoanItem>

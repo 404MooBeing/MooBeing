@@ -124,6 +124,7 @@ function Quiz() {
     if (!quizData) return;
     try {
       const result = await submitAnswer(quizData.quizId, answer);
+      result.quizType = "normal"
       navigate(`/quiz/result/${quizData.quizId}`, { state: result });
     } catch (error) {
       console.error("답변 제출 실패:", error);

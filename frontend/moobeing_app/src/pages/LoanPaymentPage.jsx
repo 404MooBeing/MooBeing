@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 import DropDownArrow from "../assets/dropdown/DropdownArrow.png";
-
 import ConfirmingPopUp from "../components/LoanPayment/ConfirmingPopUp";
-// import { getAccountInfo, postAccountLoan } from "../apis/AccountApi";
+import { getAccountInfo } from "../apis/AccountApi";
 
 const Container = styled.div`
   display: flex;
@@ -14,6 +13,12 @@ const Container = styled.div`
   min-height: 100vh;
   overflow-y: auto;
   box-sizing: border-box;
+`;
+
+const LoanTitle = styled.div`
+  font-size: 30px;
+  font-weight: 700;
+  margin-top: 8vh;
 `;
 
 const MainContent = styled.div`
@@ -27,21 +32,20 @@ const MainContent = styled.div`
 const RepaymentComponent = styled.div`
   background-color: #f5fded;
   width: 90%;
-  height: 50vh;
-  margin: 50px 0;
+  margin: 40px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 40px 30px;
   box-sizing: border-box;
   border-radius: 5%;
-  gap: 20px;
+  gap: 10px;
 `;
 
 const Row = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 15px;
   width: 100%;
 `;
@@ -49,6 +53,7 @@ const Row = styled.div`
 const Label = styled.label`
   font-size: 1rem;
   margin-right: 20px;
+  margin-top: 10px;
   white-space: nowrap;
 `;
 
@@ -60,10 +65,10 @@ const CustomDropdownContainer = styled.div`
 const CustomDropdownHeader = styled.div`
   width: 100%;
   padding: 8px 0;
-  font-size: 14px;
+  font-size: 15px;
   background-color: transparent;
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 2px solid #ccc;
   outline: none;
   cursor: pointer;
   display: flex;
@@ -73,25 +78,11 @@ const CustomDropdownHeader = styled.div`
   background-repeat: no-repeat;
   background-position: right 6px center;
   background-size: 15px 10px;
-  font-size: 18px;
   color: #348833;
-
 
   &:focus {
     border-bottom: 2px solid #4caf50;
   }
-`;
-
-
-
-const Wrapper = styled.div`
-  width : 100%
-`;
-
-const Balance = styled.div`
-  text-align: right;
-  color: gray;
-  margin-top: 4px;
 `;
 
 const CustomDropdownList = styled.ul`
@@ -111,7 +102,7 @@ const CustomDropdownList = styled.ul`
 
 const CustomDropdownItem = styled.li`
   padding: 8px;
-  font-size: 15px;
+  font-size: 13px;
   cursor: pointer;
   white-space: pre-line;
 
@@ -125,6 +116,13 @@ const CustomDropdownItem = styled.li`
     background-color: #C5E1AB;
     font-weight: bold;
   `}
+`;
+
+const Balance = styled.div`
+  text-align: right;
+  color: gray;
+  margin-top: 10px;
+  font-size: 13px;
 `;
 
 const InputContainer = styled.div`
@@ -170,6 +168,7 @@ const AmountButtons = styled.div`
   justify-content: flex-end;
   width: 100%;
   margin-bottom: 10px;
+  margin-top: -10px;
 `;
 
 const AmountButton = styled.button`
@@ -188,367 +187,174 @@ const AmountButton = styled.button`
 `;
 
 const PayButton = styled.button`
-  padding: 10px 20px;
-  background-color: #c0dda6;
-  color: white;
+  background-color: #E0EED2;
+  width: 100px;
+  color: #5E5054;
   border: none;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 1rem;
-  margin-top: 10px;
-  border-radius: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transform: translateY(0);
-  }
-`;
-
-const fadeInOut = keyframes`
-  0% { opacity: 0; }
-  15% { opacity: 1; }
-  85% { opacity: 1; }
-  100% { opacity: 0; }
-`;
-
-const Backdrop = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
-  z-index: 99999; /* 팝업 바로 뒤 */
-`;
-
-const PaymentPopup = styled.div`
-  position: fixed;
-  top: 35%;
-  left: 50%;
-  width: 80%;
-  height: 20%;
-  background-color: #F5FDED;
-  transform: translateX(-50%);
-  z-index: 100000;
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  text-align: center;
-`;
-const PopupMessage = styled.div`
-  text-align: center;
-  font-size: 20px; 
-  margin: 30px 0;
-`
-
-const Highlight = styled.span`
-  color: #27ae60; 
-  font-weight: bold;
-  margin-right: 10px;
-`;
-
-const AlertContainer = styled.div`
-  position: fixed;
-  top: 80px; // Adjust this value based on your Header heights
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100000;
-`;
-
-const AlertMessage = styled.div`
-  background-color: rgba(144, 144, 144, 0.8);
-  color: #ffffff;
-  padding: 10px 20px;
-  margin-top: 10px;
-  border-radius: 5px;
-  font-size: 18px;
-  font-weight: bold;
-  white-space: nowrap;
-  animation: ${fadeInOut} 2s ease-in-out;
+  font-family: 'mainFont';
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
 `;
 
 const LoanPaymentPage = () => {
-  const navigate = useNavigate();
   const location = useLocation();
-  const { loanList, remainingBalance } = location.state || {}; // state에서 정보 가져오기
+  const { loanList, remainingBalance, selectedLoan } = location.state || {}; // LeftMoneyManage에서 전달받은 데이터
+  const [newSelectedLoan, setNewSelectedLoan] = useState(selectedLoan); // 초기 대출 설정
+  const [isLoanDropdownOpen, setIsLoanDropdownOpen] = useState(false); // 드롭다운 열림/닫힘 상태
+  const [selectedAccount, setSelectedAccount] = useState(null); // 선택된 계좌
+  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false); // 계좌 드롭다운 상태
+  const [repaymentAmount, setRepaymentAmount] = useState(remainingBalance || 0); // 남은 돈을 상환금액으로 설정
+  const [showPopup, setShowPopup] = useState(false); // 팝업 상태
+  const [accounts, setAccounts] = useState([]); // 계좌 정보 상태
 
-  // 계좌랑 대출의 기본 정보 저장
-  const [accounts, setAccounts] = useState([]);
-  const [loans, setLoans] = useState([]);
-  const [selectedLoan, setSelectedLoan] = useState({});
-  const [selectedAccount, setSelectedAccount] = useState({});
-  const [repaymentAmount, setRepaymentAmount] = useState(0);
-  const [isLoanDropdownOpen, setIsLoanDropdownOpen] = useState(false);
-  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-   // 팝업 관련 상태
-   const [showPopup, setShowPopup] = useState(false);
-
-  // 남는돈 있다면 가져와서 표시
+  // API 호출을 통한 계좌 정보 가져오기
   useEffect(() => {
-    if (remainingBalance) {
-      setRepaymentAmount(remainingBalance);
-    }
-  }, [remainingBalance]);
-
-  // 계좌 정보 가져오기 부분
-  useEffect(() => {
-    const fetchAccounts = async () => {
+    const fetchAccountInfo = async () => {
       try {
-        // const response = await getAccountInfo();
-        const accountList = [
-              {
-                "accountName": "계좌1",
-                "accountNum": "123-456-789",
-                "balance" : 1000000
-              },
-              {
-                "accountName": "계좌2",
-                "accountNum": "123-456-790",
-                "balance" : 2000000
-              },
-              {
-                "accountName": "계좌3",
-                "accountNum": "123-456-791",
-                "balance" : 3000000
-              },
-              {
-                "accountName": "계좌4",
-                "accountNum": "123-456-792",
-                "balance" : 4000000
-              },
-              {
-                "accountName": "계좌5",
-                "accountNum": "123-456-793",
-                "balance" : 5000000
-              }
-            ]
-        const loanList = [
-          {
-            "loanProductName": "하나은행 생활안정대출",
-            "bankImageUrl": "https://github.com/user-attachments/assets/c1f2b5aa-0bb9-46c6-ab08-cafcd29dba73",
-            "remainingBalance": 4305555,
-            "interestRate": 3.9
-          },
-          {
-            "loanProductName": "IBK기업은행 중소기업대출",
-            "bankImageUrl": "https://github.com/user-attachments/assets/a723840f-838b-4160-9e96-18daf28fe7ba",
-            "remainingBalance": 2583335,
-            "interestRate": 3.6999999999999997
-          },
-          {
-            "loanProductName": "신한은행 직장인대출",
-            "bankImageUrl": "https://github.com/user-attachments/assets/fa2aedb1-6886-4982-84f3-6e773fed7792",
-            "remainingBalance": 1722220,
-            "interestRate": 3.1
-          },
-          {
-            "loanProductName": "신한은행 전세자금대출",
-            "bankImageUrl": "https://github.com/user-attachments/assets/fa2aedb1-6886-4982-84f3-6e773fed7792",
-            "remainingBalance": 332160000,
-            "interestRate": 3.1
-          },
-          {
-            "loanProductName": "KB국민은행 전세자금대출",
-            "bankImageUrl": "https://github.com/user-attachments/assets/16e42300-e535-46c6-b184-2e8f1f891dc0",
-            "remainingBalance": 3444445,
-            "interestRate": 2.6
-          },
-          {
-            "loanProductName": "우리은행 주택담보대출",
-            "bankImageUrl": "https://github.com/user-attachments/assets/0fe19810-9646-4beb-bfc3-e3e15b69f6c1",
-            "remainingBalance": 861110,
-            "interestRate": 2.4
-          }
-        ]
+        const accountData = await getAccountInfo(); // API 호출
+        console.log(accountData); // 데이터 구조 확인을 위한 콘솔 로그
 
-
-        const fetchedAccounts = accountList.map(
-          (account, index) => ({
-            id: index + 1,
-            name: `${account.accountName}\n(${account.accountNum})`, // Full display with newline for dropdown items
-            displayName: `${account.accountName}`, // Only accountName for dropdown header
-            balance: `${account.balance}`
-          })
-        );
-
-        const fetchedLoans = loanList.map(
-          (loan, index) => ({
-            id: index + 1,
-            name: `${loan.loanProductName}\n(${loan.loanProductName})`, // Full display with newline for dropdown items
-            displayName: `${loan.loanProductName}`, // Only accountName for dropdown header
-            remainingBalance: loan.remainingBalance
-          })
-        );
-
-        setAccounts(fetchedAccounts);
-        setLoans(fetchedLoans);
-        // console.log(loans)
-        // console.log(accounts)
+        // accountData.getAccountDtoList를 상태에 저장
+        if (accountData && Array.isArray(accountData.getAccountDtoList)) {
+          const processedAccounts = accountData.getAccountDtoList.map(account => ({
+            id: account.id,
+            bankImageUrl: account.bankImageUrl,
+            accountName: account.accountName,
+            accountNum: account.accountNum,
+            remainingBalance: account.remainingBalance,
+          }));
+          setAccounts(processedAccounts);
+        } else {
+          console.error("계좌 목록이 배열이 아닙니다.");
+        }
       } catch (error) {
-        console.error("계좌 정보를 가져오는 중 오류가 발생했습니다:", error);
+        console.error("계좌 정보 불러오기 실패:", error);
       }
     };
 
-    fetchAccounts();
-  }, []);
-  
+    fetchAccountInfo(); // 함수 실행
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
+
   const handleLoanSelect = (loan) => {
-    setSelectedLoan(loan);
-    setIsLoanDropdownOpen(false);
+    setNewSelectedLoan(loan); // 선택된 대출 상품 설정
+    setIsLoanDropdownOpen(false); // 드롭다운 닫기
   };
 
   const handleAccountSelect = (account) => {
-    setSelectedAccount(account);
-    setIsAccountDropdownOpen(false);
+    setSelectedAccount(account); // 선택된 계좌 설정
+    setIsAccountDropdownOpen(false); // 계좌 드롭다운 닫기
   };
-
-    // 팝업 외부 클릭 시 닫기
-    const handleBackdropClick = () => {
-      setShowPopup(false); // 팝업 닫기
-    };
-  
-    // 팝업 내부 버튼 클릭 시 팝업 닫기
-    const handlePopupClose = () => {
-      setShowPopup(false); // 팝업 닫기
-    };
-
-
 
   const handleRepaymentInputChange = (e) => {
     const value = e.target.value.replace(/,/g, "");
-    setRepaymentAmount(value === "" ? 0 : parseInt(value, 10));
+    const newAmount = value === "" ? 0 : parseInt(value, 10);
+  
+    // 상환금액이 선택된 계좌의 잔액을 초과하지 않도록 제어
+    if (selectedAccount) {
+      setRepaymentAmount(Math.min(newAmount, selectedAccount.remainingBalance, newSelectedLoan.loanBalance));
+    } else {
+      setRepaymentAmount(newAmount);
+    }
   };
-
+  
   const handleAddAmount = (amount) => {
-    setRepaymentAmount((prevAmount) => parseInt(prevAmount) + amount * 10000); // Adds amount in 만원
-  };
-
-  const formatAmount = (amount) => {
-    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  const showAlert = (message) => {
-    console.log("Alert Message:", message); // 이 라인을 추가
-    setAlertMessage(message);
-    setTimeout(() => setAlertMessage(""), 2000);
-  };
-
-  const handlePaymentBtn = () =>{
-    setShowPopup(true)
-  }
-
-  const handlePayment = async () => {
-    if (!selectedLoan || !selectedAccount || repaymentAmount <= 0) {
-      showAlert("입력하지 않은 정보가 있습니다.");
-      return;
-    }
-
-    try {
-      if (!selectedAccount) {
-        showAlert("유효한 계좌를 선택하세요.");
-        return;
+    setRepaymentAmount((prevAmount) => {
+      const newAmount = prevAmount + amount * 10000;
+      // 상환금액이 선택된 계좌의 잔액과 대출 잔금을 초과하지 않도록 제어
+      if (selectedAccount) {
+        return Math.min(newAmount, selectedAccount.remainingBalance, newSelectedLoan.loanBalance);
       }
+      return Math.min(newAmount, newSelectedLoan.loanBalance); // 대출 잔금 이상으로 상환 불가
+    });
+  };
+  
+  const formatAmount = (amount) => {
+    // 표시되는 금액도 계좌 잔액을 초과하지 않도록 제어
+    const formattedAmount = selectedAccount
+      ? Math.min(amount, selectedAccount.remainingBalance, newSelectedLoan.loanBalance)
+      : amount;
+    return formattedAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+  
 
-      const requestBody = {
-        accountNum: String(selectedAccount.accountNum),
-        loanName: String(selectedLoan),
-        money: Number(repaymentAmount),
-      };
-
-    //   const result = await postAccountLoan(requestBody);
-    //   console.log("대출금 상환 성공:", result);
-      showAlert("상환되었습니다!");
-
-      // 딜레이 추가
-      setTimeout(() => {
-        // navigate(`/loan-journey/${selectedLoan.id}`);
-      }, 2000); // 2초 후 페이지 이동
-    } catch (error) {
-      console.error("대출금 상환 중 오류 발생:", error);
-      showAlert("상환 실패! 다시 시도해 주세요.");
+  const handlePaymentBtn = () => {
+    if (newSelectedLoan && selectedAccount) {
+      // 상환 확인 팝업 띄우기
+      setShowPopup(true);
+    } else {
+      alert("모든 정보를 입력해주세요.");
     }
   };
+
   return (
     <Container>
-      <AlertContainer>
-        {alertMessage && <AlertMessage>{alertMessage}</AlertMessage>}
-      </AlertContainer>
-      {showPopup && (
-        <>
-        <Backdrop onClick={handlePopupClose} />
-         <ConfirmingPopUp selectedLoan={selectedLoan.displayName} repaymentAmount={repaymentAmount} />
-        </>
-      )}
       <MainContent>
-        <h1>대출 상환</h1>
+        <LoanTitle>대출 상환</LoanTitle>
         <RepaymentComponent>
+          {/* 대출 상품 선택 */}
           <Row>
             <Label>대출상품</Label>
-          <Wrapper>
             <CustomDropdownContainer>
               <CustomDropdownHeader
                 onClick={() => setIsLoanDropdownOpen(!isLoanDropdownOpen)}
               >
-                {selectedLoan.displayName || "대출상품 선택"}
+                {/* 선택된 대출 상품이 있을 경우 해당 이름을 보여주고, 없으면 '대출상품 선택' */}
+                {newSelectedLoan ? newSelectedLoan.loanName : "대출상품 선택"}
               </CustomDropdownHeader>
               {isLoanDropdownOpen && (
                 <CustomDropdownList>
-                {loans.map((loan) => (
-                  <CustomDropdownItem
-                    key={loan.id}
-                    onClick={() => handleLoanSelect(loan)}
-                    selected={selectedLoan === loan}
-                  > 
-                    {loan.displayName}{" "}
-                  </CustomDropdownItem>
-                ))}
-                
-              </CustomDropdownList>
+                  {loanList.map((loan) => (
+                    <CustomDropdownItem
+                      key={loan.loanName}
+                      onClick={() => handleLoanSelect(loan)}
+                      selected={newSelectedLoan === loan}
+                    >
+                      {loan.loanName}
+                    </CustomDropdownItem>
+                  ))}
+                </CustomDropdownList>
               )}
+              <Balance>
+                {/* 선택된 대출의 잔액 표시 */}
+                {newSelectedLoan && `잔금 ${Number(newSelectedLoan.loanBalance).toLocaleString()}원`}
+              </Balance>
             </CustomDropdownContainer>
-            <Balance>
-              잔금 {Number(selectedLoan.remainingBalance || 0).toLocaleString()}원
-            </Balance>
-           </Wrapper>
           </Row>
 
+          {/* 출금 계좌 선택 */}
           <Row>
             <Label>출금계좌</Label>
-            <Wrapper>
             <CustomDropdownContainer>
               <CustomDropdownHeader
                 onClick={() => setIsAccountDropdownOpen(!isAccountDropdownOpen)}
               >
-                {selectedAccount.displayName || "계좌 선택"}
+                {selectedAccount ? selectedAccount.accountName : "계좌 선택"}
               </CustomDropdownHeader>
               {isAccountDropdownOpen && (
                 <CustomDropdownList>
-                {accounts.map((account) => (
-                  <CustomDropdownItem
-                    key={account.id}
-                    onClick={() => handleAccountSelect(account)}
-                    selected={selectedAccount === account}
-                  > 
-                    {account.name}{" "}
-                  </CustomDropdownItem>
-                ))}
-                
-              </CustomDropdownList>
+                  {accounts.map((account) => (
+                    <CustomDropdownItem
+                      key={account.id}
+                      onClick={() => handleAccountSelect(account)}
+                      selected={selectedAccount === account}
+                    >
+                      {account.accountName} ({account.accountNum})
+                    </CustomDropdownItem>
+                  ))}
+                </CustomDropdownList>
               )}
+              <Balance>
+                {selectedAccount && `잔액 ${Number(selectedAccount.remainingBalance).toLocaleString()}원`}
+              </Balance>
             </CustomDropdownContainer>
-            
-            <Balance>잔액 {Number(selectedAccount.balance || 0).toLocaleString()}원</Balance>
-
-            </Wrapper>
           </Row>
 
+          {/* 상환 금액 입력 */}
           <Row>
             <Label>상환금액</Label>
             <InputContainer>
@@ -561,21 +367,30 @@ const LoanPaymentPage = () => {
               <CurrencyLabel>원</CurrencyLabel>
             </InputContainer>
           </Row>
+
+          {/* 금액 추가 버튼 */}
           <AmountButtons>
             {[1, 5, 10, 100].map((amount) => (
-              <AmountButton
-                key={amount}
-                onClick={() => handleAddAmount(amount)}
-              >
+              <AmountButton key={amount} onClick={() => handleAddAmount(amount)}>
                 + {amount.toLocaleString()}만
               </AmountButton>
             ))}
-            <AmountButton onClick={() => setRepaymentAmount(0)}>
-              정정
-            </AmountButton>
+            <AmountButton onClick={() => setRepaymentAmount(0)}>정정</AmountButton>
           </AmountButtons>
-          <PayButton onClick={handlePaymentBtn}>상환하기</PayButton>
+
+          {/* 다음 버튼 */}
+          <PayButton onClick={handlePaymentBtn}>다음</PayButton>
         </RepaymentComponent>
+
+        {/* 상환 확인 팝업 */}
+        {showPopup && (
+          <ConfirmingPopUp
+            selectedLoan={newSelectedLoan}
+            selectedAccount={selectedAccount}
+            repaymentAmount={repaymentAmount}
+            closePopup={() => setShowPopup(false)}
+          />
+        )}
       </MainContent>
     </Container>
   );

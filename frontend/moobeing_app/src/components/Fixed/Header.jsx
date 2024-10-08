@@ -27,16 +27,17 @@ const StyledHeader = styled.div`
     display: flex;
     align-items: center;
     position: relative;
+    margin-right: 15px;
   }
 
   & .alarm {
-    width: 28px;
+    width: 26px;
     cursor: pointer;
     margin-left: 5%;
   }
 
   & .auth {
-    width: 30px;
+    width: 28px;
     cursor: pointer;
     margin: 18px;
   }
@@ -61,7 +62,7 @@ const Header = () => {
   };
 
   const handleMyPageClick = () => {
-    navigate("/user");
+    navigate("/user?tab=info");
   };
 
   const handleAlarmClick = () => {

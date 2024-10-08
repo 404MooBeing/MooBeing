@@ -1,33 +1,26 @@
 import React, { useState, useEffect, useMemo } from "react";
 import styled, { keyframes, css } from "styled-components";
-
 // import MonthlyRecord from "../components/Radish/MonthlyRecord";
-
-import Line from "../../assets/button/Line.svg";
 import {
   getUserRadishCollection,
   selectRadish,
   growBabyRadish,
 } from "../../apis/RadishApi";
-// import useUserStore from "../../store/UserStore";
+import useUserStore from "../../store/UserStore";
 import checkBox from "../../assets/checkBox.svg";
 
 const Container = styled.div`
   width: 100%;
-  max-width: 600px;
   padding: 0 20px;
+  margin-bottom: 200px;
   box-sizing: border-box;
-`;
-
-const TitleContainer = styled.div`
-  text-align: center;
-  margin-bottom: 20px;
 `;
 
 const ChooseButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+  margin-right: 30px;
 `;
 
 const ChooseButton = styled.button`
@@ -35,14 +28,17 @@ const ChooseButton = styled.button`
     props.isactive === "true" ? "#348833" : "#E0EED2"};
   color: ${(props) => (props.isactive === "true" ? "white" : "black")};
   border: none;
-  border-radius: 30px;
-  padding: 10px 20px;
+  border-radius: 20px;
+  padding: 10px 15px;
   cursor: pointer;
+  font-family: 'mainFont';
+  font-weight: 600;
 `;
 
 const ScrollContainer = styled.div`
-  height: calc(100vh - 400px); /* 상단 요소들의 높이를 고려하여 조정하세요 */
+  height: calc(100vh - 420px); /* 상단 요소들의 높이를 고려하여 조정하세요 */
   overflow-y: auto;
+  padding-top: 15px;
 
   /* 크롬, 사파리, 오페라 */
   &::-webkit-scrollbar {
@@ -59,15 +55,15 @@ const ScrollContainer = styled.div`
 const CardContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 20px;
-  margin-bottom: 50px;
+  justify-content: space-evenly;
+  margin-bottom: 30px;
 `;
 
 const CharacterCard = styled.div`
-  width: calc(50% - 10px);
+  width: 50%;
   max-width: 180px;
-  height: 150px;
+  height: 170px;
+  margin-bottom: 30px;
   background-color: #f5fded;
   display: flex;
   flex-direction: column;
@@ -100,8 +96,11 @@ const CharacterName = styled.span`
   top: 10px;
   right: 10px;
   border: 1px solid rgba(128, 128, 128, 0.5);
-  padding: 2px 5px;
-  border-radius: 20px;
+  padding: 4px 8px;
+  border-radius: 18px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #5E5054;
   background-color: ${(props) => {
     switch (props.rank) {
       case "B":
@@ -120,6 +119,9 @@ const CharacterCount = styled.span`
   position: absolute;
   bottom: 10px;
   right: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #5E5054;
 `;
 
 const CheckBoxOverlay = styled.img`
@@ -144,10 +146,12 @@ const DecisionButton = styled.button`
   background-color: #348833;
   color: white;
   border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
+  border-radius: 20px;
+  padding: 10px 15px;
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 15px;
+  font-family: 'mainFont';
 `;
 
 // 애니메이션 정의
@@ -229,6 +233,7 @@ const ButtonBase = styled.button`
   padding: 5px 10px;
   cursor: pointer;
   z-index: 10;
+  font-family: 'mainFont';
 `;
 
 const GrowButton = styled(ButtonBase)`
@@ -249,7 +254,7 @@ const MyRadish = () => {
   const [isChooseActive, setIsChooseActive] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [characters, setCharacters] = useState([]);
-  // const { userInfo, setUserInfo } = useUserStore();
+  const { userInfo, setUserInfo } = useUserStore();
   const [growingCharacter, setGrowingCharacter] = useState(null);
   const [isGrowthComplete, setIsGrowthComplete] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
@@ -260,7 +265,7 @@ const MyRadish = () => {
         const memberRadishes = await getUserRadishCollection();
         setCharacters(memberRadishes);
       } catch (error) {
-        console.error("Failed to fetch radish collection:", error);
+        console.error("무 컬렉션 가져오기 실패:", error);
       }
     };
 
@@ -294,13 +299,13 @@ const MyRadish = () => {
   const handleDecision = async () => {
     if (selectedCharacter) {
       try {
-        // await selectRadish(selectedCharacter.radishName);
-        // setUserInfo({
-        //   ...userInfo,
-        //   radishName: selectedCharacter.radishName,
-        //   radishRank: selectedCharacter.radishRank,
-        //   radishImageUrl: selectedCharacter.radishImageUrl,
-        // });
+        await selectRadish(selectedCharacter.radishName);
+        setUserInfo({
+          ...userInfo,
+          radishName: selectedCharacter.radishName,
+          radishRank: selectedCharacter.radishRank,
+          radishImageUrl: selectedCharacter.radishImageUrl,
+        });
         await selectRadish(selectedCharacter.radishName);
         setIsChooseActive(false);
         setSelectedCharacter(null);
@@ -368,9 +373,6 @@ const MyRadish = () => {
 
   return (
     <Container>
-      <TitleContainer>
-        {/* 필요 시 제목 등을 추가하세요 */}
-      </TitleContainer>
       <ChooseButtonContainer>
         <ChooseButton
           onClick={handleChoose}
@@ -402,8 +404,13 @@ const MyRadish = () => {
               <CharacterName rank={char.radishRank}>
                 {char.radishName}
               </CharacterName>
-              <CharacterCount>{char.count}x</CharacterCount>
-              {/* 추가적인 요소들이 필요하면 여기에 추가하세요 */}
+              <CharacterCount>x {char.count}</CharacterCount>
+              {((!isChooseActive &&
+                char.radishName === userInfo.radishName) ||
+                (isChooseActive &&
+                  selectedCharacter?.radishId === char.radishId)) && (
+                <CheckBoxOverlay src={checkBox} alt="Selected" />
+              )}
               {char.radishName === "응애무" &&
                 char.count >= 5 &&
                 !isGrowthComplete &&

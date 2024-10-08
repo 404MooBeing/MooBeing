@@ -1,11 +1,5 @@
-import PropTypes from "prop-types";
 import styled from "styled-components";
-// import useUserStore from "../../store/UserStore";
-// import { getUserInfo } from "../../apis/UserApi";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-
 
 const Container = styled.div`
   display: flex;
@@ -16,21 +10,22 @@ const Container = styled.div`
 `;
 
 const PasswordChangeButton = styled.button`
-  margin-top: 200px;
-  font-size: 12px;
-  padding: 8px 14px;
+  margin-top: 10vh;
+  font-size: 15px;
+  padding: 10px 15px;
   cursor: pointer;
   border: none;
   font-weight: 900;
-  font: 14px;
+  font-family: 'mainFont';
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   background-color: ${(props) =>
     props.isactive === "true" ? "#348833" : "#e0eed2"};
-  color: ${(props) => (props.isactive === "true" ? "#ffffff" : "#24272D")};
+  color: ${(props) => (props.isactive === "true" ? "#ffffff" : "#5E5054")};
   border-radius: 10px;
 
   @media (min-width: 600px) {
-    font-size: 14px;
+    font-size: 15px;
     padding: 10px;
   }
 `;
@@ -84,20 +79,12 @@ const MyInfo = ({userInfo}) => {
 
   const navigate = useNavigate()
 
-  // const logout = useUserStore((state) => state.logout); // 로그아웃 액션 가져오기
-  const [passwordChange, setPasswordChange] = useState(false)
   const onPasswordChangeClick = () => {
     navigate('/password-change')
   }
 
   // 생년월일 형식 변환
   const formattedBirthday = formatBirthday(userInfo.birthday);
-
-  // 성별 표시 함수
-  const getGenderDisplay = (gender) => {
-    if (!gender) return "";
-    return gender === "M" ? "남성" : gender === "F" ? "여성" : "";
-  };
 
   return (
     
@@ -106,7 +93,7 @@ const MyInfo = ({userInfo}) => {
         <SubTitle>개인정보</SubTitle>
         <InfoRow>
           <Label>닉네임</Label>
-          <Value>{userInfo.nickname}</Value>
+          <Value>{userInfo.name}</Value>
         </InfoRow>
         <InfoRow>
           <Label>생년월일</Label>

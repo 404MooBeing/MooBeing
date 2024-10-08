@@ -6,15 +6,13 @@ import { getAccountBenefit } from "../../apis/AccountApi";
 
 const Container = styled.div`
   background-color: #f5fded;
-  height: 320px;
   width: 90%;
-  max-width: 1200px;
   margin-bottom: 5%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 8%;
+  padding: 8% 8% 5% 8%;
   box-sizing: border-box;
   border-radius: 5%;
 `;
@@ -22,56 +20,50 @@ const Container = styled.div`
 const SubHeader = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  justify-content: flex-start;
+  align-items: flex-end;
 `;
 
 const SubTitle = styled.div`
   margin: 0;
   font-size: 22px;
   font-weight: 700;
+  margin-right: 10px;
 
   @media (min-width: 600px) {
     font-size: 27px;
   }
 `;
 
+const LeftMoney = styled.span`
+  font-size: 13px;
+`
+
 const PayButton = styled.button`
-  padding: 10px 20px;
-  background-color: #c0dda6;
-  color: white;
+  background-color: #E0EED2;
   border: none;
+  padding: 10px 20px;
+  margin: 30px 0 10px 0;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
-  font-size: 1rem;
-  margin-top: 10px;
-  border-radius: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #5E5054;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
-
-  &:hover {
-    background-color: #b5c99a;
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    background-color: #a9b98e;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transform: translateY(0);
-  }
+  font-family: 'mainFont';
 `;
 
 const CustomDropdownContainer = styled.div`
   position: relative;
-  width: 230px;
+  width: 220px;
   max-width: 300px;
   display: inline-block;
-  margin: 10px 0;
+  margin: 30px 0;
 `;
 
 const CustomDropdownHeader = styled.div`
-  padding: 8px 12px;
+  padding: 8px 30px 8px 12px;
   font-size: 1rem;
   background-color: transparent;
   border-bottom: 1px solid #ccc;
@@ -121,6 +113,7 @@ const CustomDropdownItem = styled.li`
 const TextTag = styled.div`
   text-align: center;
   width: 100%;
+  font-size: 14px;
 `;
 
 const MoneySpan = styled.span`
@@ -128,7 +121,7 @@ const MoneySpan = styled.span`
 `;
 
 const LastLine = styled.div`
-  margin: 10px 0px;
+  margin: 20px 0px;
 `;
 
 function LeftMoneyManage() {
@@ -162,51 +155,59 @@ function LeftMoneyManage() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const goToLoanPaymentPage = () => {
+    if (selectedLoan) {
+      navigate('/loan-payment', { state: { loanList, remainingBalance, selectedLoan } }); // loanList와 잔액을 전달
+    }
+  };
+
   if (isLoading) {
     return <div>로딩 중...</div>;
   }
 
   return (
     <Container>
-      <SubHeader>
-        <SubTitle>남은 돈 관리하기</SubTitle>
-      </SubHeader>
+    <SubHeader>
+      <SubTitle>남은 돈 관리하기</SubTitle>
+      <LeftMoney>
+        잔액 <MoneySpan>{remainingBalance?.toLocaleString()}원</MoneySpan>
+      </LeftMoney>
+    </SubHeader>
 
-      <CustomDropdownContainer>
-        <CustomDropdownHeader onClick={toggleDropdown}>
-          {selectedLoan ? selectedLoan.loanName : "대출 상품 선택"} {/* 선택된 대출 상품 이름으로 설정 */}
-        </CustomDropdownHeader>
-        {isDropdownOpen && (
-          <CustomDropdownList>
-            {loanList.map((loan) => (
-              <CustomDropdownItem key={loan.loanName} onClick={() => {
+    <CustomDropdownContainer>
+      <CustomDropdownHeader onClick={toggleDropdown}>
+        {selectedLoan ? selectedLoan.loanName : "대출 상품 선택"}
+      </CustomDropdownHeader>
+      {isDropdownOpen && (
+        <CustomDropdownList>
+          {loanList.map((loan) => (
+            <CustomDropdownItem
+              key={loan.loanName}
+              onClick={() => {
                 setSelectedLoan(loan);
-                setIsDropdownOpen(false); // 드롭다운 숨기기
+                setIsDropdownOpen(false); 
               }}>
-                {loan.loanName}
-              </CustomDropdownItem>
-            ))}
-          </CustomDropdownList>
-        )}
-      </CustomDropdownContainer>
-
-      <TextTag>
-        남은 돈 <MoneySpan>{remainingBalance?.toLocaleString()}원</MoneySpan>을
-      </TextTag>
+              {loan.loanName}
+            </CustomDropdownItem>
+          ))}
+        </CustomDropdownList>
+      )}
+    </CustomDropdownContainer>
 
       <TextTag>
         {selectedLoan && (
           <>
-          <LastLine>
-              상환하면 이자 <MoneySpan>{selectedLoan.interestBalance.toLocaleString()}원</MoneySpan>을 아낄 수 있어요
+            남은 돈 <MoneySpan>{remainingBalance?.toLocaleString()}원</MoneySpan>을
+            <LastLine>
+              상환하면 이자 <MoneySpan>{selectedLoan.interestBalance.toLocaleString()}원</MoneySpan>을 아낄 수 있어요.
             </LastLine>
-            대출잔액: <MoneySpan>{selectedLoan.loanBalance.toLocaleString()}원</MoneySpan>
+            대출잔액은 <MoneySpan>{selectedLoan.loanBalance.toLocaleString()}원</MoneySpan>입니다.
             <br />
+            <PayButton onClick={goToLoanPaymentPage}>상환하러 가기</PayButton>
           </>
         )}
       </TextTag>
 
-      <PayButton onClick={() => navigate('/repayment')}>상환하러 가기</PayButton>
     </Container>
   );
 }
