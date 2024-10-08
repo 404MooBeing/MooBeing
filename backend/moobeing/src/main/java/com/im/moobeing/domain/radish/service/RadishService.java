@@ -5,10 +5,10 @@ import com.im.moobeing.domain.deal.repository.DealRepository;
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.domain.member.entity.MemberRadish;
 import com.im.moobeing.domain.member.repository.MemberRadishRepository;
+import com.im.moobeing.domain.point.service.PointService;
 import com.im.moobeing.domain.radish.dto.request.CreateRadishCapsuleRequest;
 import com.im.moobeing.domain.radish.dto.request.RadishCapsuleAreaRequest;
 import com.im.moobeing.domain.radish.dto.response.*;
-import com.im.moobeing.domain.radish.entity.CapsuleType;
 import com.im.moobeing.domain.radish.entity.RadishCapsule;
 import com.im.moobeing.domain.radish.repository.RadishCapsuleRepository;
 import com.im.moobeing.global.error.ErrorCode;
@@ -35,6 +35,7 @@ public class RadishService {
     private final RadishCapsuleRepository radishCapsuleRepository;
     private final DealRepository dealRepository;
     private final MemberRadishRepository memberRadishRepository;
+    private final PointService pointService;
 
     public CreateRadishCapsuleResponse createRadishCapsule(Member member, CreateRadishCapsuleRequest requestDto) {
         MemberRadish memberRadish = memberRadishRepository.findByMemberIdAndRadishId(member.getId(), requestDto.getRadishId())
@@ -66,7 +67,9 @@ public class RadishService {
 
         radishCapsuleRepository.save(radishCapsule);
 
-        return new CreateRadishCapsuleResponse(radishCapsule.getEndAt(), radishCapsule.getLat(), radishCapsule.getLng(), radishCapsule.getImgUrl());
+        pointService.depositPoints(member, 500L);
+
+        return new CreateRadishCapsuleResponse(radishCapsule.getEndAt(), radishCapsule.getLat(), radishCapsule.getLng(), radishCapsule.getImgUrl(), 500L);
     }
 
     public List<CharactersResponse> characters(Member member, boolean isIncludeBaby) {
@@ -86,7 +89,7 @@ public class RadishService {
         List<RadishCapsule> capsules = radishCapsuleRepository.findAllByIsHarvestedAndMemberIdOrderByCreateAtDesc(true, member.getId(), pageable);
 
         return capsules.stream()
-                .map(RadishCapsuleResponse::of)
+                .map(capsule -> RadishCapsuleResponse.of(capsule, 0L))
                 .collect(Collectors.toList());
     }
 
@@ -100,7 +103,7 @@ public class RadishService {
         List<RadishCapsule> capsules = radishCapsuleRepository.findHarvestedRadishByMemberAndDateRange(member.getId(), startDate, endDate, pageable);
 
         return capsules.stream()
-                .map(RadishCapsuleResponse::of)
+                .map(capsule -> RadishCapsuleResponse.of(capsule, 0L))
                 .collect(Collectors.toList());
     }
 
@@ -119,7 +122,7 @@ public class RadishService {
         capsule.harvest();
         radishCapsuleRepository.save(capsule);
 
-        return RadishCapsuleResponse.of(capsule);
+        return RadishCapsuleResponse.of(capsule, 500L);
     }
 
     public List<RadishCapsuleAreaResponse> findUnharvestedCapsulesInArea(Member member, RadishCapsuleAreaRequest request) {
