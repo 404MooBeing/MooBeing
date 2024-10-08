@@ -12,50 +12,61 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ScheduledTasks {
 
-    private final PushSubscriptionRepository repository;
+    private final PushSubscriptionRepository subscriptionRepository;
     private final FCMService fcmService;
     private final RadishCapsuleRepository radishCapsuleRepository;
 
-    private List<String> getAllTokens() {
-        return repository.findAll().stream()
-                .map(PushSubscription::getToken)
-                .collect(Collectors.toList());
+    // 조회된 구독 정보 필드
+    private List<PushSubscription> subscriptions;
+
+    // 매일 오전 8시에 구독 정보 조회
+    @Scheduled(cron = "0 0 8 * * ?") // 매일 오전 8시 실행
+    public void loadSubscriptions() {
+        subscriptions = subscriptionRepository.findAll();  // DB에서 모든 구독 정보 조회
+        log.info("Loaded subscriptions at 8 AM.");
     }
 
-    // 매달 무비티아이 확인 알림
+    // 매일 무비티아이 확인 알림 전송 (구독 데이터 활용)
     @Scheduled(cron = "0 0 9 1 * ?") // 매월 1일 오전 9시
     public void sendMooBTINotice() {
-        List<String> tokens = getAllTokens();
-        fcmService.sendMooBTINotice(tokens);
+        if (subscriptions == null) loadSubscriptions();
+        subscriptions.forEach(subscription -> fcmService.sendMooBTINotice(
+                List.of(subscription.getToken()),
+                subscription.getMember()
+        ));
         log.info("Sent MooBTI notice to all users.");
     }
 
-    // 매일 금융 상식 퀴즈 알림
+    // 매일 금융 상식 퀴즈 알림 전송 (구독 데이터 활용)
     @Scheduled(cron = "0 0 9 * * ?") // 매일 오전 9시
     public void sendFinanceQuizNotice() {
-        List<String> tokens = getAllTokens();
-        fcmService.sendFinanceQuizNotice(tokens);
+        if (subscriptions == null) loadSubscriptions();
+        subscriptions.forEach(subscription -> fcmService.sendFinanceQuizNotice(
+                List.of(subscription.getToken()),
+                subscription.getMember()
+        ));
         log.info("Sent daily finance quiz notice to all users.");
     }
 
-    // 매달 소비내역 퀴즈 알림
+    // 매달 소비내역 퀴즈 알림 전송 (구독 데이터 활용)
     @Scheduled(cron = "0 0 9 1 * ?") // 매월 1일 오전 9시
     public void sendMonthlySpendingQuizNotice() {
-        List<String> tokens = getAllTokens();
-        fcmService.sendMonthlySpendingQuizNotice(tokens);
+        if (subscriptions == null) loadSubscriptions();
+        subscriptions.forEach(subscription -> fcmService.sendMonthlySpendingQuizNotice(
+                List.of(subscription.getToken()),
+                subscription.getMember()
+        ));
         log.info("Sent monthly spending quiz notice to all users.");
     }
 
-    // 매시간마다 수확 시점을 지난 캡슐에 대해 알림을 보냄
+    // 매시간마다 수확 시점을 지난 캡슐에 대해 알림을 보냄 (구독 데이터 활용)
     @Scheduled(cron = "0 0 * * * ?") // 매 정시마다 실행
     @Transactional
     public void checkHarvestTimeAndNotify() {
@@ -66,13 +77,11 @@ public class ScheduledTasks {
 
         overdueCapsules.forEach(capsule -> {
             try {
-                // 해당 캡슐을 소유한 회원의 구독 토큰들을 조회
-                List<String> tokens = capsule.getMember().getPushSubscriptions().stream()
-                        .map(PushSubscription::getToken)
-                        .collect(Collectors.toList());
-
-                // 알림 전송
-                fcmService.sendHarvestTimeNotice(tokens);
+                List<PushSubscription> subscriptions = capsule.getMember().getPushSubscriptions();
+                subscriptions.forEach(subscription -> fcmService.sendHarvestTimeNotice(
+                        List.of(subscription.getToken()),
+                        subscription.getMember()
+                ));
 
                 // 수확 완료 상태로 업데이트하여 중복 알림 방지
                 capsule.harvest();
@@ -85,8 +94,7 @@ public class ScheduledTasks {
         log.info("Sent harvest time notifications for {} overdue capsules.", overdueCapsules.size());
     }
 
-    // 만료된 구독 배치 제거
-    // ScheduledTasks 클래스에서 FCMService의 메서드를 호출하는 방식으로 변경
+    // 만료된 구독 배치 제거 (매일 자정 실행)
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정 실행
     public void cleanUpOldSubscriptions() {
         fcmService.removeExpiredSubscriptions(); // FCMService의 만료 구독 삭제 메서드 호출

@@ -3,6 +3,8 @@ package com.im.moobeing.global.fcm.service;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import com.im.moobeing.domain.alarm.entity.AlarmIconType;
+import com.im.moobeing.domain.alarm.service.AlarmService;
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.global.fcm.dto.SubscriptionRequest;
 import com.im.moobeing.global.fcm.dto.SubscriptionResponse;
@@ -25,6 +27,18 @@ import java.util.Optional;
 public class FCMService {
 
     private final PushSubscriptionRepository subscriptionRepository;
+    private final AlarmService alarmService; // 알림 서비스 주입
+
+    // 알림 전송과 동시에 알림 기록
+    @Transactional
+    public void sendAndRecordNotification(Member member, String token, AlarmIconType iconType, String title, String body) {
+        // FCM 알림 전송
+        sendPushNotification(token, title, body);
+
+        // 알림 기록
+        alarmService.createAlarm(member, iconType);
+        log.info("Notification sent and recorded for memberId {}", member.getId());
+    }
 
     // 구독 추가 및 갱신
     @Transactional
@@ -104,26 +118,31 @@ public class FCMService {
 
     // 무비티아이 확인 알림
     @Async
-    public void sendMooBTINotice(List<String> tokens) {
-        sendNotification(tokens, "이번 달 당신의 무비티아이는!?", "소비 내역을 바탕으로 분석한 당신의 무비티아이를 확인하세요!");
+    public void sendMooBTINotice(List<String> tokens, Member member) {
+        tokens.forEach(token -> sendAndRecordNotification(
+                member, token, AlarmIconType.MOOBTI, "이번 달 당신의 무비티아이는!?", "소비 내역을 바탕으로 분석한 당신의 무비티아이를 확인하세요!"
+        ));
     }
 
-    // 금융 상식 퀴즈 알림
     @Async
-    public void sendFinanceQuizNotice(List<String> tokens) {
-        sendNotification(tokens, "오늘의 금융 상식 퀴즈!", "금융 지식을 테스트할 퀴즈에 참여해보세요.");
+    public void sendFinanceQuizNotice(List<String> tokens, Member member) {
+        tokens.forEach(token -> sendAndRecordNotification(
+                member, token, AlarmIconType.QUIZ_ECONOMY, "오늘의 금융 상식 퀴즈!", "금융 지식을 테스트할 퀴즈에 참여해보세요."
+        ));
     }
 
-    // 지난 달 소비내역 퀴즈 알림
     @Async
-    public void sendMonthlySpendingQuizNotice(List<String> tokens) {
-        sendNotification(tokens, "저번 달 소비내역 퀴즈!", "저번 달의 소비내역을 기반으로 한 퀴즈에 참여하세요!");
+    public void sendMonthlySpendingQuizNotice(List<String> tokens, Member member) {
+        tokens.forEach(token -> sendAndRecordNotification(
+                member, token, AlarmIconType.QUIZ, "저번 달 소비내역 퀴즈!", "저번 달의 소비내역을 기반으로 한 퀴즈에 참여하세요!"
+        ));
     }
 
-    // 타임 무 수확 시기 알림
     @Async
-    public void sendHarvestTimeNotice(List<String> tokens) {
-        sendNotification(tokens, "타임 무 수확 시기!", "지금이 수확의 적기입니다! 타임 무를 확인하세요.");
+    public void sendHarvestTimeNotice(List<String> tokens, Member member) {
+        tokens.forEach(token -> sendAndRecordNotification(
+                member, token, AlarmIconType.TIME, "타임 무 수확 시기!", "지금이 수확의 적기입니다! 타임 무를 확인하세요."
+        ));
     }
 
     // 공통 알림 전송 메서드
