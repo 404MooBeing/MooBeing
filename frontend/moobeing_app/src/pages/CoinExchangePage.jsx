@@ -15,6 +15,12 @@ const Container = styled.div`
   box-sizing: border-box;
 `;
 
+const CoinTitle = styled.div`
+  font-size: 30px;
+  font-weight: 700;
+  margin-top: 8vh;
+`;
+
 const MainContent = styled.div`
   flex-grow: 1;
   display: flex;
@@ -26,16 +32,15 @@ const MainContent = styled.div`
 const RepaymentComponent = styled.div`
   background-color: #f5fded;
   width: 90%;
-  height: 50vh;
-  margin: 50px 0;
+  margin: 40px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 40px 30px;
   box-sizing: border-box;
   border-radius: 5%;
-  gap: 20px;
+  gap: 30px;
 `;
 
 const Row = styled.div`
@@ -49,6 +54,7 @@ const Row = styled.div`
 const Label = styled.label`
   font-size: 1rem;
   margin-right: 20px;
+  margin-top: 10px;
   white-space: nowrap;
 `;
 
@@ -60,7 +66,7 @@ const CustomDropdownContainer = styled.div`
 const CustomDropdownHeader = styled.div`
   width: 100%;
   padding: 8px 0;
-  font-size: 18px;
+  font-size: 15px;
   background-color: transparent;
   border: none;
   border-bottom: 1px solid #ccc;
@@ -117,7 +123,7 @@ const Balance = styled.div`
   text-align: right;
   color: gray;
   font-size: 12px;
-  margin-top: -25px;
+  margin-top: -30px;
   margin-right : 4px;
 `;
 
@@ -164,6 +170,7 @@ const AmountButtons = styled.div`
   justify-content: flex-end;
   width: 100%;
   margin-bottom: 10px;
+  margin-top: -10px;
 `;
 
 const AmountButton = styled.button`
@@ -182,18 +189,18 @@ const AmountButton = styled.button`
 `;
 
 const PayButton = styled.button`
-   background-color: #E0EED2;
-  border: none;
-  padding: 10px 20px;
-  margin: 20px 0;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
+  background-color: #E0EED2;
+  width: 100px;
   color: #5E5054;
+  border: none;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 600;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 /
-  transition: all 0.2s ease-in-out; / 버튼 클릭 시 애니메이션 추가 */
+  cursor: pointer;
   font-family: 'mainFont';
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
 `;
 
 const fadeInOut = keyframes`
@@ -330,7 +337,7 @@ const CoinExchangePage = () => {
         </>
       )}
       <MainContent>
-        <h1>코인 송금</h1>
+        <CoinTitle>코인 송금</CoinTitle>
         <RepaymentComponent>
           <Row>
             <Label>입금계좌</Label>

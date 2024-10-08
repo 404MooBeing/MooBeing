@@ -1,8 +1,4 @@
-import PropTypes from "prop-types";
 import styled from "styled-components";
-// import useUserStore from "../../store/UserStore";
-// import { getUserInfo } from "../../apis/UserApi";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
@@ -86,7 +82,6 @@ const MyInfo = ({userInfo}) => {
   const navigate = useNavigate()
 
   // const logout = useUserStore((state) => state.logout); // 로그아웃 액션 가져오기
-  const [passwordChange, setPasswordChange] = useState(false)
   const onPasswordChangeClick = () => {
     navigate('/password-change')
   }
@@ -107,7 +102,7 @@ const MyInfo = ({userInfo}) => {
         <SubTitle>개인정보</SubTitle>
         <InfoRow>
           <Label>닉네임</Label>
-          <Value>{userInfo.nickname}</Value>
+          <Value>{userInfo.name}</Value>
         </InfoRow>
         <InfoRow>
           <Label>생년월일</Label>

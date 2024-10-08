@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import DropDownArrow from "../assets/dropdown/DropdownArrow.png";
 import ConfirmingPopUp from "../components/LoanPayment/ConfirmingPopUp";
 import { getAccountInfo } from "../apis/AccountApi";
@@ -40,7 +40,7 @@ const RepaymentComponent = styled.div`
   padding: 40px 30px;
   box-sizing: border-box;
   border-radius: 5%;
-  gap: 15px;
+  gap: 10px;
 `;
 
 const Row = styled.div`
@@ -121,7 +121,7 @@ const CustomDropdownItem = styled.li`
 const Balance = styled.div`
   text-align: right;
   color: gray;
-  margin-top: 4px;
+  margin-top: 10px;
   font-size: 13px;
 `;
 
@@ -168,6 +168,7 @@ const AmountButtons = styled.div`
   justify-content: flex-end;
   width: 100%;
   margin-bottom: 10px;
+  margin-top: -10px;
 `;
 
 const AmountButton = styled.button`

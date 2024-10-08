@@ -51,7 +51,6 @@ const CoinPage = () => {
         page: 1
       }
       const data = await getCoinHistory(requestBody)
-      console.log(data)
       setCoinList(data);
     } catch (error) {
       console.error("데이터 가져오기 실패:", error);

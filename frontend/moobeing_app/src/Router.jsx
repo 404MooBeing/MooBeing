@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Fixed/Header";
@@ -34,12 +34,15 @@ import Spend from "./pages/SpendPage";
 import TransactionHistory from "./pages/TransactionHistoryPage";
 import Welcome from "./pages/WelcomePage";
 import useUserStore from "./store/UserStore";
+import ChatbotPage from "./pages/ChatbotPage";
 import ChatBot from "./assets/radishes/chatbotRad.png";
+import closeButton from "./assets/button/closeButton.svg";
 
 function Router() {
   const location = useLocation();
   const navigate = useNavigate();
   const userInfo = useUserStore((state) => state.userInfo);
+  const [showChatbot, setShowChatbot] = useState(true); // 챗봇 표시 여부 상태
 
   // 로그인되지 않았을 경우 로그인 페이지로 리디렉션
   useEffect(() => {
@@ -55,10 +58,18 @@ function Router() {
     location.pathname
   );
 
+  // 챗봇 페이지에서는 챗봇 이미지 표시하지 않음
+  const isChatbotPage = location.pathname === "/chatbot";
+
   // 챗봇 클릭 시 챗봇 페이지로 이동
-  // const handleChatbotClick = () => {
-  //   navigate("/chatbot");
-  // };
+  const handleChatbotClick = () => {
+    navigate("/chatbot");
+  };
+
+  // 챗봇 닫기 버튼 클릭 시 챗봇 숨김
+  const handleChatbotClose = () => {
+    setShowChatbot(false);
+  };
 
   return (
     <>
@@ -103,26 +114,40 @@ function Router() {
             element={<TransactionHistory />}
           />
           <Route path="/welcome" element={<Welcome />} />
-          {/* <Route path="/welcome" element={<Welcome />} /> */}
+          <Route path="/chatbot" element={<ChatbotPage />} />
         </Routes>
       </div>
       {shouldShowHeaderFooter && <Footer />}
-      {/* Chatbot 이미지 */}
-      <img
-        src={ChatBot}
-        alt="Chatbot"
-        style={{
-          position: "fixed",
-          bottom: "90px",
-          right: "23px",
-          width: "70px",
-          height: "80px",
-          zIndex: 1000,
-          cursor: "pointer",
-          filter: "drop-shadow(4px 3px 3px #c3c3c3)",
-        }}
-        // onClick={handleChatbotClick}
-      />
+
+      {/* Chatbot 이미지 (챗봇 페이지에서는 표시 안함, 챗봇이 활성화된 경우만 표시) */}
+      {!isChatbotPage && showChatbot && (
+        <div style={{ position: "fixed", bottom: "90px", right: "23px", zIndex: 1000 }}>
+          <img
+            src={ChatBot}
+            alt="Chatbot"
+            style={{
+              width: "70px",
+              height: "80px",
+              cursor: "pointer",
+              filter: "drop-shadow(4px 3px 3px #c3c3c3)",
+            }}
+            onClick={handleChatbotClick}
+          />
+          <img
+            src={closeButton}
+            alt="Close"
+            style={{
+              position: "absolute",
+              top: "0",
+              right: "4px",
+              width: "12px",
+              height: "12px",
+              cursor: "pointer",
+            }}
+            onClick={handleChatbotClose}
+          />
+        </div>
+      )}
     </>
   );
 }
