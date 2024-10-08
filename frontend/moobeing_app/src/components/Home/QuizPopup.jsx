@@ -42,11 +42,11 @@ const Container = styled.div`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 8px;
-  right: 12px;
+  top: 6px;
+  right: 5px;
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   cursor: pointer;
 `;
 

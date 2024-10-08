@@ -16,7 +16,6 @@ const Container = styled.div`
   height: 100vh;
   overflow-y: auto; /* 내부 콘텐츠만 스크롤 가능 */
   box-sizing: border-box;
-  padding-bottom: 150px; /* Footer 공간 확보 */
   -webkit-overflow-scrolling: touch;
 `;
 
