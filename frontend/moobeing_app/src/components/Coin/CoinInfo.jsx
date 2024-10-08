@@ -4,7 +4,6 @@ import DropDownArrow from "../../assets/dropdown/DropdownArrow.png";
 import SortCoin from "./SortCoin";
 import { useNavigate } from "react-router-dom";
 import RadishCoinImg from "../../assets/coin/RadishCoin.png"
-import RightArrowBtn from "../../assets/button/rightButtonBlack.svg"
 import { getCoin } from "../../apis/CoinApi";
 
 const CoinHeader = styled.div`
@@ -23,7 +22,7 @@ const RadishCoin = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-bottom: 25px;
+  margin-bottom: 40px;
 `;
 
 const RadishCoinText = styled.div`
@@ -46,6 +45,7 @@ const RadishCoinBtn = styled.button`
   border: none;
   padding: 8px 10px;
   font-size: 15px;
+  width: 120px;
   font-weight: 600;
   border-radius: 10px;
   cursor: pointer;
