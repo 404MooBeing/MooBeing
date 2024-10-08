@@ -49,7 +49,7 @@ const Header = ({ isAlarmVisible }) => {
   };
 
   const handleMyPageClick = () => {
-    navigate("/user");
+    navigate("/user?tab=info");
   };
 
   const handleAlarmClick = () => {

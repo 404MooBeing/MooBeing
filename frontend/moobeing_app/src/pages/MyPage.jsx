@@ -4,6 +4,7 @@ import MyInfo from "../components/User/MyInfo";
 import MyRadish from "../components/User/MyRadish";
 import MyInfoHeader from "../components/User/MyInfoHeader";
 import { getUserInfo } from "../apis/UserApi";
+import { useLocation } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -30,7 +31,13 @@ const ToggleItem = styled.span`
 `;
 
 const MyPage = () => {
-  const [showComponent, setShowComponent] = useState("info");
+  const location = useLocation();
+
+  // 쿼리 파라미터에서 'tab' 값을 가져옵니다.
+  const searchParams = new URLSearchParams(location.search);
+  const initialTab = searchParams.get('tab') || 'info';  // 기본값은 'info'
+
+  const [showComponent, setShowComponent] = useState(initialTab);  // 초기 상태를 쿼리 파라미터로 설정
 
   const toggle = (component) => {
     setShowComponent(component);

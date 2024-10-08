@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -81,19 +79,12 @@ const MyInfo = ({userInfo}) => {
 
   const navigate = useNavigate()
 
-  // const logout = useUserStore((state) => state.logout); // 로그아웃 액션 가져오기
   const onPasswordChangeClick = () => {
     navigate('/password-change')
   }
 
   // 생년월일 형식 변환
   const formattedBirthday = formatBirthday(userInfo.birthday);
-
-  // 성별 표시 함수
-  const getGenderDisplay = (gender) => {
-    if (!gender) return "";
-    return gender === "M" ? "남성" : gender === "F" ? "여성" : "";
-  };
 
   return (
     

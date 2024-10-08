@@ -45,7 +45,7 @@ const PayButton = styled.button`
   padding: 10px 20px;
   margin: 30px 0 10px 0;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
   cursor: pointer;
   color: #5E5054;
   border-radius: 10px;
@@ -113,6 +113,7 @@ const CustomDropdownItem = styled.li`
 const TextTag = styled.div`
   text-align: center;
   width: 100%;
+  font-size: 14px;
 `;
 
 const MoneySpan = styled.span`

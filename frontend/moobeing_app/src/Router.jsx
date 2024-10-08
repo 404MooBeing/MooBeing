@@ -54,12 +54,22 @@ function Router() {
   // Header와 Footer를 표시하지 않을 경로 목록
   const noHeaderFooterRoutes = ["/loading", "/login", "/signup", "/welcome"];
 
-  const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(
-    location.pathname
-  );
+  // 챗봇을 표시하지 않을 경로 목록
+  const chatbotRoutes = ["/", "/loan", "/spend", "/menu"];
 
   // 챗봇 페이지에서는 챗봇 이미지 표시하지 않음
   const isChatbotPage = location.pathname === "/chatbot";
+
+  const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(location.pathname);
+
+  const shouldShowChatbot = chatbotRoutes.includes(location.pathname) && !isChatbotPage;
+
+  // 페이지 이동 시 챗봇 다시 표시
+  useEffect(() => {
+    if (chatbotRoutes.includes(location.pathname)) {
+      setShowChatbot(true); // 페이지가 변경될 때 챗봇 다시 표시
+    }
+  }, [location.pathname]);
 
   // 챗봇 클릭 시 챗봇 페이지로 이동
   const handleChatbotClick = () => {
@@ -118,8 +128,8 @@ function Router() {
       </div>
       {shouldShowHeaderFooter && <Footer />}
 
-      {/* Chatbot 이미지 (챗봇 페이지에서는 표시 안함, 챗봇이 활성화된 경우만 표시) */}
-      {!isChatbotPage && showChatbot && (
+      {/* Chatbot 이미지 (챗봇 페이지 또는 특정 페이지에서는 표시 안함, 챗봇이 활성화된 경우만 표시) */}
+      {!isChatbotPage && showChatbot && shouldShowChatbot && (
         <div style={{ position: "fixed", bottom: "90px", right: "23px", zIndex: 1000 }}>
           <img
             src={ChatBot}
