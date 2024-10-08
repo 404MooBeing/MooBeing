@@ -100,7 +100,7 @@ const RadishInfo = () => {
       const formattedDuration = `${days}일 ${hours}시간 ${minutes}분 ${remainingSeconds}초`;
       return formattedDuration;
     } else {
-      return "시간이 만료되었습니다!";
+      return "무를 뽑을 수 있습니다!";
     }
   };
 
