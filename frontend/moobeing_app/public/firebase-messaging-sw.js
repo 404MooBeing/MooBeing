@@ -21,18 +21,14 @@ const messaging = firebase.messaging();
 // 마지막 알림 시간을 저장할 변수
 let lastNotificationTime = 0;
 // 알림 간 최소 간격 (밀리초)
-const MIN_NOTIFICATION_INTERVAL = 500; // 1분
+const MIN_NOTIFICATION_INTERVAL = 500; // 500ms
 
 messaging.onBackgroundMessage((payload) => {
-  console.log(
-    "[firebase-messaging-sw.js] Received background message ",
-    payload
-  );
+  console.log("[firebase-messaging-sw.js] Received background message ", payload);
 
   const currentTime = Date.now();
-  
-  // 마지막 알림 이후 충분한 시간이 지났는지 확인
-  if (currentTime - lastNotificationTime >= MIN_NOTIFICATION_INTERVAL) {
+
+  if (payload.notification && currentTime - lastNotificationTime >= MIN_NOTIFICATION_INTERVAL) {
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
       body: payload.notification.body,
@@ -40,8 +36,6 @@ messaging.onBackgroundMessage((payload) => {
     };
 
     self.registration.showNotification(notificationTitle, notificationOptions);
-    
-    // 마지막 알림 시간 업데이트
     lastNotificationTime = currentTime;
   } else {
     console.log("알림 간격이 너무 짧아 무시됨");
