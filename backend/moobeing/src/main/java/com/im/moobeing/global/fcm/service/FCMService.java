@@ -32,11 +32,10 @@ public class FCMService {
         // 사용자 ID로 기존 구독 정보 조회
         Optional<PushSubscription> existingSubscription = subscriptionRepository.findByMemberId(member.getId());
 
-        if (existingSubscription.isPresent() && existingSubscription.get().getToken() != null) {
+        if (existingSubscription.isPresent()) {
             PushSubscription subscription = existingSubscription.get();
-
             // 현재 토큰과 요청된 토큰이 같은지 확인
-            if (subscription.getToken().equals(request.getToken())) {
+            if (existingSubscription.get().getToken() != null && subscription.getToken().equals(request.getToken())) {
                 // 같은 경우 lastUpdated만 갱신
                 log.info("Existing subscription with same token for memberId {}. Updating lastUpdated time.", member.getId());
                 subscription.setLastUpdated(LocalDateTime.now());
