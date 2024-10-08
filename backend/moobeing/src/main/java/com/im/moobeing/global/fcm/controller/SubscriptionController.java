@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/subscription")
+@RequestMapping("/subscription")
 @RequiredArgsConstructor
 public class SubscriptionController {
 
