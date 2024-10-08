@@ -135,17 +135,17 @@ const PageTitle = ({ totalExpense, setViewMode, viewMode }) => {
 
       <Toggle>
         <ToggleItem
-          active={viewMode === "차트 보기"}
-          onClick={() => toggle("차트 보기")}
-        >
-          차트 보기
-        </ToggleItem>
-        |
-        <ToggleItem
           active={viewMode === "캘린더 보기"}
           onClick={() => toggle("캘린더 보기")}
         >
           캘린더 보기
+        </ToggleItem>
+        |
+        <ToggleItem
+          active={viewMode === "차트 보기"}
+          onClick={() => toggle("차트 보기")}
+        >
+          차트 보기
         </ToggleItem>
       </Toggle>
     </>
