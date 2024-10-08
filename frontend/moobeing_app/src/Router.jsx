@@ -29,6 +29,7 @@ import MyMap from "./pages/MyMap";
 import User from "./pages/MyPage";
 import PasswordChange from "./pages/PasswordChangePage";
 import Quiz from "./pages/QuizPage";
+import EconomyQuiz from "./pages/EconomyQuizPage"
 import QuizResult from "./pages/QuizResultPage";
 import Spend from "./pages/SpendPage";
 import TransactionHistory from "./pages/TransactionHistoryPage";
@@ -104,7 +105,7 @@ function Router() {
           <Route path="/capsule-search" element={<CapsuleSearch />} />
           <Route path="/coin-exchange" element={<CoinExchange />} />
           <Route path="/coin" element={<Coin />} />
-          <Route path="/get-radishcharacter" element={<GetRadishCharacter />} />
+          <Route path="/get-radish" element={<GetRadishCharacter />} />
           <Route path="/total-journey" element={<TotalLoanJourney />} />
           <Route path="/each-journey/:loanName" element={<EachLoanJourney />} />
           <Route path="/loan" element={<Loan />} />
@@ -116,6 +117,7 @@ function Router() {
           <Route path="/user" element={<User />} />
           <Route path="/password-change" element={<PasswordChange />} />
           <Route path="/quiz" element={<Quiz />} />
+          <Route path="/economy-quiz" element={<EconomyQuiz />} />
           <Route path="/quiz/result/:quizId" element={<QuizResult />} />
           <Route path="/spend" element={<Spend />} />
           <Route
