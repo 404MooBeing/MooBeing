@@ -1,9 +1,12 @@
-// NotGrownYetPopup.jsx
 import React from "react";
 import styled from "styled-components";
 
 const PopupContainer = styled.div`
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   top: 15%;
   left: 50%;
   transform: translateX(-50%);
@@ -27,12 +30,41 @@ const Message = styled.p`
   margin: 10px 0;
 `;
 
-const CloseButton = styled.button`
-  padding: 10px 20px;
-  background-color: #f44336;
-  color: white;
-  border: none;
+const RadishImage = styled.img`
+  width: 100%;
+  height: auto;
   border-radius: 4px;
+  margin: 10px 0;
+`;
+
+const InfoText = styled.div`
+  font-size: 14px;
+  color: #333;
+  margin: 5px 0;
+`;
+
+const DateText = styled.div`
+  font-size: 14px;
+  color: #666;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  padding: 8px;
+  margin: 10px 0;
+  width: fit-content;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   font-size: 14px;
 `;
@@ -40,9 +72,14 @@ const CloseButton = styled.button`
 function NotGrownYetPopup({ data, onClose }) {
   return (
     <PopupContainer>
-      <Title>Not Grown Yet</Title>
-      <Message>This radish is not yet ready to open.</Message>
-      <CloseButton onClick={onClose}>Close</CloseButton>
+      <CloseButton onClick={onClose}>X</CloseButton>
+      <Title>아직 열 수 없습니다</Title>
+      <Message>아직 무가 자라지 않았어요!</Message>
+      <DateText>D-{data.remainingDays}</DateText>
+      {/* <InfoText>Address: {data.addressName}</InfoText> */}
+      <InfoText>
+        Created At: {new Date(data.createdAt).toLocaleString()}
+      </InfoText>
     </PopupContainer>
   );
 }
