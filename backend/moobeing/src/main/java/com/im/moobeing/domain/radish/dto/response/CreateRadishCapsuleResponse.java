@@ -6,6 +6,7 @@ public record CreateRadishCapsuleResponse(
         LocalDateTime harvestAt,
         Double lat,
         Double lng,
-        String imageUrl
+        String imageUrl,
+        long coin
 ) {
 }
