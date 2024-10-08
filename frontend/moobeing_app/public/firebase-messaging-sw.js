@@ -1,3 +1,4 @@
+// public/firebase-messaging-sw.js
 importScripts(
   "https://www.gstatic.com/firebasejs/9.5.0/firebase-app-compat.js"
 );
@@ -5,6 +6,7 @@ importScripts(
   "https://www.gstatic.com/firebasejs/9.5.0/firebase-messaging-compat.js"
 );
 
+// Firebase 설정 객체 (firebase.ts와 동일한 값 사용)
 const firebaseConfig = {
   apiKey: "AIzaSyCTHRWWL50vqyNfYQnJofsEItQxl2fgI3I",
   authDomain: "moobeing-ee0eb.firebaseapp.com",
@@ -18,26 +20,17 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// 마지막 알림 시간을 저장할 변수
-let lastNotificationTime = 0;
-// 알림 간 최소 간격 (밀리초)
-const MIN_NOTIFICATION_INTERVAL = 500; // 500ms
-
 messaging.onBackgroundMessage((payload) => {
-  console.log("[firebase-messaging-sw.js] Received background message ", payload);
+  console.log(
+    "[firebase-messaging-sw.js] Received background message ",
+    payload
+  );
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: "/firebase-logo.png", // 원하는 아이콘으로 변경
+  };
 
-  const currentTime = Date.now();
-
-  if (payload.notification && currentTime - lastNotificationTime >= MIN_NOTIFICATION_INTERVAL) {
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-      body: payload.notification.body,
-      icon: "/firebase-logo.png",
-    };
-
-    self.registration.showNotification(notificationTitle, notificationOptions);
-    lastNotificationTime = currentTime;
-  } else {
-    console.log("알림 간격이 너무 짧아 무시됨");
-  }
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
