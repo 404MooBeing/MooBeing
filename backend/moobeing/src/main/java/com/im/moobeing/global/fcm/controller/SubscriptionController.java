@@ -56,7 +56,7 @@ public class SubscriptionController {
 
     // 무비티아이 확인 알림 전송
     @Operation(summary = "무비티아이 확인 알림", description = "무비티아이 확인 알림을 전송합니다.")
-    @PostMapping("/send/moobt-notice")
+    @PostMapping("/send/moobti-notice")
     public ResponseEntity<String> sendMooBTINotice(@AuthenticationPrincipal Member member, @RequestBody List<String> tokens) {
         fcmService.sendMooBTINotice(tokens, member);
         return ResponseEntity.ok("무비티아이 확인 알림이 성공적으로 전송되었습니다.");
