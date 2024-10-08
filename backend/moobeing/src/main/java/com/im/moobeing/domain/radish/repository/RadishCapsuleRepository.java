@@ -30,4 +30,7 @@ public interface RadishCapsuleRepository extends JpaRepository<RadishCapsule, Lo
                                                       @Param("latTopRight") Double latTopRight,
                                                       @Param("lngBottomLeft") Double lngBottomLeft,
                                                       @Param("lngTopRight") Double lngTopRight);
+
+    // 종료 시간이 지나고 수확되지 않은 캡슐을 찾는 메서드
+    List<RadishCapsule> findByEndAtBeforeAndIsHarvestedFalse(LocalDateTime now);
 }

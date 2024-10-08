@@ -4,6 +4,7 @@ import com.im.moobeing.domain.account.entity.Account;
 import com.im.moobeing.domain.member.dto.request.MemberChangeRequest;
 import com.im.moobeing.domain.member.dto.request.MemberPwChangeRequest;
 import com.im.moobeing.global.entity.BaseTimeEntity;
+import com.im.moobeing.global.fcm.entity.PushSubscription;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -65,6 +66,9 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Account> accounts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<PushSubscription> pushSubscriptions = new ArrayList<>(); // 여러 개의 푸시 구독
+
     @Setter
     @Column
     private LocalDate lastSolvedAt;
@@ -99,5 +103,13 @@ public class Member extends BaseTimeEntity {
     public void setMemberRadishId(Long selectedRadishId) {
         this.selectedRadishId = selectedRadishId;
     }
+    public void addPushSubscription(PushSubscription pushSubscription) {
+        this.pushSubscriptions.add(pushSubscription);
+        pushSubscription.setMember(this);
+    }
 
+    public void removePushSubscription(PushSubscription pushSubscription) {
+        this.pushSubscriptions.remove(pushSubscription);
+        pushSubscription.setMember(null);
+    }
 }
