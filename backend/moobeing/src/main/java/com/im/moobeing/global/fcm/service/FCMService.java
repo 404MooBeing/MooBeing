@@ -8,11 +8,11 @@ import com.im.moobeing.global.fcm.dto.SubscriptionRequest;
 import com.im.moobeing.global.fcm.dto.SubscriptionResponse;
 import com.im.moobeing.global.fcm.entity.PushSubscription;
 import com.im.moobeing.global.fcm.repository.PushSubscriptionRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,12 +21,13 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class FCMService {
 
     private final PushSubscriptionRepository subscriptionRepository;
 
     // 구독 추가 및 갱신
+    @Transactional
     public SubscriptionResponse registerOrUpdateSubscription(Member member, SubscriptionRequest request) {
         Optional<PushSubscription> existingSubscription = subscriptionRepository.findByMemberId(member.getId());
 
@@ -49,6 +50,7 @@ public class FCMService {
     }
 
     // 구독 삭제
+    @Transactional
     public void unregisterSubscription(String token) {
         log.info("Attempting to unregister token: {}", token);
         subscriptionRepository.deleteByToken(token);
@@ -56,6 +58,7 @@ public class FCMService {
     }
 
     // 만료된 구독 배치 제거
+    @Transactional
     public void removeExpiredSubscriptions() {
         LocalDateTime thresholdDate = LocalDateTime.now().minusDays(30);
         List<PushSubscription> expiredSubscriptions = subscriptionRepository.findAll().stream()

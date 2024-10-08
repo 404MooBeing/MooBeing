@@ -1,9 +1,12 @@
 package com.im.moobeing.global.fcm.dto;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
-@Data
+@Builder
+@Getter
 public class SubscriptionResponse {
 
     private String token;

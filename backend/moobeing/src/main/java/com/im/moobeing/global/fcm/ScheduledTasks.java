@@ -86,15 +86,10 @@ public class ScheduledTasks {
     }
 
     // 만료된 구독 배치 제거
+    // ScheduledTasks 클래스에서 FCMService의 메서드를 호출하는 방식으로 변경
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정 실행
-    @Transactional
     public void cleanUpOldSubscriptions() {
-        LocalDateTime sixMonthsAgo = LocalDateTime.now().minus(6, ChronoUnit.MONTHS);
-        List<PushSubscription> oldSubscriptions = repository.findAll().stream()
-                .filter(subscription -> subscription.getLastUpdated().isBefore(sixMonthsAgo))
-                .collect(Collectors.toList());
-
-        repository.deleteAll(oldSubscriptions);
-        log.info("Cleaned up {} old subscriptions older than six months.", oldSubscriptions.size());
+        fcmService.removeExpiredSubscriptions(); // FCMService의 만료 구독 삭제 메서드 호출
+        log.info("Daily cleanup of old subscriptions completed.");
     }
 }

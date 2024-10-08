@@ -1,13 +1,11 @@
 package com.im.moobeing.global.fcm.dto;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+@Builder
+@Getter
 public class SubscriptionRequest {
 
     private String token;
-
-    public SubscriptionRequest(String token) {
-        this.token = token;
-    }
 }
