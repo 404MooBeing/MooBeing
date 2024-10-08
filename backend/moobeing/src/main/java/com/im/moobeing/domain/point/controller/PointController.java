@@ -45,7 +45,7 @@ public class PointController {
 
     @Operation(
             summary = "포인트 내역 조회",
-            description = "지정된 계좌 ID, 조회 기간, 거래 유형(전체, 입금, 출금)에 따라 사용자의 포인트 거래 내역을 페이지별로 조회합니다."
+            description = "지정된 계좌 ID, 조회 기간, 거래 유형(전체, 적립, 사용)에 따라 사용자의 포인트 거래 내역을 페이지별로 조회합니다."
     )
     @PostMapping("/history")
     public ResponseEntity<List<PointTransactionHistoryResponse>> getPointTransactionHistory(

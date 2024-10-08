@@ -50,7 +50,7 @@ public class PointService {
         Deal deal = Deal.builder()
                 .member(member)
                 .dealCategory(null)
-                .title("포인트 출금")
+                .title("포인트 입금")
                 .price(amount)
                 .remainBalance(account.getAccountBalance() + amount)
                 .account(account)
