@@ -2,13 +2,16 @@ package com.im.moobeing.global.fcm.entity;
 
 import com.im.moobeing.domain.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Table(name = "push_subscription")
 @Entity
-@Data
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE) // Builder를 위한 생성자 접근 제어
+@Builder  // 빌더 패턴 추가
 public class PushSubscription {
 
     @Id
@@ -19,6 +22,9 @@ public class PushSubscription {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;  // 구독을 소유하는 Member
 
+    @Setter
     private String token;  // FCM 토큰
+
+    @Setter
     private LocalDateTime lastUpdated;
 }
