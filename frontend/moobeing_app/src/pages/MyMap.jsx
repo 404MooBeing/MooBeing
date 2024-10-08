@@ -7,6 +7,7 @@ import NotOpenedYetPopup from "../components/CapsuleMap/popups/NotOpenedYet";
 import OpenedPopup from "../components/CapsuleMap/popups/Opened";
 import NotGrownImg from "../assets/capsules/NotGrownYet.png";
 
+// 애니메이션 정의
 const bounce = keyframes`
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
@@ -25,61 +26,101 @@ const MapWrapper = styled.div`
   position: relative;
 `;
 
+const LoadingWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  z-index: 1000;
+`;
+
 function MyMap() {
   const [markers, setMarkers] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [popupData, setPopupData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const mapRef = useRef(null);
+  const mapInstance = useRef(null);
+  const userMarkerRef = useRef(null);
+  const markersRef = useRef([]);
 
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(
+      navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserLocation({
+          const userCoords = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-          });
+          };
+          setUserLocation(userCoords);
+          setIsLoading(false);
         },
-        (error) => console.error("Error getting location:", error),
+        (error) => {
+          console.error("Error getting location:", error);
+          setIsLoading(false);
+        },
         { enableHighAccuracy: true }
       );
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_MAP_APP_KEY}&libraries=services,clusterer&autoload=false`;
-    script.async = true;
+    if (!isLoading && userLocation) {
+      const script = document.createElement("script");
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_MAP_APP_KEY}&libraries=services,clusterer&autoload=false`;
+      script.async = true;
 
-    script.onload = () => {
-      window.kakao.maps.load(() => {
-        initializeMap();
-      });
-    };
+      script.onload = () => {
+        window.kakao.maps.load(() => {
+          initializeMap();
+        });
+      };
 
-    document.head.appendChild(script);
+      document.head.appendChild(script);
 
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+      return () => {
+        document.head.removeChild(script);
+      };
+    }
+  }, [isLoading, userLocation]);
 
   const initializeMap = () => {
     if (!mapRef.current) return;
 
     const mapOptions = {
-      center: new kakao.maps.LatLng(37.5665, 126.978), // 초기 중심 좌표 (서울)
+      center: new kakao.maps.LatLng(userLocation.lat, userLocation.lng),
       level: 3,
     };
 
-    const map = new kakao.maps.Map(mapRef.current, mapOptions);
+    mapInstance.current = new kakao.maps.Map(mapRef.current, mapOptions);
 
-    kakao.maps.event.addListener(map, "bounds_changed", () => {
-      const bounds = map.getBounds();
-      handleBoundsChanged(bounds, map);
+    const circle = new kakao.maps.Circle({
+      center: new kakao.maps.LatLng(userLocation.lat, userLocation.lng),
+      radius: 10,
+      strokeWeight: 2,
+      strokeColor: "#ff0000",
+      strokeOpacity: 0.8,
+      fillColor: "#ff0000",
+      fillOpacity: 0.4,
     });
 
-    handleBoundsChanged(map.getBounds(), map); // 초기 마커 설정
+    circle.setMap(mapInstance.current);
+    userMarkerRef.current = circle;
+
+    kakao.maps.event.addListener(mapInstance.current, "bounds_changed", () => {
+      const bounds = mapInstance.current.getBounds();
+      handleBoundsChanged(bounds, mapInstance.current);
+    });
+
+    handleBoundsChanged(mapInstance.current.getBounds(), mapInstance.current);
   };
 
   const handleBoundsChanged = useCallback(
@@ -91,6 +132,9 @@ function MyMap() {
           latBottomLeft: bounds.getSouthWest().getLat(),
           lngBottomLeft: bounds.getSouthWest().getLng(),
         });
+
+        markersRef.current.forEach((marker) => marker.setMap(null));
+        markersRef.current = [];
 
         radishes.forEach((radish) => {
           const distance = userLocation
@@ -104,24 +148,79 @@ function MyMap() {
 
           const isWithinRange = distance <= 100;
 
-          const markerPosition = new kakao.maps.LatLng(radish.lat, radish.lng);
+          // 커스텀 오버레이의 내용을 정의
+          const content = document.createElement("div");
+          content.className = "custom-overlay";
+          content.style.position = "relative";
+          content.style.display = "inline-block";
+          content.style.animation =
+            isWithinRange && radish.remainingDays <= 0
+              ? "bounce 1s infinite"
+              : "none"; // 마커 애니메이션 적용
+          content.innerHTML = `
+            <img 
+              src="${
+                radish.remainingDays <= 0 ? radish.radishImageUrl : NotGrownImg
+              }" 
+              style="
+                width: 64px; 
+                height: 69px; 
+                ${
+                  !isWithinRange && radish.remainingDays <= 0
+                    ? "filter: grayscale(100%);"
+                    : ""
+                }
+              "
+            />
+            ${
+              isWithinRange && radish.remainingDays <= 0
+                ? `<div style="
+                    position: absolute;
+                    top: -5px;
+                    left: -5px;
+                    right: -5px;
+                    bottom: -5px;
+                    background: rgba(255, 255, 0, 0.3);
+                    filter: blur(10px);
+                    z-index: -1;
+                  "></div>`
+                : ""
+            }
+          `;
 
-          const marker = new kakao.maps.Marker({
-            position: markerPosition,
-            image: new kakao.maps.MarkerImage(
-              radish.remainingDays <= 0 ? radish.radishImageUrl : NotGrownImg,
-              new kakao.maps.Size(64, 69), // 이미지 크기
-              { offset: new kakao.maps.Point(32, 69) } // 중심점
-            ),
-            clickable: true,
-          });
+          // 애니메이션 키프레임 정의
+          const style = document.createElement("style");
+          style.innerHTML = `
+            @keyframes bounce {
+              0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+              }
+              40% {
+                transform: translateY(-10px);
+              }
+              60% {
+                transform: translateY(-5px);
+              }
+            }
+          `;
+          document.head.appendChild(style);
 
-          marker.setMap(map);
-
-          // 마커 클릭 시 이벤트 설정
-          kakao.maps.event.addListener(marker, "click", () => {
+          // 클릭 이벤트 추가
+          content.addEventListener("click", () => {
             openPopup(radish, isWithinRange);
           });
+
+          const position = new kakao.maps.LatLng(radish.lat, radish.lng);
+
+          const customOverlay = new kakao.maps.CustomOverlay({
+            position: position,
+            content: content,
+            map: map,
+            xAnchor: 0.5,
+            yAnchor: 1,
+          });
+
+          markersRef.current.push(customOverlay);
         });
       } catch (error) {
         console.error("Failed to fetch radishes:", error);
@@ -131,7 +230,7 @@ function MyMap() {
   );
 
   function calculateDistance(lat1, lng1, lat2, lng2) {
-    const R = 6371e3; // 지구 반지름 (미터 단위)
+    const R = 6371e3;
     const φ1 = (lat1 * Math.PI) / 180;
     const φ2 = (lat2 * Math.PI) / 180;
     const Δφ = ((lat2 - lat1) * Math.PI) / 180;
@@ -142,7 +241,7 @@ function MyMap() {
       Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    return R * c; // 두 좌표 간의 거리 (미터 단위)
+    return R * c;
   }
 
   const openPopup = (radish, isWithinRange) => {
@@ -164,6 +263,7 @@ function MyMap() {
 
   return (
     <MapWrapper ref={mapRef}>
+      {isLoading && <LoadingWrapper>사용자 위치를 찾는 중...</LoadingWrapper>}
       {popupData && (
         <PopupComponent
           popupType={popupData.type}

@@ -4,15 +4,15 @@ import styled from "styled-components";
 
 const PopupContainer = styled.div`
   position: fixed;
-  top: 50%;
+  top: 15%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
+  transform: translateX(-50%);
+  width: 80%;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  z-index: 2000;
+  padding: 15px;
+  z-index: 1000;
 `;
 
 const Title = styled.h3`
