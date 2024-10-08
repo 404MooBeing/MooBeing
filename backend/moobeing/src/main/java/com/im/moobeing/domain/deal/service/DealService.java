@@ -133,8 +133,44 @@ public class DealService {
         dealRepository.save(deal);
     }
 
-
     public GetDrawPiChartResponse drawPiChart(Member member, Integer year, Integer month) {
+        validateDate(year, month);
+        LocalDateTime start = YearMonth.of(year, month).atDay(1).atStartOfDay();
+        LocalDateTime end = YearMonth.of(year, month).atEndOfMonth().atTime(23, 59, 59);
+        List<Deal> deals = dealRepository.findAllExpenseByMemberAndDateRange(member, start, end);
+
+        Map<DealCategory, Long> totalAmountsByCategory = deals.stream()
+                .collect(Collectors.groupingBy(
+                        Deal::getDealCategory,
+                        Collectors.summingLong(Deal::getAbsPrice)
+                ));
+        List<GetDrawPiChartDto> getDrawPiChartDtoList = totalAmountsByCategory.entrySet().stream()
+                .map(entry -> {
+                    DealCategory category = entry.getKey();
+                    Long totalAmount = entry.getValue();
+                    String color = getCategoryColor(category);  // Helper function to get category color
+                    return GetDrawPiChartDto.of(category.getDescription(), category.getDescription(), totalAmount, color);
+                })
+                .collect(Collectors.toList());
+
+
+        long totalAmount = totalAmountsByCategory.values().stream().mapToLong(Long::longValue).sum();
+
+
+        List<GetCategoryListDto> getCategoryListDtoList = totalAmountsByCategory.entrySet().stream()
+                .map(entry -> {
+                    DealCategory category = entry.getKey();
+                    Long amount = entry.getValue();
+                    double percentage = (totalAmount > 0) ? ((double) amount / totalAmount) * 100 : 0;
+                    return GetCategoryListDto.of(category.getDescription(), percentage, amount);
+                })
+                .collect(Collectors.toList());
+
+        return GetDrawPiChartResponse.of(totalAmount, getDrawPiChartDtoList, getCategoryListDtoList);
+    }
+
+
+    public GetDrawPiChartResponse drawSortedPiChart(Member member, Integer year, Integer month) {
         validateDate(year, month);
         LocalDateTime start = YearMonth.of(year, month).atDay(1).atStartOfDay();
         LocalDateTime end = YearMonth.of(year, month).atEndOfMonth().atTime(23, 59, 59);

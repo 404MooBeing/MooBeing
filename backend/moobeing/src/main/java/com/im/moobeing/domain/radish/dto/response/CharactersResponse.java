@@ -6,9 +6,11 @@ public record CharactersResponse(
         Long radishId,
         String radishName,
         String radishImageUrl,
-        Long count
+        Long count,
+        String radishRank
+
 ) {
     public static CharactersResponse of(Radish radish, Long count) {
-        return new CharactersResponse(radish.getId(), radish.getRadishName(), radish.getRadishImageUrl(), count);
+        return new CharactersResponse(radish.getId(), radish.getRadishName(), radish.getRadishImageUrl(), count, radish.getRadishRank());
     }
 }
