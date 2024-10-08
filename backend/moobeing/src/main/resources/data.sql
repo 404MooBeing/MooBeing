@@ -79,7 +79,7 @@ INSERT IGNORE INTO radish (radish_id, radish_name, radish_image_url, radish_rank
 (6, '머리숱많아무', 'https://github.com/user-attachments/assets/474185cd-9469-4394-a0b9-48fd189b66d4', 'A', '2024-08-23 12:25:00', '2024-08-23 12:25:00', '아름다운 머릿결을 가진 무이다. 지나갈 때마다 상쾌한 샴푸 냄새가 난다.'),
 (7, '무신사', 'https://github.com/user-attachments/assets/5a28373c-c434-4d2b-8df9-27dc48c6df05', 'S', '2024-08-23 12:30:00', '2024-08-23 12:30:00', '매우 신사적인 무다. 매일 아침 철저한 수염 관리 루틴을 가지고 있다.'),
 (8, '무지개', 'https://github.com/user-attachments/assets/28b348f4-cd9e-4a65-9390-49bec79af10f', 'A', '2024-08-23 12:40:00', '2024-08-23 12:40:00', '비가 온 후 몸의 색이 무지개처럼 변한다.'),
-(9, '무급휴가', 'https://github.com/user-attachments/assets/0bd57 d4a-f59f-4cdc-ba71-5ce07a37bf9e', 'A', '2024-08-23 12:50:00', '2024-08-23 12:50:00', '무급휴가 중인 무다.'),
+(9, '무급휴가', 'https://s3.seungki-cho.lol/moobeing/Time.png', 'A', '2024-08-23 12:50:00', '2024-08-23 12:50:00', '무급휴가 중인 무다.'),
 (10, '무산소', 'https://github.com/user-attachments/assets/eb74b691-4b58-4532-bf7d-087bc944a844', 'A', '2024-08-23 12:55:00', '2024-08-23 12:55:00', '헬스장 가는 것이 삶의 낙인 무이다. 유산소는 좋아하지 않는다.');
 
 -- Loan Product 1 상환 기록 (월 상환 금액: 27,778원)
