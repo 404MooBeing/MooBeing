@@ -130,4 +130,10 @@ public class ExpenseController {
 		MoobtiResponse moobti = openAPIService.getMoobti(member);
 		return ResponseEntity.ok(moobti);
 	}
+
+	@GetMapping("/report")
+	public ResponseEntity<String> getReport(@AuthenticationPrincipal Member member) {
+		String report = openAPIService.getReport(member);
+		return ResponseEntity.ok(report);
+	}
 }

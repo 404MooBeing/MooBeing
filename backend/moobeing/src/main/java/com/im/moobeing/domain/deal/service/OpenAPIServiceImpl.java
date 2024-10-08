@@ -3,15 +3,20 @@ package com.im.moobeing.domain.deal.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.im.moobeing.domain.deal.dto.CategoryPercentDto;
+import com.im.moobeing.domain.deal.dto.GetCategoryListDto;
 import com.im.moobeing.domain.deal.dto.MoobtiCharacterDto;
 import com.im.moobeing.domain.deal.dto.request.OpenAIRequest;
 import com.im.moobeing.domain.deal.dto.response.GetDrawPiChartResponse;
 import com.im.moobeing.domain.deal.dto.response.MoobtiResponse;
+import com.im.moobeing.domain.deal.entity.Deal;
+import com.im.moobeing.domain.deal.repository.DealRepository;
 import com.im.moobeing.domain.member.entity.Member;
 import com.im.moobeing.global.entity.OpenAIRole;
 import com.im.moobeing.global.error.exception.OpenAIException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +40,10 @@ public class OpenAPIServiceImpl implements OpenAPIService {
     private final DealService dealService;
     private final String openAiApiKey;
     private final ObjectMapper objectMapper;
+    private final DealRepository dealRepository;
 
     @Override
-    public MoobtiResponse getMoobti(Member member) {
+    public String getReport(Member member) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + openAiApiKey);
         headers.set("Content-Type", "application/json");
@@ -45,158 +51,26 @@ public class OpenAPIServiceImpl implements OpenAPIService {
         // System 프롬프트
         promptList.add(
             new OpenAIRequest(OpenAIRole.system,
-                "우리 서비스는 사용자의 소비 내역을 분석하여 소비 유형을 알려줍니다.\n" +
-                    "소비 카테고리는 식비, 의료, 문화, 대출, 유흥 이렇게 5가지이며, 각 카테고리의 소비 비율에 따라 소비 유형을 분류합니다.\n" +
-                    "각 카테고리의 소비 비율을 보정하기 위해 다음 공식을 사용합니다:\n" +
-                    "보정된 비율 y = 30 + ((x - 0.1) / 0.9) * 70\n" +
-                    "여기서 x는 원래의 소비 비율 / 100 입니다.\n" +
-                    "이 식을 사용하여 주어진 소비 비율에 맞는 보정 비율을 계산해주세요.\n"
-                    + "그리고 카테고리들의 변환한%가 50을 넘는지 안넘는지에 따라서 사용자의 유형을 분류할거야\n"
-                    + "5개의 유형이므로 32개의 카테고리가 있겠지?\n"
-                    + "\n"
-                    + "각 유형은 다음과 같아\n"
-                    + "\n"
-                    + "{\n"
-                    + "  \"1\": {\n"
-                    + "    \"name\": \"미래 준비형\",\n"
-                    + "    \"description\": \"책임감 넘치는 분이시네요! 대출 상환에 신경을 많이 쓰시면서 미래를 차근차근 준비하는 모습입니다.\"\n"
-                    + "  },\n"
-                    + "  \"2\": {\n"
-                    + "    \"name\": \"짠테크 고수형\",\n"
-                    + "    \"description\": \"알뜰하고 실속 있게 생활하시는 분이시군요! 필요한 곳에만 딱딱 쓰는 절약의 고수입니다.\"\n"
-                    + "  },\n"
-                    + "  \"3\": {\n"
-                    + "    \"name\": \"인생 즐기기형\",\n"
-                    + "    \"description\": \"인생을 즐기며 사시는 분이시네요! 유흥과 즐거움을 잊지 않는 멋진 라이프스타일을 가지고 계시군요.\"\n"
-                    + "  },\n"
-                    + "  \"4\": {\n"
-                    + "    \"name\": \"문화 탐닉형\",\n"
-                    + "    \"description\": \"예술과 문화를 사랑하는 분이시군요! 공연, 전시회를 즐기며 감성을 충전하는 시간을 소중히 하시는 모습입니다.\"\n"
-                    + "  },\n"
-                    + "  \"5\": {\n"
-                    + "    \"name\": \"건강 챙기기형\",\n"
-                    + "    \"description\": \"건강이 최우선! 몸과 마음을 위해 아낌없이 투자하며 웰빙을 실천하는 분이시군요.\"\n"
-                    + "  },\n"
-                    + "  \"6\": {\n"
-                    + "    \"name\": \"맛집 탐방형\",\n"
-                    + "    \"description\": \"미식가이시군요! 맛있는 음식을 찾아다니며 소소한 행복을 즐기시는 분입니다.\"\n"
-                    + "  },\n"
-                    + "  \"7\": {\n"
-                    + "    \"name\": \"균형 잡힌 생활형\",\n"
-                    + "    \"description\": \"모든 것을 균형 있게! 고르게 소비하면서도 알찬 생활을 유지하는 분이십니다.\"\n"
-                    + "  },\n"
-                    + "  \"8\": {\n"
-                    + "    \"name\": \"대출 플렉스형\",\n"
-                    + "    \"description\": \"현실과 즐거움을 모두 챙기시는 분이시네요! 대출도 신경 쓰면서 즐거움을 놓치지 않는 삶을 사시는군요.\"\n"
-                    + "  },\n"
-                    + "  \"9\": {\n"
-                    + "    \"name\": \"건강-안정형\",\n"
-                    + "    \"description\": \"건강과 경제적 안정을 동시에 챙기시는 분이군요. 몸도, 마음도, 재정도 모두 든든합니다!\"\n"
-                    + "  },\n"
-                    + "  \"10\": {\n"
-                    + "    \"name\": \"웰빙 미식가형\",\n"
-                    + "    \"description\": \"몸도 마음도 건강하게! 맛있는 음식과 건강을 동시에 챙기며 사시는 분이시네요.\"\n"
-                    + "  },\n"
-                    + "  \"11\": {\n"
-                    + "    \"name\": \"문화 미식형\",\n"
-                    + "    \"description\": \"미식과 문화를 사랑하는 멋진 분이시네요! 세련된 라이프스타일을 추구하시는군요.\"\n"
-                    + "  },\n"
-                    + "  \"12\": {\n"
-                    + "    \"name\": \"문화 웰빙러형\",\n"
-                    + "    \"description\": \"건강과 문화를 모두 놓치지 않는 분이시네요! 균형 잡힌 생활을 하시는 모습이 인상적입니다.\"\n"
-                    + "  },\n"
-                    + "  \"13\": {\n"
-                    + "    \"name\": \"미식 플렉스형\",\n"
-                    + "    \"description\": \"맛있는 음식과 즐거움을 동시에! 인생을 즐기며 사시는 멋진 분이십니다.\"\n"
-                    + "  },\n"
-                    + "  \"14\": {\n"
-                    + "    \"name\": \"건강한 플렉스형\",\n"
-                    + "    \"description\": \"유흥도 즐기면서 건강도 잘 챙기시는 분이시네요! 완벽한 밸런스를 추구하는 모습입니다.\"\n"
-                    + "  },\n"
-                    + "  \"15\": {\n"
-                    + "    \"name\": \"현실 도피형\",\n"
-                    + "    \"description\": \"대출에 신경 쓰면서도 가끔은 스트레스를 풀어야죠! 즐거움을 찾는 여유도 잊지 않는 분입니다.\"\n"
-                    + "  },\n"
-                    + "  \"16\": {\n"
-                    + "    \"name\": \"다채로운 삶형\",\n"
-                    + "    \"description\": \"다양한 경험을 즐기시는 분이시군요! 문화와 유흥을 고루 즐기며 인생을 알차게 사십니다.\"\n"
-                    + "  },\n"
-                    + "  \"17\": {\n"
-                    + "    \"name\": \"미식 탐닉형\",\n"
-                    + "    \"description\": \"맛있는 음식을 사랑하시는 분이군요! 여유로운 삶을 즐기며 미식의 세계를 탐험하시는 모습이 멋집니다.\"\n"
-                    + "  },\n"
-                    + "  \"18\": {\n"
-                    + "    \"name\": \"안정 지향형\",\n"
-                    + "    \"description\": \"건강과 재정적 안정을 꼼꼼히 챙기시는 분이시네요! 든든한 삶을 사는 분입니다.\"\n"
-                    + "  },\n"
-                    + "  \"19\": {\n"
-                    + "    \"name\": \"모험가형\",\n"
-                    + "    \"description\": \"새로운 것에 도전하는 분이시네요! 미식과 문화를 탐험하며 끊임없이 새로운 경험을 쌓아가십니다.\"\n"
-                    + "  },\n"
-                    + "  \"20\": {\n"
-                    + "    \"name\": \"웰빙 모험가형\",\n"
-                    + "    \"description\": \"건강도 챙기면서 문화를 탐험하시는 멋진 분이시네요! 균형 잡힌 모험을 즐기시는 모습입니다.\"\n"
-                    + "  },\n"
-                    + "  \"21\": {\n"
-                    + "    \"name\": \"대출 모험형\",\n"
-                    + "    \"description\": \"대출 상환도 잊지 않으면서 문화를 즐기며 모험을 멈추지 않는 분이시네요!\"\n"
-                    + "  },\n"
-                    + "  \"22\": {\n"
-                    + "    \"name\": \"휴식형\",\n"
-                    + "    \"description\": \"유흥과 문화를 고루 즐기며 여가를 소중히 하는 분이시군요! 여유로운 시간을 잘 보내시는 모습입니다.\"\n"
-                    + "  },\n"
-                    + "  \"23\": {\n"
-                    + "    \"name\": \"여유로운 삶형\",\n"
-                    + "    \"description\": \"대출 걱정 없이 여가와 즐거움을 누리며 인생을 여유롭게 사시는 분이시네요!\"\n"
-                    + "  },\n"
-                    + "  \"24\": {\n"
-                    + "    \"name\": \"건강한 여유형\",\n"
-                    + "    \"description\": \"건강을 잘 챙기면서도 여유로운 삶을 추구하는 분이시네요! 몸과 마음이 모두 건강합니다.\"\n"
-                    + "  },\n"
-                    + "  \"25\": {\n"
-                    + "    \"name\": \"미식 여가형\",\n"
-                    + "    \"description\": \"미식과 여가를 즐기며 소소한 행복을 누리시는 분이군요! 여유롭고 맛있는 삶을 사시는 모습입니다.\"\n"
-                    + "  },\n"
-                    + "  \"26\": {\n"
-                    + "    \"name\": \"실속파형\",\n"
-                    + "    \"description\": \"실속 있게 소비하는 분이시네요! 대출 외에는 꼭 필요한 곳에만 소비하며 알뜰한 생활을 하십니다.\"\n"
-                    + "  },\n"
-                    + "  \"27\": {\n"
-                    + "    \"name\": \"웰빙 안정형\",\n"
-                    + "    \"description\": \"건강도, 재정도 안정적으로 관리하는 분이시네요! 균형 잡힌 삶을 추구하는 모습이 멋집니다.\"\n"
-                    + "  },\n"
-                    + "  \"28\": {\n"
-                    + "    \"name\": \"다채로운 인생형\",\n"
-                    + "    \"description\": \"다양한 경험을 즐기며 인생을 다채롭게 살아가시는 분이시군요! 문화와 유흥을 모두 챙기시는 모습이 인상적입니다.\"\n"
-                    + "  },\n"
-                    + "  \"29\": {\n"
-                    + "    \"name\": \"안정된 즐거움형\",\n"
-                    + "    \"description\": \"재정적 안정을 유지하면서도 여가와 즐거움을 잊지 않는 분이시네요! 균형 있는 삶을 사십니다.\"\n"
-                    + "  },\n"
-                    + "  \"30\": {\n"
-                    + "    \"name\": \"안정된 문화형\",\n"
-                    + "    \"description\": \"경제적 안정을 유지하면서 문화를 즐기는 멋진 분이시군요! 균형 잡힌 생활을 추구하는 모습이 돋보입니다.\"\n"
-                    + "  },\n"
-                    + "  \"31\": {\n"
-                    + "    \"name\": \"건강 탐구형\",\n"
-                    + "    \"description\": \"건강과 문화를 동시에 탐구하며 즐거움을 찾는 분이시네요! 몸과 마음을 위한 멋진 여정을 이어가십니다.\"\n"
-                    + "  },\n"
-                    + "  \"32\": {\n"
-                    + "    \"name\": \"다채로운 모험형\",\n"
-                    + "    \"description\": \"미식, 문화, 유흥을 모두 즐기며 모험적인 삶을 사시는 분이시군요! 새로운 것을 찾아 나서는 멋진 분입니다.\"\n"
-                    + "  }\n"
-                    + "}\n"
-                    + "\n"
-                    + "이제 너는 소비 내역 분석기가 되어 내가 주는 소비 내역을 보고 \n"
-                    + "유형 이름과 description, 각 카테고리별로 변환한 %을 개행 으로 분리해서 보여줘 description 은 내가 준 내용을 참고해서 사용자의 소비 내용을 보고 너가 분석한 뒤  어울리는 멘트를 생성해서 20 ~ 30자 정도로 만들어줘야해 20자는 반드시 넘도록해\n "
-                    + "줄바꿈이랑 띄어쓰기 하지마 카테고리 들은 이름, 퍼센트  이렇게 차례대로 보내 식비, 의료, 문화, 대출, 유흥 순서대로 보내고 없어도 0 이라고 해서 보내  label 붙이지 말고 카테고리 이름도 빼고 순서만 유지하고 보내 값들만 보여줘 그러면 총 7줄이 나와야할거야 name, description 문자열 2줄, Percent 를 표시할 int 형  5줄"));
-        // 사용자 정보 넣는 부분 추가
-        LocalDateTime now = LocalDateTime.now();
-        GetDrawPiChartResponse getDrawPiChartResponse = dealService.drawPiChart(member,
-            now.getYear(), now.getMonthValue() - 1);
+                "당신은 소비내역 분석기 입니다. 거래 내역을 보고 개선점, 좋은점 등 내역을 분석해서 300자 내외의 분석결과지를 보내주세요 각 거래는 (제목 금액(- 이면 지출)) 로 되어있습니다"
+                    + "text 로만 보내주시고 * 과 같은 굵은글씨 쓰지마세요, 카테고리 이름 적지 마세요 " 
+                    + "결과지의 시작은  이번달 소비내역 결과를 알려드리겠습니다 라고 해줘"));
 
-        promptList.add(new OpenAIRequest(OpenAIRole.system, getDrawPiChartResponse.getGetCategoryListDtoList().toString()));
+
+        // 사용자 정보 넣는 부분 추가
         Map<String, Object> requestBody = new HashMap<>();
+
+        LocalDateTime now = LocalDateTime.now();
+        // 저번 달의 첫째 날 구하기
+        LocalDateTime startDate = now.minusMonths(1).withDayOfMonth(1);
+
+        // 저번 달의 마지막 날 구하기 (방법 1)
+        LocalDateTime endDate = now.withDayOfMonth(1).minusDays(1);
+        List<Deal> deals = dealRepository.findAllByMemberAndDateRange(
+            member,
+            startDate,
+            endDate
+        );
+        promptList.add(new OpenAIRequest(OpenAIRole.system, deals.toString()));
         // 사용할 모델 정보
         requestBody.put("model", "gpt-4o");
         // 응답으로 받을 최대 토큰 수
@@ -206,17 +80,128 @@ public class OpenAPIServiceImpl implements OpenAPIService {
             HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
             ResponseEntity<String> response = restTemplate.exchange(OPENAI_API_URL, HttpMethod.POST,
                 entity, String.class);
-            ObjectMapper objectMapper = new ObjectMapper();
-            // JSON 문자열을 MoobtiResponse 객체로 변환
-            System.out.println(extractMessageField(response.getBody()));
             if (response.getStatusCode() == HttpStatus.OK) {
-                return parsingMoobTi(extractMessageField(response.getBody()), member, now.getMonthValue() - 1);
+                return extractMessageField(response.getBody());
             } else {
                 throw new OpenAIException("OpenAI 응답 오류");
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static final String[] names = {
+        "짠테크 고수형",
+        "맛집 탐방형",
+        "건강 챙기기형",
+        "문화 탐닉형",
+        "미래 준비형",
+        "인생 즐기기형",
+        "웰빙 미식가형",
+        "문화 미식형",
+        "실속파형",
+        "미식 플렉스형",
+        "문화 웰빙러형",
+        "건강-안정형",
+        "건강한 플렉스형",
+        "대출 모험형",
+        "다채로운 삶형",
+        "현실 도피형",
+        "웰빙 안정형",
+        "안정 지향형",
+        "건강한 여유형",
+        "모험가형",
+        "여유로운 삶형",
+        "미식 여가형",
+        "웰빙 모험가형",
+        "다채로운 인생형",
+        "건강 탐구형",
+        "휴식형",
+        "안정된 문화형",
+        "안정된 즐거움형",
+        "건강한 플렉스형",
+        "미식 탐닉형",
+        "다채로운 모험형",
+        "균형 잡힌 생활형"
+    };
+
+    private static final String[] descriptions = {
+        "알뜰하고 실속 있게 생활하시는 분이시군요! 필요한 곳에만 딱딱 쓰는 절약의 고수입니다.",
+        "미식가이시군요! 맛있는 음식을 찾아다니며 소소한 행복을 즐기시는 분입니다.",
+        "건강이 최우선! 몸과 마음을 위해 아낌없이 투자하며 웰빙을 실천하는 분이시군요.",
+        "예술과 문화를 사랑하는 분이시군요! 공연, 전시회를 즐기며 감성을 충전하는 시간을 소중히 하시는 모습입니다.",
+        "책임감 넘치는 분이시네요! 대출 상환에 신경을 많이 쓰시면서 미래를 차근차근 준비하는 모습입니다.",
+        "인생을 즐기며 사시는 분이시네요! 유흥과 즐거움을 잊지 않는 멋진 라이프스타일을 가지고 계시군요.",
+        "몸도 마음도 건강하게! 맛있는 음식과 건강을 동시에 챙기며 사시는 분이시네요.",
+        "미식과 문화를 사랑하는 멋진 분이시네요! 세련된 라이프스타일을 추구하시는군요.",
+        "실속 있게 소비하는 분이시네요! 대출 외에는 꼭 필요한 곳에만 소비하며 알뜰한 생활을 하십니다.",
+        "맛있는 음식과 즐거움을 동시에! 인생을 즐기며 사시는 멋진 분이십니다.",
+        "건강과 문화를 모두 놓치지 않는 분이시네요! 균형 잡힌 생활을 하시는 모습이 인상적입니다.",
+        "건강과 경제적 안정을 동시에 챙기시는 분이군요. 몸도, 마음도, 재정도 모두 든든합니다!",
+        "유흥도 즐기면서 건강도 잘 챙기시는 분이시네요! 완벽한 밸런스를 추구하는 모습입니다.",
+        "대출 상환도 잊지 않으면서 문화를 즐기며 모험을 멈추지 않는 분이시네요!",
+        "다양한 경험을 즐기시는 분이시군요! 문화와 유흥을 고루 즐기며 인생을 알차게 사십니다.",
+        "대출에 신경 쓰면서도 가끔은 스트레스를 풀어야죠! 즐거움을 찾는 여유도 잊지 않는 분입니다.",
+        "건강도, 재정도 안정적으로 관리하는 분이시네요! 균형 잡힌 삶을 추구하는 모습이 멋집니다.",
+        "건강과 재정적 안정을 꼼꼼히 챙기시는 분이시네요! 든든한 삶을 사는 분입니다.",
+        "건강을 잘 챙기면서도 여유로운 삶을 추구하는 분이시네요! 몸과 마음이 모두 건강합니다.",
+        "새로운 것에 도전하는 분이시네요! 미식과 문화를 탐험하며 끊임없이 새로운 경험을 쌓아가십니다.",
+        "대출 걱정 없이 여가와 즐거움을 누리며 인생을 여유롭게 사시는 분이시네요!",
+        "미식과 여가를 즐기며 소소한 행복을 누리시는 분이군요! 여유롭고 맛있는 삶을 사시는 모습입니다.",
+        "건강도 챙기면서 문화를 탐험하시는 멋진 분이시네요! 균형 잡힌 모험을 즐기시는 모습입니다.",
+        "다양한 경험을 즐기며 인생을 다채롭게 살아가시는 분이시군요! 문화와 유흥을 모두 챙기시는 모습이 인상적입니다.",
+        "건강과 문화를 동시에 탐구하며 즐거움을 찾는 분이시네요! 몸과 마음을 위한 멋진 여정을 이어가십니다.",
+        "유흥과 문화를 고루 즐기며 여가를 소중히 하는 분이시군요! 여유로운 시간을 잘 보내시는 모습입니다.",
+        "경제적 안정을 유지하면서 문화를 즐기는 멋진 분이시군요! 균형 잡힌 생활을 추구하는 모습이 돋보입니다.",
+        "재정적 안정을 유지하면서도 여가와 즐거움을 잊지 않는 분이시네요! 균형 있는 삶을 사십니다.",
+        "유흥도 즐기면서 건강도 잘 챙기시는 분이시네요! 완벽한 밸런스를 추구하는 모습입니다.",
+        "맛있는 음식을 사랑하시는 분이군요! 여유로운 삶을 즐기며 미식의 세계를 탐험하시는 모습이 멋집니다.",
+        "미식, 문화, 유흥을 모두 즐기며 모험적인 삶을 사시는 분이시군요! 새로운 것을 찾아 나서는 멋진 분입니다.",
+        "모든 것을 균형 있게! 고르게 소비하면서도 알찬 생활을 유지하는 분이십니다."
+    };
+
+    @Override
+    public MoobtiResponse getMoobti(Member member) {
+        // 사용자 정보 넣는 부분 추가
+        LocalDateTime now = LocalDateTime.now();
+        GetDrawPiChartResponse getDrawPiChartResponse = dealService.drawPiChart(member,
+            now.getYear(), now.getMonthValue() - 1);
+        List<GetCategoryListDto> categoryList = getDrawPiChartResponse.getGetCategoryListDtoList();
+        int[] ary = new int[5];
+        for (int i = 0; i < 5; i++) {
+            double percent = categoryList.get(i).getPercent(); // 카테고리의 소비 비율 (0에서 100 사이의 값)
+            double M; // 변환된 값
+
+            if (percent <= 20) {
+                M = 2.5 * percent;
+            } else {
+                M = 50 + 0.625 * (percent - 20);
+            }
+            ary[i] = (int)M;
+        }
+        List<CategoryPercentDto> categoryPercentDtoList = new ArrayList<>();
+
+        //식비, 의료, 문화, 대출, 유흥
+        categoryPercentDtoList.add(new CategoryPercentDto("식비", ary[0]));
+        categoryPercentDtoList.add(new CategoryPercentDto("의료", ary[1]));
+        categoryPercentDtoList.add(new CategoryPercentDto("문화", ary[2]));
+        categoryPercentDtoList.add(new CategoryPercentDto("대출", ary[3]));
+        categoryPercentDtoList.add(new CategoryPercentDto("유흥", ary[4]));
+        int idx = 0;
+        for (int i = 0; i < 5; i++){
+            if (ary[i] >= 50)
+                idx ++;
+            if (i != 4)
+                idx <<= 1;
+        }
+        MoobtiCharacterDto moobtiCharacterDto = MoobtiCharacterDto.builder()
+                                                                  .type("소비 유형")
+                                                                  .imageUrl("FlexRad")
+                                                                  .name(names[idx])
+                                                                  .description(descriptions[idx])
+                                                                  .build();
+        MoobtiResponse moobtiResponse = new MoobtiResponse(moobtiCharacterDto ,categoryPercentDtoList, member.getName(), now.minusMonths(1).getMonthValue());
+        return moobtiResponse;
     }
 
     private String extractMessageField(String responseBody) {
@@ -227,36 +212,10 @@ public class OpenAPIServiceImpl implements OpenAPIService {
                                        .path("message");
 
             String content = messageNode.path("content").asText();
-
-
             return content;
         } catch (Exception e) {
             throw new OpenAIException("OpenAI 파싱 오류");
         }
     }
-
-    private MoobtiResponse parsingMoobTi(String s, Member member, Integer month){
-        String[] tokens = s.split("\n");
-        List<CategoryPercentDto> categoryPercentDtoList = new ArrayList<>();
-        if (tokens.length != 7){
-            throw new OpenAIException("OpenAI 파싱 오류");
-        }
-
-        //식비, 의료, 문화, 대출, 유흥
-        categoryPercentDtoList.add(new CategoryPercentDto("식비", Double.parseDouble(tokens[2])));
-        categoryPercentDtoList.add(new CategoryPercentDto("의료", Double.parseDouble(tokens[3])));
-        categoryPercentDtoList.add(new CategoryPercentDto("문화", Double.parseDouble(tokens[4])));
-        categoryPercentDtoList.add(new CategoryPercentDto("대출", Double.parseDouble(tokens[5])));
-        categoryPercentDtoList.add(new CategoryPercentDto("유흥", Double.parseDouble(tokens[6])));
-        MoobtiCharacterDto moobtiCharacterDto = MoobtiCharacterDto.builder()
-            .type("소비 유형")
-            .imageUrl("FlexRad")
-            .name(tokens[0])
-            .description(tokens[1])
-                                                                  .build();
-        MoobtiResponse moobtiResponse = new MoobtiResponse(moobtiCharacterDto ,categoryPercentDtoList, member.getName(), month);
-        return moobtiResponse;
-    }
-
 
 }
