@@ -20,34 +20,20 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// 중복 알림을 방지하기 위한 Set
-const notificationIds = new Set();
-
 messaging.onBackgroundMessage((payload) => {
-  console.log(
-    "[firebase-messaging-sw.js] Received background message ",
-    payload
-  );
+  console.log("[firebase-messaging-sw.js] Received background message ", payload);
 
-  // 고유한 알림 ID 생성 (예: 타임스탬프 + 제목)
-  const notificationId = `${Date.now()}-${payload.notification.title}`;
-
-  // 이미 표시된 알림인지 확인
-  if (!notificationIds.has(notificationId)) {
-    notificationIds.add(notificationId);
-
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-      body: payload.notification.body,
-      icon: "/firebase-logo.png", // 원하는 아이콘으로 변경
-      tag: notificationId, // 알림에 고유 태그 추가
-    };
-
-    self.registration.showNotification(notificationTitle, notificationOptions);
-
-    // 일정 시간 후 Set에서 알림 ID 제거 (예: 10초 후)
-    setTimeout(() => {
-      notificationIds.delete(notificationId);
-    }, 10000);
+  // 포그라운드에서 이미 알림이 처리된 경우, 백그라운드에서는 알림을 표시하지 않도록 처리
+  if (!document.hidden) {
+    return;
   }
+
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: "/firebase-logo.png",
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
