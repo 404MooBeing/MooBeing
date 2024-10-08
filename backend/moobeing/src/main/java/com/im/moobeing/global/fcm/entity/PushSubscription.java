@@ -18,6 +18,8 @@ public class PushSubscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // setMember 메서드 추가
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)  // Member와 다대일 관계 설정
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;  // 구독을 소유하는 Member
@@ -27,4 +29,5 @@ public class PushSubscription {
 
     @Setter
     private LocalDateTime lastUpdated;
+
 }
