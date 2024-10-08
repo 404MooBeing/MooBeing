@@ -9,6 +9,7 @@ const useCapsuleStore = create((set) => ({
   description: "",
   type: "", // SMALL_RADISH, MEDIUM_RADISH, LARGE_RADISH
   radishId: "",
+  radishImageUrl: "",
   harvestAt: "",
   lat: 0,
   lng: 0,
@@ -32,11 +33,12 @@ const useCapsuleStore = create((set) => ({
     })),
 
   // 그룹 3: 타입 및 수확 정보 업데이트 함수
-  updateRadishInfo: (type, id, harvestAt) =>
+  updateRadishInfo: (type, id, harvestAt, radishImageUrl) =>
     set((state) => ({
       type: type,
       radishId: id,
       harvestAt: harvestAt,
+      radishImageUrl: radishImageUrl,
     })),
 
   // 그룹 4: 위치 정보 업데이트 함수

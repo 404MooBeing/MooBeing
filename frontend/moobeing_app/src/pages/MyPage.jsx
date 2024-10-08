@@ -10,8 +10,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  box-sizing: border-box;
-  padding : 0 0 200px 0;
+  padding-bottom: 150px;
 `;
 
 const Toggle = styled.div`
@@ -19,13 +18,14 @@ const Toggle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 10px;
 `;
 
 const ToggleItem = styled.span`
-  font-size: 20px;
+  font-size: 18px;
   color: ${(props) => (props.active ? "black" : "gray")};
   font-weight: ${(props) => (props.active ? "bold" : "normal")};
-  margin: 0px 14px;
+  margin: 15px;
   cursor: pointer;
 `;
 
