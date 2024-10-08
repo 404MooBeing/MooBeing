@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { getNotStartedQuiz, submitAnswer } from "../apis/QuizApi";
+import { getNotStartedEconomicQuiz, submitEconomicQuizAnswer } from "../apis/QuizApi";
 import upArrow from "../assets/quiz/upArrow.svg";
 import downArrow from "../assets/quiz/downArrow.svg";
 import { useNavigate } from "react-router-dom";
@@ -90,7 +90,7 @@ function Quiz() {
   useEffect(() => {
     async function fetchQuiz() {
       try {
-        const data = await getNotStartedQuiz();
+        const data = await getNotStartedEconomicQuiz();
         if (data) {
           setQuizData(data);
         } else {
@@ -123,8 +123,9 @@ function Quiz() {
   const handleAnswer = async (answer) => {
     if (!quizData) return;
     try {
-      const result = await submitAnswer(quizData.quizId, answer);
-      result.quizType = "normal"
+      const result = await submitEconomicQuizAnswer(quizData.quizId, answer);
+      result.quizType = "economy"
+      console.log(result.isCorrect)
       navigate(`/quiz/result/${quizData.quizId}`, { state: result });
     } catch (error) {
       console.error("답변 제출 실패:", error);
@@ -162,18 +163,14 @@ function Quiz() {
           <TimerText>{timeLeft}</TimerText>
         </TimerContainer>
         <QuizText>
-          {userInfo.name}님의
-          <br />
-          지난 주 지출액은
-          <br />
-          {quizData.example}원
+          {quizData.question}
         </QuizText>
         <ButtonContainer>
-          <UpButton onClick={() => handleAnswer("UP")}>
-            <ArrowIcon src={upArrow} alt="Up" />
+          <UpButton onClick={() => handleAnswer("true")}>
+            <ArrowIcon src={upArrow} alt="true" />
           </UpButton>
-          <DownButton onClick={() => handleAnswer("DOWN")}>
-            <ArrowIcon src={downArrow} alt="Down" />
+          <DownButton onClick={() => handleAnswer("false")}>
+            <ArrowIcon src={downArrow} alt="false" />
           </DownButton>
         </ButtonContainer>
       </QuizContainer>

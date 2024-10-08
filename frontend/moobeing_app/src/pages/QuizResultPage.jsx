@@ -13,15 +13,17 @@ const PageContainer = styled.div`
   background-color: #e0eed2;
 `;
 
-function QuizResult() {
+function QuizResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const result = location.state;
+  
+  console.log(result.isCorrect); // 객체 자체를 로그로 출력
 
   // useEffect는 항상 동일한 위치에서 호출되어야 함
   useEffect(() => {
     if (!result) {
-      navigate("/quiz");
+      navigate("/");
     }
   }, [result, navigate]);
 
@@ -30,15 +32,16 @@ function QuizResult() {
     return null;
   }
 
-  return (
+  return ( 
     <PageContainer>
-      {result.correct ? (
-        <RightResult message={result.message} answer={result.answer} />
+      {result.isCorrect ? (
+        <RightResult message={result.message} answer={result.answer} explanation={result.explanation} type={result.quizType}/>
       ) : (
-        <WrongResult message={result.message} answer={result.answer} />
+        <WrongResult message={result.message} answer={result.answer} explanation={result.explanation} type={result.quizType} />
       )}
     </PageContainer>
   );
 }
 
-export default QuizResult;
+// QuizResultPage를 export해야 함
+export default QuizResultPage;
