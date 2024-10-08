@@ -37,12 +37,12 @@ const CharacterName = styled.h2`
 `;
 
 const Description = styled.p`
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
-  line-height: 150%;
+  line-height: 160%;
   color: #333;
   margin-bottom: 0;
-  font-family: 'Nanum Gothic', sans-serif;
+  font-family: 'sans-serif';
 `;
 
 const StatusSection = styled.div`

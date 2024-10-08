@@ -5,6 +5,8 @@ import saveAs from "file-saver";
 import { useRef } from "react";
 import MoobtiCard from '../components/Moobti/MoobtiCard';
 import FlexRad from "../assets/radishes/flexRadish.png";
+import useUserStore from '../store/UserStore';
+import dayjs from "dayjs";
 
 const Screen = styled.div`
   display: flex;
@@ -50,10 +52,12 @@ const Title = styled.h1`
   font-weight: bold;
   margin: 0;
   color: #333;
+  line-height: 150%;
 `;
 
 const MoobtiPage = () => {
   const divRef = useRef(null);
+  const { userInfo } = useUserStore();
 
   const handleDownload = async () => {
     if (!divRef.current) return;
@@ -71,6 +75,8 @@ const MoobtiPage = () => {
       console.error("Error:", error);
     }
   };
+
+  const currentMonth = dayjs().format("MM");
   
 
   const character = {
@@ -93,7 +99,7 @@ const MoobtiPage = () => {
       <PageContainer>
         <ContentWrapper>
           <TitleBox>
-            <Title>제갈파피님의<br />8월 MooBTI</Title>
+            <Title>{userInfo.name || "사용자"}님의<br />{currentMonth}월 MooBTI</Title>
           </TitleBox>
           <MoobtiCard 
             character={character} 
