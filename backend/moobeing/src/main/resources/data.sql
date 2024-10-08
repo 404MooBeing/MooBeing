@@ -499,7 +499,10 @@ INSERT IGNORE INTO radish_capsule (member_id, deal_id, character_id, description
 (1, 18, 9, '박물관에서 무를 심었습니다.', 'https://picsum.photos/300/300', 'LARGE_RADISH', 37.5750, 126.9785, '서울 국립중앙박물관', '서울시 용산구', '2024-08-10 18:00:00', DATE_ADD('2024-08-10 18:00:00', INTERVAL 180 DAY), true),
 (1, 19, 10, '독서 모임 후 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.477942, 126.980520, '서울 독서 모임 장소', '서울시 서대문구 신촌', DATE_SUB(now(), INTERVAL 21 DAY), DATE_SUB(now(), INTERVAL 1 DAY), true),
 (1, 20, 2, '헬스장에서 운동 후 작은 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.476282, 126.981818, '서울 독서 모임 장소', '서울시 서대문구 신촌', DATE_SUB(now(), INTERVAL 22 DAY), DATE_SUB(now(), INTERVAL 2 DAY), true),
-(1, 21, 4, '농협은행에서 대출 상환 후 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.478078, 126.982473, '서울 독서 모임 장소', '서울시 서대문구 신촌', DATE_SUB(now(), INTERVAL 23 DAY), DATE_SUB(now(), INTERVAL 3 DAY), true);
+(1, 21, 4, '농협은행에서 대출 상환 후 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.478078, 126.982473, '서울 독서 모임 장소', '서울시 서대문구 신촌', DATE_SUB(now(), INTERVAL 23 DAY), DATE_SUB(now(), INTERVAL 3 DAY), true),
+(1, 22, 1, '멀티캠퍼스 역삼점에서 GPT를 결제했습니다.', 'https://s3.seungki-cho.lol/moobeing/F6F17FC7-8C5B-4323-A0C8-17CF3B561E76.jpg', 'SMALL_RADISH', 37.501268, 127.039634, '멀티캠퍼스 역삼점', '서울시 강남구 테헤란로', DATE_SUB(NOW(), INTERVAL 21 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY), false),
+(1, 23, 2, '바나프레소 테헤란로점에서 커피를 샀습니다.', 'https://s3.seungki-cho.lol/moobeing/sangwoocoffee.png', 'SMALL_RADISH', 37.501111, 127.039073, '바나프레소 테헤란로점', '서울시 강남구 테헤란로', DATE_SUB(NOW(), INTERVAL 23 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 23 DAY), INTERVAL 20 DAY), false),
+(1, 24, 3, '매머드익스프레스 역삼언주로점에서 커피를 샀습니다.', 'https://s3.seungki-cho.lol/moobeing/97947112.1.jpg', 'SMALL_RADISH', 37.500775, 127.040461, '매머드익스프레스 역삼언주로점', '서울시 강남구 언주로', DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_ADD(NOW(), INTERVAL 10 DAY), false);
 
 
 INSERT IGNORE INTO alarm (member_id, icon_name, title, message, created_at) VALUES
