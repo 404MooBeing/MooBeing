@@ -502,7 +502,10 @@ INSERT IGNORE INTO radish_capsule (member_id, deal_id, character_id, description
 (1, 21, 4, '농협은행에서 대출 상환 후 무를 심었습니다.', 'https://picsum.photos/300/300', 'SMALL_RADISH', 37.478078, 126.982473, '서울 독서 모임 장소', '서울시 서대문구 신촌', DATE_SUB(now(), INTERVAL 23 DAY), DATE_SUB(now(), INTERVAL 3 DAY), true),
 (1, 22, 1, '멀티캠퍼스 역삼점에서 GPT를 결제했습니다.', 'https://s3.seungki-cho.lol/moobeing/F6F17FC7-8C5B-4323-A0C8-17CF3B561E76.jpg', 'SMALL_RADISH', 37.501268, 127.039634, '멀티캠퍼스 역삼점', '서울시 강남구 테헤란로', DATE_SUB(NOW(), INTERVAL 21 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY), false),
 (1, 23, 2, '바나프레소 테헤란로점에서 커피를 샀습니다.', 'https://s3.seungki-cho.lol/moobeing/sangwoocoffee.png', 'SMALL_RADISH', 37.501111, 127.039073, '바나프레소 테헤란로점', '서울시 강남구 테헤란로', DATE_SUB(NOW(), INTERVAL 23 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 23 DAY), INTERVAL 20 DAY), false),
-(1, 24, 3, '매머드익스프레스 역삼언주로점에서 커피를 샀습니다.', 'https://s3.seungki-cho.lol/moobeing/97947112.1.jpg', 'SMALL_RADISH', 37.500775, 127.040461, '매머드익스프레스 역삼언주로점', '서울시 강남구 언주로', DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_ADD(NOW(), INTERVAL 10 DAY), false);
+(1, 24, 3, '매머드익스프레스 역삼언주로점에서 커피를 샀습니다.', 'https://s3.seungki-cho.lol/moobeing/97947112.1.jpg', 'SMALL_RADISH', 37.500775, 127.040461, '매머드익스프레스 역삼언주로점', '서울시 강남구 언주로', DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_ADD(NOW(), INTERVAL 10 DAY), false),
+(1, 25, 3, '매머드익스프레스 강남역 할리스 2점에서 커피를 샀습니다.', 'https://s3.seungki-cho.lol/moobeing/97947112.1.jpg', 'SMALL_RADISH', 37.500418, 127.027108, '할리스 강남역 2점', '서울시 강남구 역삼동', DATE_SUB(NOW(), INTERVAL 23 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 23 DAY), INTERVAL 20 DAY) , false),
+(1, 26, 3, '에피소드 방탈출 최고', 'https://s3.seungki-cho.lol/moobeing/97947112.1.jpg', 'SMALL_RADISH', 37.500506, 127.027376, '에피소드방탈출카페', '서울시 강남구 역삼동', DATE_SUB(NOW(), INTERVAL 23 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 23 DAY), INTERVAL 20 DAY) , false);
+
 
 
 INSERT IGNORE INTO alarm (member_id, icon_name, title, message, created_at) VALUES
