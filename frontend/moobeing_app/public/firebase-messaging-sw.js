@@ -1,39 +1,94 @@
-// public/firebase-messaging-sw.js
-importScripts(
-  "https://www.gstatic.com/firebasejs/9.5.0/firebase-app-compat.js"
-);
-importScripts(
-  "https://www.gstatic.com/firebasejs/9.5.0/firebase-messaging-compat.js"
-);
+/* global importScripts, firebase */
+importScripts('https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.2.1/firebase-messaging.js');
 
-// Firebase 설정 객체 (firebase.ts와 동일한 값 사용)
-const firebaseConfig = {
-  apiKey: "AIzaSyCTHRWWL50vqyNfYQnJofsEItQxl2fgI3I",
-  authDomain: "moobeing-ee0eb.firebaseapp.com",
-  projectId: "moobeing-ee0eb",
-  storageBucket: "moobeing-ee0eb.appspot.com",
-  messagingSenderId: "830764540752",
-  appId: "1:830764540752:web:aa3e3215695f7b78288255",
-  measurementId: "G-2MW15Q9GCQ"
-};
+console.log('===========================================');
+console.log('FIREBASE SERVICE WORKER LOADED');
+console.log('===========================================');
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp({
+  apiKey: '',
+  projectId: '',
+  messagingSenderId: '',
+  appId: '',
+  authDomain: '',
+  databaseURL: '',
+  storageBucket: '',
+  measurementId: '',
+});
+
+class CustomPushEvent extends Event {
+  constructor(data) {
+    super('push');
+
+    Object.assign(this, data);
+    this.custom = true;
+  }
+}
+
+/*
+ * Overrides push notification data, to avoid having 'notification' key and firebase blocking
+ * the message handler from being called
+ */
+self.addEventListener('push', (e) => {
+  // Skip if event is our own custom event
+  if (e.custom) return;
+
+  // Kep old event data to override
+  const oldData = e.data;
+
+  // Create a new event to dispatch, pull values from notification key and put it in data key,
+  // and then remove notification key
+  const newEvent = new CustomPushEvent({
+    data: {
+      ehheh: oldData.json(),
+      json() {
+        const newData = oldData.json();
+        newData.data = {
+          ...newData.data,
+          ...newData.notification,
+        };
+        delete newData.notification;
+        return newData;
+      },
+    },
+    waitUntil: e.waitUntil.bind(e),
+  });
+
+  // Stop event propagation
+  e.stopImmediatePropagation();
+
+  // Dispatch the new wrapped event
+  dispatchEvent(newEvent);
+});
+
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  console.log("[firebase-messaging-sw.js] Received background message ", payload);
+  // console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
-  // 포그라운드에서 이미 알림이 처리된 경우, 백그라운드에서는 알림을 표시하지 않도록 처리
-  if (!document.hidden) {
-    return;
-  }
+  const { title, body, icon, badge, ...restPayload } = payload.data;
 
-  const notificationTitle = payload.notification.title;
   const notificationOptions = {
-    body: payload.notification.body,
-    icon: "/firebase-logo.png",
+    body,
+    icon: icon || '/icons/firebase-logo.png', // path to your "fallback" firebase notification logo
+    badge: badge || '/icons/firebase-logo.png', // path to your "fallback" notification badge (Instead of the default bell)
+    data: restPayload,
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  return self.registration.showNotification(title, notificationOptions);
 });
 
+self.addEventListener('notificationclick', (event) => {
+  // console.log('[firebase-messaging-sw.js] notificationclick ', event);
+
+  // click_action described at https://github.com/BrunoS3D/firebase-messaging-sw.js#click-action
+  if (event.notification.data && event.notification.data.click_action) {
+    self.clients.openWindow(event.notification.data.click_action);
+  } else {
+    self.clients.openWindow(event.currentTarget.origin);
+  }
+  
+  // close notification after click
+  event.notification.close();
+});
