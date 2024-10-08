@@ -6,6 +6,7 @@ const MapContainer = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+  touch-action: none;
 `;
 
 // 애니메이션 정의
