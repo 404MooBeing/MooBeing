@@ -110,8 +110,6 @@ const PageTitle = ({ totalExpense, setViewMode, viewMode }) => {
     navigate("/moobti");
   };
 
-  console.log(user.userInfo)
-
   const userName = user.userInfo.name ? user.userInfo.name : "사용자";
 
   // 현재 날짜의 월을 가져옴
