@@ -79,6 +79,7 @@ public class RadishController {
         return ResponseEntity.ok(responses);
     }
 
+    @Operation(summary = "수확하지 않은 무 중, 수확 시기가 아직 되지 않은 모든 무 요약 조회", description = "수확하지 않은 무 중, 수확 하지 않은 무 수, 수확 시기가 아직 되지 않은 무 요약 조회")
     @GetMapping("/summary")
     public ResponseEntity<CapsuleSummaryResponse> getSummaryRadish(@AuthenticationPrincipal Member member) {
         return ResponseEntity.ok(radishService.getRadishSummary(member));
