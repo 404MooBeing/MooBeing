@@ -7,14 +7,13 @@ console.log('FIREBASE SERVICE WORKER LOADED');
 console.log('===========================================');
 
 firebase.initializeApp({
-  apiKey: '',
-  projectId: '',
-  messagingSenderId: '',
-  appId: '',
-  authDomain: '',
-  databaseURL: '',
-  storageBucket: '',
-  measurementId: '',
+  apiKey: "AIzaSyCTHRWWL50vqyNfYQnJofsEItQxl2fgI3I",
+  authDomain: "moobeing-ee0eb.firebaseapp.com",
+  projectId: "moobeing-ee0eb",
+  storageBucket: "moobeing-ee0eb.appspot.com",
+  messagingSenderId: "830764540752",
+  appId: "1:830764540752:web:aa3e3215695f7b78288255",
+  measurementId: "G-2MW15Q9GCQ"
 });
 
 class CustomPushEvent extends Event {
