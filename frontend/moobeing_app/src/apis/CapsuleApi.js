@@ -64,8 +64,6 @@ export const postCapsulesOnMap = async (bounds) => {
       lngBottomLeft: bounds.lngBottomLeft,
     });
 
-    console.log("API Response:", response.data); // 응답 데이터 로깅
-
     const radishes = response.data;
 
     // 데이터 유효성 검사
@@ -83,7 +81,6 @@ export const postCapsulesOnMap = async (bounds) => {
         createdAt: radish.createdAt,
         remainingDays: radish.remainingDays,
       };
-      console.log("Processed radish:", processed); // 각 처리된 무 데이터 로깅
       return processed;
     });
 

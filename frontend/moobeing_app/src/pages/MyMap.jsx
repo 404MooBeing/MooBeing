@@ -132,7 +132,6 @@ function MyMap() {
           latBottomLeft: bounds.getSouthWest().getLat(),
           lngBottomLeft: bounds.getSouthWest().getLng(),
         });
-        console.log("얘야아아아아아", radishes);
         markersRef.current.forEach((marker) => marker.setMap(null));
         markersRef.current = [];
         radishes.forEach((radish) => {
@@ -244,7 +243,6 @@ function MyMap() {
   }
 
   const openPopup = (radish, isWithinRange) => {
-    console.log("너의 정체는?", radish);
     let popupType = null;
     if (radish.remainingDays > 0) {
       popupType = "NotGrownYet";
@@ -265,12 +263,6 @@ function MyMap() {
       },
     });
   };
-
-  useEffect(() => {
-    if (popupData) {
-      console.log("Popup Data Updated: ", popupData);
-    }
-  }, [popupData]);
 
   const closePopup = () => {
     setPopupData(null);
