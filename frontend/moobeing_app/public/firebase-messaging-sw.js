@@ -8,13 +8,13 @@ importScripts(
 
 // Firebase 설정 객체 (firebase.ts와 동일한 값 사용)
 const firebaseConfig = {
-  apiKey: "AIzaSyBlc1vfdR4lTXBZalRDoL2LLoqk_k9itsM",
-  authDomain: "the-family-guardian.firebaseapp.com",
-  projectId: "the-family-guardian",
-  storageBucket: "the-family-guardian.appspot.com",
-  messagingSenderId: "339693893957",
-  appId: "1:339693893957:web:585d6f430050a0d28f262c",
-  measurementId: "G-41DK0HCV9H",
+  apiKey: "AIzaSyCTHRWWL50vqyNfYQnJofsEItQxl2fgI3I",
+  authDomain: "moobeing-ee0eb.firebaseapp.com",
+  projectId: "moobeing-ee0eb",
+  storageBucket: "moobeing-ee0eb.appspot.com",
+  messagingSenderId: "830764540752",
+  appId: "1:830764540752:web:aa3e3215695f7b78288255",
+  measurementId: "G-2MW15Q9GCQ"
 };
 
 firebase.initializeApp(firebaseConfig);
