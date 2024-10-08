@@ -25,9 +25,9 @@ getToken(messaging, {
       // 전역 상태에 currentToken 저장
       useFCMStore.getState().setToken(currentToken); // 추가된 코드
       console.log("Token:", currentToken);
-    //   navigator.clipboard.writeText(currentToken)
-    //     .then(() => alert("토큰이 클립보드에 복사되었습니다: " + currentToken))
-    //     .catch(err => console.error("토큰 복사 실패:", err));
+      navigator.clipboard.writeText(currentToken)
+        .then(() => alert("토큰이 클립보드에 복사되었습니다: " + currentToken))
+        .catch(err => console.error("토큰 복사 실패:", err));
     } else {
       console.log("No registration token available. Request permission to generate one.");
     }
