@@ -65,7 +65,8 @@ public enum ErrorCode {
 	LN_INVALID_PRODUCT_CODE(HttpStatus.BAD_REQUEST, "LN003", "잘못된 상품 코드입니다."),
 
 	// Radish
-	RD_NO_RADISH(HttpStatus.BAD_REQUEST, "RD001", "없는 무로 캡슐을 만들 수 없습니다.");
+	RD_NO_RADISH(HttpStatus.BAD_REQUEST, "RD001", "없는 무로 캡슐을 만들 수 없습니다."),
+	RD_TOO_CLOSE(HttpStatus.BAD_REQUEST, "RD002", "가까운 무가 있습니다. 무는 영양분을 필요로 합니다.");
 
 	private final HttpStatus status;
 	private final String code;
