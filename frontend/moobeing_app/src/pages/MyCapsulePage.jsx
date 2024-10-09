@@ -40,7 +40,6 @@ const Title = styled.div`
 const TitleText = styled.span`
   display: flex;
   align-items: center;
-  white-space: nowrap;  // 변경된 부분: 텍스트가 한 줄에 표시되도록 설정
 
   & > img {
     margin: 0 22px;
@@ -55,6 +54,11 @@ const TitleText = styled.span`
     margin: 0 22px;
     user-select: none;
     cursor: pointer;
+
+    // 가로 가이즈가 350px 보다 작으면 글자 크기 2px 줄이기
+    @media (max-width: 350px) {
+      font-size: 23px; // 2px 줄임
+    }
   }
 `;
 
