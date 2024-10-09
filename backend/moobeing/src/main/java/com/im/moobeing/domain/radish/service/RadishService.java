@@ -78,6 +78,7 @@ public class RadishService {
                 .placeName(requestDto.getPlaceName())
                 .endAt(LocalDateTime.now().plusDays(requestDto.getType().getHarvestDays()))
                 .character(memberRadish.getRadish())
+                .member(member)
                 .build();
 
         radishCapsuleRepository.save(radishCapsule);
@@ -144,7 +145,7 @@ public class RadishService {
                 .collect(Collectors.toList());
     }
 
-    public RadishCapsuleResponse harvestRadishCapsule(Long capsuleId, Member member) {
+    public RadishCapsuleHarvestResponse harvestRadishCapsule(Long capsuleId, Member member) {
         RadishCapsule capsule = radishCapsuleRepository.findById(capsuleId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.BAD_REQUEST));
 
@@ -159,7 +160,7 @@ public class RadishService {
         capsule.harvest();
         radishCapsuleRepository.save(capsule);
 
-        return RadishCapsuleResponse.of(capsule, 500L);
+        return RadishCapsuleHarvestResponse.of(capsule, 500L);
     }
 
     public List<RadishCapsuleAreaResponse> findUnharvestedCapsulesInArea(Member member, RadishCapsuleAreaRequest request) {
