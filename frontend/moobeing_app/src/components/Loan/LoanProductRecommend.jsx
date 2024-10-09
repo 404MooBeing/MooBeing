@@ -127,7 +127,7 @@ const LoanProductRecommend = () => {
 
   const dummyProducts = [
     { image: shinHan, name: "참신한", rate: "금리 11.9%", url: "https://www.shinhansavings.com/PD_0139" },
-    { image: hana, name: "BEST 신용대출", rate: "금리 6.5", url: "https://www.kebhana.com/cont/mall/mall08/mall0802/mall080204/1431602_115200.jsp" },
+    { image: hana, name: "BEST 신용대출", rate: "금리 6.5%", url: "https://www.kebhana.com/cont/mall/mall08/mall0802/mall080204/1431602_115200.jsp" },
   ];
 
   if (!isVisible) return null;
