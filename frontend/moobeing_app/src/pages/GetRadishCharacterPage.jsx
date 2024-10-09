@@ -141,7 +141,7 @@ const CardWrapper = styled.div`
 
 const CollectionButton = styled.button`
   position: absolute;
-  bottom: 7%;
+  bottom: 25%;
   left: 50%;
   transform: translateX(-50%);
   padding: 10px 20px;
@@ -152,6 +152,7 @@ const CollectionButton = styled.button`
   cursor: pointer;
   font-size: 16px;
   opacity: 0;
+  z-index : 100;
   animation: ${fadeIn} 0.8s ease-out 0.5s forwards;
 `;
 
@@ -238,7 +239,7 @@ function GetRadishCharacter() {
   }, [pullCount]);
 
   const handleCollectionClick = () => {
-    navigate("/radish-collection");
+    navigate("/user?tab=collection");
   };
 
   return (
@@ -273,7 +274,7 @@ function GetRadishCharacter() {
               imageUrl={radishInfo.radishImageUrl}
             />
           </CardWrapper>
-          {showCollectionButton && (
+          {(
             <CollectionButton onClick={handleCollectionClick}>
               무들 보러가기
             </CollectionButton>

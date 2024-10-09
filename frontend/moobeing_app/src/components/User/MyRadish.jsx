@@ -8,6 +8,7 @@ import {
 } from "../../apis/RadishApi";
 import useUserStore from "../../store/UserStore";
 import checkBox from "../../assets/checkBox.svg";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
@@ -82,7 +83,7 @@ const CharacterCard = styled.div`
   border-radius: 10%;
   cursor: ${(props) => (props.isselectable === "true" ? "pointer" : "default")};
   box-shadow: 0.3px 0.3px 6px rgba(0, 0, 0, 0.12);
-  ${(props) =>
+  ${(props) =>  
     props.isselected &&
     `
       filter: drop-shadow(0 0 8px #348833);
@@ -266,6 +267,7 @@ const MyRadish = () => {
   const [growingCharacter, setGrowingCharacter] = useState(null);
   const [isGrowthComplete, setIsGrowthComplete] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRadishCollection = async () => {
@@ -356,6 +358,7 @@ const MyRadish = () => {
 
   const handleAcquire = () => {
     window.location.reload();
+    navigate('/user?tab=collection')
   };
 
   const renderCharacterContent = (char) => {
