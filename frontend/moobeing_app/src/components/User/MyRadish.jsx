@@ -19,6 +19,9 @@ const Container = styled.div`
 const ChooseButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
+  background-color: rgba(255, 255, 255, 1);
+
+  width: 100%;
   margin-bottom: 5px;
   margin-right: 30px;
   background-color: transparent !important;
@@ -41,6 +44,7 @@ const ScrollContainer = styled.div`
   height: calc(100vh - 420px); /* 상단 요소들의 높이를 고려하여 조정하세요 */
   overflow-y: auto;
   padding-top: 15px;
+  z-index : -1;
 
   /* 크롬, 사파리, 오페라 */
   &::-webkit-scrollbar {
@@ -57,7 +61,8 @@ const ScrollContainer = styled.div`
 const CardContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+  // justify-content: space-evenly;
   margin-bottom: 30px;
 `;
 
@@ -66,6 +71,7 @@ const CharacterCard = styled.div`
   max-width: 180px;
   height: 170px;
   margin-bottom: 30px;
+  margin-left: 5px;
   background-color: #f5fded;
   display: flex;
   flex-direction: column;
@@ -350,27 +356,6 @@ const MyRadish = () => {
 
   const handleAcquire = () => {
     window.location.reload();
-  };
-
-  const renderCharacterContent = (char) => {
-    if (char.growthStage === "growing") {
-      return (
-        <AnimationContainer>
-          <ExplosionEffect />
-          <SmokeEffect />
-        </AnimationContainer>
-      );
-    } else if (char.growthStage === "complete") {
-      return (
-        <AnimationContainer>
-          <NewCharacterEffect>
-            <CharacterImage src={char.radishImageUrl} />
-          </NewCharacterEffect>
-        </AnimationContainer>
-      );
-    } else {
-      return <CharacterImage src={char.radishImageUrl} />;
-    }
   };
 
   return (

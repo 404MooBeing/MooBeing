@@ -45,12 +45,21 @@ function Router() {
   const userInfo = useUserStore((state) => state.userInfo);
   const [showChatbot, setShowChatbot] = useState(true); // 챗봇 표시 여부 상태
 
-  // 로그인되지 않았을 경우 로그인 페이지로 리디렉션
-  // useEffect(() => {
-  //   if (!userInfo) {
-  //     navigate("/login");
-  //   }
-  // }, [userInfo, navigate]);
+  // 뒤로 가기를 막는 로직
+  useEffect(() => {
+    if (location.pathname === "/get-radish") {
+      window.history.pushState(null, "", window.location.href); // 현재 상태를 히스토리에 추가
+      const handlePopState = () => {
+        navigate("/", { replace: true }); // 뒤로 가기를 시도하면 홈으로 리다이렉트
+      };
+
+      window.addEventListener("popstate", handlePopState);
+
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+      };
+    }
+  }, [location.pathname, navigate]);
 
   // Header와 Footer를 표시하지 않을 경로 목록
   const noHeaderFooterRoutes = ["/loading", "/login", "/signup", "/welcome"];
