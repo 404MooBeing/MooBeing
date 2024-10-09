@@ -322,9 +322,9 @@ public class DealService {
 
         String message;
         if (difference < 0) {
-            message = "지난 달보다 " + Math.abs(difference) + "원 더 썼어요!";
+            message = "지난 달보다 " + String.format("%,d",Math.abs(difference)) + "원 더 썼어요!";
         } else if (difference > 0) {
-            message = "지난 달보다 " + Math.abs(difference) + "원 덜 썼어요!";
+            message = "지난 달보다 " + String.format("%,d",Math.abs(difference)) + "원 덜 썼어요!";
         } else {
             message = "지난 달과 같은 금액을 썼어요!";
         }
