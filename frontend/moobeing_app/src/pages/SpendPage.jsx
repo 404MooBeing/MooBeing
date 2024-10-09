@@ -140,35 +140,32 @@ const Spend = () => {
 
   useEffect(() => {
     // 에러가 발생했거나 데이터가 이미 로드되었으면 중단
-    if (error || hasFetchedData) return;
-
-    // 연도나 달이 변경될 때만 API 호출
-    if (prevYear !== year || prevMonth !== month) {
-      setIsLoading(true);
-      setError(null);
-
-      const fetchData = async () => {
-        try {
-          await Promise.all([
-            fetchSpendData(year, month),
-            fetchPieChartData(year, month),
-            fetchSpendCategory(year, month),
-          ]);
-          setHasFetchedData(true); // 데이터 요청 후 다시 상태를 true로 설정
-        } catch (err) {
-          setError("데이터 로드 중 오류 발생");
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      fetchData();
-
-      // 연도와 달이 변경되면 prevYear와 prevMonth를 업데이트
-      setPrevYear(year);
-      setPrevMonth(month);
-    }
-  }, [year, month, fetchSpendData, fetchPieChartData, fetchSpendCategory, error, hasFetchedData, prevYear, prevMonth]);
+    if (error || isLoading || hasFetchedData) return;
+  
+    setIsLoading(true);
+    setError(null);
+  
+    const fetchData = async () => {
+      try {
+        await Promise.all([
+          fetchSpendData(year, month),
+          fetchPieChartData(year, month),
+          fetchSpendCategory(year, month),
+        ]);
+        setHasFetchedData(true); // 데이터 요청 후 다시 상태를 true로 설정
+      } catch (err) {
+        setError("데이터 로드 중 오류 발생");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchData();
+  
+    // 연도와 달이 변경되면 prevYear와 prevMonth를 업데이트
+    setPrevYear(year);
+    setPrevMonth(month);
+  }, [year, month, fetchSpendData, fetchPieChartData, fetchSpendCategory, error, isLoading, hasFetchedData, prevYear, prevMonth]);
 
   return (
     <Screen>

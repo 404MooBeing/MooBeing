@@ -7,29 +7,39 @@ const ResultContainer = styled.div`
   border-radius: 10px;
   padding: 20px;
   margin: 20px;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   text-align: center;
 `;
 
 const Expression = styled.div`
-  font-size: 40px;
+  font-size: 30px;
   font-weight: bold;
   margin-bottom: 20px;
 `;
 
 const Result = styled.div`
-  font-size: 30px;
+  font-size: 20px;
   margin-bottom: 10px;
 `;
 
 const Radish = styled.img`
-  width: 50%;
-  height: 50%;
+  width: 30%;
+  height: 30%;
+  margin: 15px 0;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (min-width: 600px) {
+    width: 25%;
+    height: 25%;
+  }
 `;
 
 const ChatBubbleContainer = styled.div`
   position: relative;
-  margin-top: 100px;
+  margin-top: 30px;
   height: auto;
   max-width: 260px;
   margin-left: auto;
@@ -60,17 +70,17 @@ const Button = styled.button`
   background-color: #4caf50;
   border: none;
   color: white;
-  padding: 12px 20px;
+  padding: 12px 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
-  margin: 10px 2px;
+  font-size: 15px;
   cursor: pointer;
   border-radius: 12px;
   transition: background-color 0.3s ease;
   width: 170px;
-  width: 180px;
+  margin-left: auto;
+  margin-right: auto;
 
   &:hover {
     background-color: #45a049;
