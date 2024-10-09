@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled, { keyframes, css } from "styled-components";
 import closeButton from "../../assets/button/closeButton.svg";
 import shinHan from "../../assets/banks/금융아이콘_SVG_신한.svg";
+import hana from "../../assets/banks/금융아이콘_SVG_하나.svg";
 
 const fadeOut = keyframes`
   from {
@@ -125,8 +126,8 @@ const LoanProductRecommend = () => {
   };
 
   const dummyProducts = [
-    { name: "참신한", rate: "금리 11.9%", url: "https://www.shinhansavings.com/PD_0139" },
-    { name: "BEST 신용대출", rate: "금리 6.5", url: "https://www.kebhana.com/cont/mall/mall08/mall0802/mall080204/1431602_115200.jsp" },
+    { image: shinHan, name: "참신한", rate: "금리 11.9%", url: "https://www.shinhansavings.com/PD_0139" },
+    { image: hana, name: "BEST 신용대출", rate: "금리 6.5", url: "https://www.kebhana.com/cont/mall/mall08/mall0802/mall080204/1431602_115200.jsp" },
   ];
 
   if (!isVisible) return null;
@@ -140,7 +141,7 @@ const LoanProductRecommend = () => {
         {dummyProducts.map((product, index) => (
           <ProductItem key={index}>
             <ProductInfo>
-              <ProductLogo src={shinHan} alt="은행 로고"/>
+              <ProductLogo src={product.image} alt="은행 로고"/>
               <ProductDetails>
                 <ProductName>{product.name}</ProductName>
                 <InterestRate>{product.rate}</InterestRate>
