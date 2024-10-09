@@ -167,8 +167,8 @@ public class OpenAPIServiceImpl implements OpenAPIService {
         GetDrawPiChartResponse getDrawPiChartResponse = dealService.drawSortedPiChart(member,
             now.getYear(), now.getMonthValue() - 1);
         List<GetCategoryListDto> categoryList = getDrawPiChartResponse.getGetCategoryListDtoList();
-        int[] ary = new int[5];
-        for (int i = 0; i < 5; i++) {
+        int[] ary = new int[6];
+        for (int i = 0; i < 6; i++) {
             double percent = categoryList.get(i).getPercent(); // 카테고리의 소비 비율 (0에서 100 사이의 값)
             double M; // 변환된 값
 
@@ -183,15 +183,17 @@ public class OpenAPIServiceImpl implements OpenAPIService {
 
         //식비, 의료, 문화, 대출, 유흥
         categoryPercentDtoList.add(new CategoryPercentDto("식비", ary[0]));
-        categoryPercentDtoList.add(new CategoryPercentDto("의료", ary[1]));
+        categoryPercentDtoList.add(new CategoryPercentDto("의료", ary[5]));
         categoryPercentDtoList.add(new CategoryPercentDto("문화", ary[2]));
-        categoryPercentDtoList.add(new CategoryPercentDto("대출", ary[3]));
-        categoryPercentDtoList.add(new CategoryPercentDto("유흥", ary[4]));
+        categoryPercentDtoList.add(new CategoryPercentDto("대출", ary[1]));
+        categoryPercentDtoList.add(new CategoryPercentDto("유흥", ary[3]));
         int idx = 0;
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 6; i++){
+            if (i == 4)
+                continue;
             if (ary[i] >= 50)
                 idx ++;
-            if (i != 4)
+            if (i != 5)
                 idx <<= 1;
         }
         MoobtiCharacterDto moobtiCharacterDto = MoobtiCharacterDto.builder()
