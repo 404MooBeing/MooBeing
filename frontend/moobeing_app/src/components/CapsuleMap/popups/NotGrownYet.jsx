@@ -18,6 +18,14 @@ const PopupContainer = styled.div`
   z-index: 1000;
 `;
 
+const CreatedDateText = styled.div`
+  font-size: 12px;
+  color: #348833;
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+`;
+
 const Title = styled.h3`
   margin: 0;
   font-size: 18px;
@@ -46,10 +54,10 @@ const InfoText = styled.div`
 const DateText = styled.div`
   font-size: 14px;
   color: #666;
-  background-color: #f0f0f0;
+  background-color: #ffc9c9;
   border-radius: 10px;
   padding: 8px;
-  margin: 10px 0;
+  margin: 5px 0;
   width: fit-content;
 `;
 
@@ -77,9 +85,9 @@ function NotGrownYetPopup({ data, onClose }) {
       <Message>아직 무가 자라지 않았어요!</Message>
       <DateText>D-{data.remainingDays}</DateText>
       {/* <InfoText>Address: {data.addressName}</InfoText> */}
-      <InfoText>
-        Created At: {new Date(data.createdAt).toLocaleString()}
-      </InfoText>
+      <CreatedDateText>
+        이 무는 {new Date(data.createdAt).toLocaleDateString()}에 심어졌습니다.
+      </CreatedDateText>
     </PopupContainer>
   );
 }

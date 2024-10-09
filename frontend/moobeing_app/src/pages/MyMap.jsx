@@ -21,10 +21,18 @@ const bounce = keyframes`
   }
 `;
 
+const shake = keyframes`
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  75% { transform: translateX(-10px); }
+`;
+
 const MapWrapper = styled.div`
   width: 100%;
   height: 100vh;
   position: relative;
+  animation: ${({ isShaking }) => (isShaking ? shake : "none")} 0.5s;
 `;
 
 const LoadingWrapper = styled.div`
@@ -50,6 +58,13 @@ function MyMap() {
   const mapInstance = useRef(null);
   const userMarkerRef = useRef(null);
   const markersRef = useRef([]);
+
+  const [isShaking, setIsShaking] = useState(false);
+
+  const shakeScreen = () => {
+    setIsShaking(true);
+    setTimeout(() => setIsShaking(false), 500); // 0.5초 후 흔들림 효과 제거
+  };
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -253,6 +268,14 @@ function MyMap() {
       popupType = "Opened";
     }
 
+    // 진동 및 화면 흔들림 효과 추가
+    if (popupType === "NotGrownYet" || popupType === "NotOpenedYet") {
+      if (navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]); // 200ms 진동, 100ms 대기, 다시 200ms 진동
+      }
+      shakeScreen();
+    }
+
     setPopupData({
       type: popupType,
       data: {
@@ -270,7 +293,7 @@ function MyMap() {
   };
 
   return (
-    <MapWrapper ref={mapRef}>
+    <MapWrapper ref={mapRef} isShaking={isShaking}>
       {isLoading && <FindingLocation />}
       {popupData && (
         <PopupComponent
