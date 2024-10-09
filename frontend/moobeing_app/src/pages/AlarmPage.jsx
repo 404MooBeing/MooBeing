@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import DownButton from '../assets/button/yearDownButton.svg';
 import { getAllAlarms, getAlarmsByCategory } from '../apis/AlarmApi';
-import basicRadish from '../assets/radishes/basicRad.svg';
+import basicRadish from '../assets/radishes/basicRad.png';
 
 const AlarmContainer = styled.div`
   padding: 30px;

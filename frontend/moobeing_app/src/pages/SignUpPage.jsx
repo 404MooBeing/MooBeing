@@ -114,8 +114,8 @@ const MaskedDisplay = styled.div`
   letter-spacing: 1px;
 
   @media (min-width: 500px) {
-    font-size: 40px;
-    letter-spacing: 10px;
+    font-size: 30px;
+    letter-spacing: 4px;
   }
 `;
 
@@ -274,6 +274,17 @@ const SignUp = () => {
     setStep(nextStep);
   };
 
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    const regex = /^[^0-9]*$/; // 숫자 제외
+
+    if (regex.test(value)) {
+      setName(value); // 숫자가 포함되지 않은 경우에만 값을 변경
+    } else {
+      showAlert("이름은 숫자를 포함할 수 없습니다.");
+    }
+  };
+
   const handlePasswordConfirm = (e) => {
     setConfirmPassword(e.target.value);
     setPasswordMismatch(password !== e.target.value);
@@ -378,7 +389,7 @@ const SignUp = () => {
                 type="text"
                 placeholder="사용자 이름"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={handleNameChange}
               />
               <ButtonGroup>
                 <PrevButton onClick={goToLogin}>이전</PrevButton>
