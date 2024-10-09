@@ -92,7 +92,7 @@ public class ExpenseController {
 	public ResponseEntity<?> drawPiChart(@AuthenticationPrincipal Member member,
 										 @RequestParam Integer year,
 										 @RequestParam Integer month) {
-		return ResponseEntity.status(HttpStatus.OK).body(dealService.drawPiChart(member, year, month));
+		return ResponseEntity.status(HttpStatus.OK).body(dealService.drawSortedPiChart(member, year, month));
 	}
 
 	@Operation(
