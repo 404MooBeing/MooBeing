@@ -17,15 +17,6 @@
     url("https://fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff")
       format("woff");
 }
-
-@font-face {
-  font-family: "EarlyFontDiary";
-  src: url("https://gcore.jsdelivr.net/gh/projectnoonnu/noonfonts_220508@1.0/EarlyFontDiary.woff2")
-    format("woff2");
-  font-weight: normal;
-  font-style: normal;
-}
-
 @font-face {
   font-family: "Dream";
   font-style: normal;
@@ -52,9 +43,8 @@
     format("woff");
 }
 @font-face {
-  font-family: "NPSfontBold";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/NPSfontBold.woff2")
-    format("woff2");
+  font-family: 'NPSfontBold';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/NPSfontBold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
 }
@@ -62,14 +52,12 @@
 /* 기본 body 설정 */
 body {
   margin: 0;
-  font-family: "mainFont", "Dream", system-ui, "NPSfontBold", BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "mainFont", "Dream", system-ui, "NPSfontBold", BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* 코드 블록 설정 */
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
