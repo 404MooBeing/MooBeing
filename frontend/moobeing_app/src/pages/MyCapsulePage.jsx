@@ -40,7 +40,8 @@ const Title = styled.div`
 const TitleText = styled.span`
   display: flex;
   align-items: center;
-  
+  white-space: nowrap;  // 변경된 부분: 텍스트가 한 줄에 표시되도록 설정
+
   & > img {
     margin: 0 22px;
     user-select: none;
@@ -219,7 +220,7 @@ const MyCapsulePage = () => {
       <Container ref={containerRef}>
         <ContentWrapper>
           <Title>
-            <TitleText>
+          <TitleText>
               <img src={LeftButton} alt="이전 달" onClick={() => changeMonth(-1)} />
               <span onClick={toggleDateSort}>{getTitleText()}</span>
               <img src={RightButton} alt="다음 달" onClick={() => changeMonth(1)} />
