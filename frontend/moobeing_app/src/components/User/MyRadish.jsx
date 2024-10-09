@@ -19,6 +19,7 @@ import {
 } from "../../apis/RadishApi";
 import useUserStore from "../../store/UserStore";
 import checkBox from "../../assets/checkBox.svg";
+import { useNavigate } from "react-router-dom";
 
 const Radishs = {
   aniRad: aniRad,
@@ -43,8 +44,13 @@ const Container = styled.div`
 const ChooseButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
+  background-color: rgba(255, 255, 255, 1);
+
+  width: 100%;
   margin-bottom: 5px;
   margin-right: 30px;
+  background-color: transparent !important;
+  z-index: 1000;
 `;
 
 const ChooseButton = styled.button`
@@ -63,6 +69,7 @@ const ScrollContainer = styled.div`
   height: calc(100vh - 420px); /* 상단 요소들의 높이를 고려하여 조정하세요 */
   overflow-y: auto;
   padding-top: 15px;
+  z-index : -1;
 
   /* 크롬, 사파리, 오페라 */
   &::-webkit-scrollbar {
@@ -79,7 +86,8 @@ const ScrollContainer = styled.div`
 const CardContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+  // justify-content: space-evenly;
   margin-bottom: 30px;
 `;
 
@@ -88,6 +96,7 @@ const CharacterCard = styled.div`
   max-width: 180px;
   height: 170px;
   margin-bottom: 30px;
+  margin-left: 5px;
   background-color: #f5fded;
   display: flex;
   flex-direction: column;
@@ -98,7 +107,7 @@ const CharacterCard = styled.div`
   border-radius: 10%;
   cursor: ${(props) => (props.isselectable === "true" ? "pointer" : "default")};
   box-shadow: 0.3px 0.3px 6px rgba(0, 0, 0, 0.12);
-  ${(props) =>
+  ${(props) =>  
     props.isselected &&
     `
       filter: drop-shadow(0 0 8px #348833);
@@ -282,6 +291,7 @@ const MyRadish = () => {
   const [growingCharacter, setGrowingCharacter] = useState(null);
   const [isGrowthComplete, setIsGrowthComplete] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRadishCollection = async () => {
@@ -372,6 +382,7 @@ const MyRadish = () => {
 
   const handleAcquire = () => {
     window.location.reload();
+    navigate('/user?tab=collection')
   };
 
   return (

@@ -26,7 +26,7 @@ const TransactionHistory = () => {
   const location = useLocation();
   const { account: selectedAccount, accounts: initialAccounts } = location.state || {}; // useLocation으로 받은 account와 accounts
 
-  const { setAccount, setAccounts, accounts } = useTransactionStore();
+  const { setAccount, setAccounts, resetState, accounts } = useTransactionStore();
 
   // 최초에 초기값 설정 및 선택된 계좌 설정
   useEffect(() => {
@@ -37,8 +37,13 @@ const TransactionHistory = () => {
     if (selectedAccount) {
       setAccount(selectedAccount); // 선택된 계좌를 store에 저장
     }
-  }, [initialAccounts, selectedAccount, accounts, setAccounts, setAccount]);
 
+    return () => {
+      // 페이지를 떠날 때 상태 초기화
+      resetState();
+    };
+  }, [initialAccounts, selectedAccount, accounts, setAccounts, setAccount, resetState]);
+  
   return (
     <Screen>
       <Container>

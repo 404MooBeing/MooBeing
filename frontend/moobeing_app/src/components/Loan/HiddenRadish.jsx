@@ -160,7 +160,7 @@ function HiddenRadish() {
     return images[stages[currentStageIndex]];
   };
 
-  const isComplete = paidLoanNum === totalLoanNum;
+  const isComplete = paidLoanNum === totalLoanNum && totalLoanNum != 0;
 
   const handleGetRadish = () => {
     if (isComplete) {

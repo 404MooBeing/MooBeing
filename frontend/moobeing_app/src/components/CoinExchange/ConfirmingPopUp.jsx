@@ -9,7 +9,7 @@ const PayButton = styled.button`
   color: #5E5054;
   border: none;
   padding: 10px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   border-radius: 10px;
   cursor: pointer;
@@ -34,7 +34,7 @@ const PaymentPopup = styled.div`
 
 const PopupMessage = styled.div`
   text-align: center;
-  font-size: 20px; 
+  font-size: 16px; 
   margin: 30px 0;
 `
 

@@ -16,8 +16,12 @@ const PieGraph = ({ width = "100%", height = 300 }) => {
   const pieChartData = useSpendStore((state) => state.pieChartData);
   const data = pieChartData?.getPieChartList || [];
   
+  // value가 0인 항목을 필터링
+  // const filteredData = data.filter(d => d.value > 0);
+  
   // 전체 합계 계산
   const total = data.length > 0 ? data.reduce((sum, item) => sum + item.value, 0) : 1;
+
 
   // 데이터가 없는 경우 이무것도 표시하지 않기
   if (data.length === 0) {
@@ -42,8 +46,8 @@ const PieGraph = ({ width = "100%", height = 300 }) => {
           from: "color",
           modifiers: [["darker", 0.2]],
         }}
-        arcLinkLabelsSkipAngle={360}
-        arcLabelsSkipAngle={10}
+        enableArcLinkLabels={false}
+        arcLinkLabelsSkipAngle={10}
         arcLabelsTextColor={{
           from: "color",
           modifiers: [["darker", 2]],

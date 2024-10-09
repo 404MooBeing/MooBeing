@@ -66,9 +66,8 @@ const SearchContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  width: 90%;
-  max-width: 400px;
-  margin: 15px 0 10px 0;
+  width: 90%; /* 부모 요소의 전체 너비 사용 */
+  margin: 15px auto 10px auto; /* 중앙 정렬을 위해 margin 변경 */
   height: 40px;
   box-sizing: border-box;
 `;
@@ -80,7 +79,7 @@ const SearchInput = styled.input`
   font-size: 16px;
   height: 100%;
   outline: none;
-  padding: 0 40px 0 15px;
+  padding: 0 15px;
   font-family: 'mainFont';
   box-sizing: border-box;
 `;
