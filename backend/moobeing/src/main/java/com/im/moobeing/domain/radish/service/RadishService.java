@@ -78,6 +78,7 @@ public class RadishService {
                 .placeName(requestDto.getPlaceName())
                 .endAt(LocalDateTime.now().plusDays(requestDto.getType().getHarvestDays()))
                 .character(memberRadish.getRadish())
+                .member(member)
                 .build();
 
         radishCapsuleRepository.save(radishCapsule);

@@ -67,7 +67,7 @@ public class RadishCapsule {
 
     @Builder
     public RadishCapsule(Long id, Deal deal, Radish character, String description, String imgUrl, CapsuleType type,
-                         Double lat, Double lng, String placeName, String addressName, LocalDateTime createAt, LocalDateTime endAt) {
+                         Double lat, Double lng, String placeName, String addressName, LocalDateTime createAt, LocalDateTime endAt, Member member) {
         this.id = id;
         this.deal = deal;
         this.character = character;
@@ -80,6 +80,7 @@ public class RadishCapsule {
         this.addressName = addressName;
         this.createAt = LocalDateTime.now();
         this.endAt = endAt;
+        this.member = member;
     }
 
     public void harvest() {
