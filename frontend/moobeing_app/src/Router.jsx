@@ -46,11 +46,11 @@ function Router() {
   const [showChatbot, setShowChatbot] = useState(true); // 챗봇 표시 여부 상태
 
   // 로그인되지 않았을 경우 로그인 페이지로 리디렉션
-  useEffect(() => {
-    if (!userInfo) {
-      navigate("/login");
-    }
-  }, [userInfo, navigate]);
+  // useEffect(() => {
+  //   if (!userInfo) {
+  //     navigate("/login");
+  //   }
+  // }, [userInfo, navigate]);
 
   // Header와 Footer를 표시하지 않을 경로 목록
   const noHeaderFooterRoutes = ["/loading", "/login", "/signup", "/welcome"];
@@ -91,41 +91,38 @@ function Router() {
         }}
       >
         <Routes>
-          <Route path="/" element={userInfo ? <Home /> : <Navigate replace to="/login" />} />
-          <Route path="/loading" element={<Loading />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/alarm" element={<Alarm />} />
-          <Route path="/choose-character" element={<CapsuleChooseCharacter />} />
-          <Route path="/choose-location" element={<CapsuleChooseLocation />} />
-          <Route path="/capsule-harvest" element={<CapsuleHarvest />} />
-          <Route path="/capsule-intro" element={<CapsuleIntro />} />
-          <Route path="/capsule-create" element={<CapsuleCreate />} />
-          <Route path="/capsule-planting" element={<CapsulePlanting />} />
-          <Route path="/capsule-search" element={<CapsuleSearch />} />
-          <Route path="/coin-exchange" element={<CoinExchange />} />
-          <Route path="/coin" element={<Coin />} />
-          <Route path="/get-radish" element={<GetRadishCharacter />} />
-          <Route path="/total-journey" element={<TotalLoanJourney />} />
-          <Route path="/each-journey/:loanName" element={<EachLoanJourney />} />
-          <Route path="/loan" element={<Loan />} />
-          <Route path="/loan-payment" element={<LoanPayment />} />
-          <Route path="/menu" element={<Menu />} />
-          <Route path="/moobti" element={<Moobti />} />
-          <Route path="/my-capsule" element={<MyCapsule />} />
-          <Route path="/my-map" element={<MyMap />} />
-          <Route path="/user" element={<User />} />
-          <Route path="/password-change" element={<PasswordChange />} />
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/economy-quiz" element={<EconomyQuiz />} />
-          <Route path="/quiz/result/:quizId" element={<QuizResult />} />
-          <Route path="/spend" element={<Spend />} />
-          <Route
-            path="/transaction-history/:accountId"
-            element={<TransactionHistory />}
-          />
-          <Route path="/welcome" element={<Welcome />} />
-          <Route path="/chatbot" element={<ChatbotPage />} />
+          <Route path="/" element={userInfo ? <Home /> : <Navigate replace to="/login" />} />
+          <Route path="/loading" element={userInfo ? <Loading /> : <Navigate replace to="/login" />} />
+          <Route path="/alarm" element={userInfo ? <Alarm /> : <Navigate replace to="/login" />} />
+          <Route path="/choose-character" element={userInfo ? <CapsuleChooseCharacter /> : <Navigate replace to="/login" />} />
+          <Route path="/choose-location" element={userInfo ? <CapsuleChooseLocation /> : <Navigate replace to="/login" />} />
+          <Route path="/capsule-harvest" element={userInfo ? <CapsuleHarvest /> : <Navigate replace to="/login" />} />
+          <Route path="/capsule-intro" element={userInfo ? <CapsuleIntro /> : <Navigate replace to="/login" />} />
+          <Route path="/capsule-create" element={userInfo ? <CapsuleCreate /> : <Navigate replace to="/login" />} />
+          <Route path="/capsule-planting" element={userInfo ? <CapsulePlanting /> : <Navigate replace to="/login" />} />
+          <Route path="/capsule-search" element={userInfo ? <CapsuleSearch /> : <Navigate replace to="/login" />} />
+          <Route path="/coin-exchange" element={userInfo ? <CoinExchange /> : <Navigate replace to="/login" />} />
+          <Route path="/coin" element={userInfo ? <Coin /> : <Navigate replace to="/login" />} />
+          <Route path="/get-radish" element={userInfo ? <GetRadishCharacter /> : <Navigate replace to="/login" />} />
+          <Route path="/total-journey" element={userInfo ? <TotalLoanJourney /> : <Navigate replace to="/login" />} />
+          <Route path="/each-journey/:loanName" element={userInfo ? <EachLoanJourney /> : <Navigate replace to="/login" />} />
+          <Route path="/loan" element={userInfo ? <Loan /> : <Navigate replace to="/login" />} />
+          <Route path="/loan-payment" element={userInfo ? <LoanPayment /> : <Navigate replace to="/login" />} />
+          <Route path="/menu" element={userInfo ? <Menu /> : <Navigate replace to="/login" />} />
+          <Route path="/moobti" element={userInfo ? <Moobti /> : <Navigate replace to="/login" />} />
+          <Route path="/my-capsule" element={userInfo ? <MyCapsule /> : <Navigate replace to="/login" />} />
+          <Route path="/my-map" element={userInfo ? <MyMap /> : <Navigate replace to="/login" />} />
+          <Route path="/user" element={userInfo ? <User /> : <Navigate replace to="/login" />} />
+          <Route path="/password-change" element={userInfo ? <PasswordChange /> : <Navigate replace to="/login" />} />
+          <Route path="/quiz" element={userInfo ? <Quiz /> : <Navigate replace to="/login" />} />
+          <Route path="/economy-quiz" element={userInfo ? <EconomyQuiz /> : <Navigate replace to="/login" />} />
+          <Route path="/quiz/result/:quizId" element={userInfo ? <QuizResult /> : <Navigate replace to="/login" />} />
+          <Route path="/spend" element={userInfo ? <Spend /> : <Navigate replace to="/login" />} />
+          <Route path="/transaction-history/:accountId" element={userInfo ? <TransactionHistory /> : <Navigate replace to="/login" />} />
+          <Route path="/welcome" element={userInfo ? <Welcome /> : <Navigate replace to="/login" />} />
+          <Route path="/chatbot" element={userInfo ? <ChatbotPage /> : <Navigate replace to="/login" />} />
         </Routes>
       </div>
       {shouldShowHeaderFooter && <Footer />}
