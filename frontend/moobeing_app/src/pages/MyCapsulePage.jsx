@@ -40,7 +40,7 @@ const Title = styled.div`
 const TitleText = styled.span`
   display: flex;
   align-items: center;
-  
+
   & > img {
     margin: 0 22px;
     user-select: none;
@@ -54,6 +54,11 @@ const TitleText = styled.span`
     margin: 0 22px;
     user-select: none;
     cursor: pointer;
+
+    // 가로 가이즈가 350px 보다 작으면 글자 크기 2px 줄이기
+    @media (max-width: 350px) {
+      font-size: 23px; // 2px 줄임
+    }
   }
 `;
 
@@ -219,7 +224,7 @@ const MyCapsulePage = () => {
       <Container ref={containerRef}>
         <ContentWrapper>
           <Title>
-            <TitleText>
+          <TitleText>
               <img src={LeftButton} alt="이전 달" onClick={() => changeMonth(-1)} />
               <span onClick={toggleDateSort}>{getTitleText()}</span>
               <img src={RightButton} alt="다음 달" onClick={() => changeMonth(1)} />
