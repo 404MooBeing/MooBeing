@@ -74,11 +74,11 @@ public class RadishController {
 
     @Operation(summary = "무 수확", description = "캡슐 아이디로 무를 수확합니다. 수확 가능 시간이 되어야 수확할 수 있습니다.")
     @PostMapping("/harvest/{capsuleId}")
-    public ResponseEntity<RadishCapsuleResponse> harvestRadish(
+    public ResponseEntity<RadishCapsuleHarvestResponse> harvestRadish(
             @AuthenticationPrincipal Member member,
             @PathVariable Long capsuleId
     ) {
-        RadishCapsuleResponse response = radishService.harvestRadishCapsule(capsuleId, member);
+        RadishCapsuleHarvestResponse response = radishService.harvestRadishCapsule(capsuleId, member);
         return ResponseEntity.ok(response);
     }
 
