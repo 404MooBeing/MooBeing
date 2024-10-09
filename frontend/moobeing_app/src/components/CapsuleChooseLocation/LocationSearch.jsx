@@ -2,40 +2,27 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 const SearchContainer = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* 수평 중앙 정렬 */
 `;
 
 const FormContainer = styled.form`
   display: flex;
   align-items: center;
-  margin-top: 10px;
-  margin-bottom: 0px;
-
-  /* gap: 4px; */
+  margin-bottom: 10px;
 `;
 
 const SearchInput = styled.input`
-  width: 260px;
+  width: 230px;
   padding: 10px;
   font-size: 16px;
   margin: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  outline: none;
-
-  &:focus {
-    outline: 1px solid #4caf50;
-    border: 1px solid #4caf50;
-  }
 `;
 
 const SearchButton = styled.button`
   padding: 10px 20px;
   font-size: 16px;
-  border-radius: 5px;
   background-color: #4caf50;
   color: white;
   border: none;
@@ -44,9 +31,8 @@ const SearchButton = styled.button`
 
 const ResultsList = styled.ul`
   list-style-type: none;
-  padding: 3px 20px;
+  padding: 0;
   max-height: 200px;
-  /* margin: 10px; */
   overflow-y: auto;
 `;
 
@@ -75,16 +61,10 @@ function LocationSearch({ onSearch, places, onSelectPlace }) {
     <SearchContainer>
       <FormContainer onSubmit={handleSubmit}>
         <SearchInput
-          type="search"
+          type="text"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           placeholder="주소 검색"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault(); // 기본 Enter 동작을 막음
-              onSearch(keyword); // 검색 함수 호출
-            }
-          }}
         />
         <SearchButton type="submit">검색</SearchButton>
       </FormContainer>

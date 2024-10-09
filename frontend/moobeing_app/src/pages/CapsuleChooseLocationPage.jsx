@@ -54,14 +54,6 @@ const DecisionButton = styled.button`
   font-size: 16px;
 `;
 
-const SearchContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px; /* 선택사항: 모서리를 둥글게 만듦 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 아래쪽에만 그림자 효과 */
-`;
-
 function CapsuleChooseLocationPage() {
   const [places, setPlaces] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
@@ -208,13 +200,11 @@ function CapsuleChooseLocationPage() {
 
   return (
     <>
-      <SearchContainer>
-        <LocationSearch
-          onSearch={searchPlaces}
-          places={places}
-          onSelectPlace={handleSelectPlace}
-        />
-      </SearchContainer>
+      <LocationSearch
+        onSearch={searchPlaces}
+        places={places}
+        onSelectPlace={handleSelectPlace}
+      />
       <MapComponent
         markers={customMarkers}
         userLocation={userLocation}
