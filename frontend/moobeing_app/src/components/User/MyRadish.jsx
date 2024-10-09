@@ -21,6 +21,8 @@ const ChooseButtonContainer = styled.div`
   justify-content: flex-end;
   margin-bottom: 5px;
   margin-right: 30px;
+  background-color: transparent !important;
+  z-index: 1000;
 `;
 
 const ChooseButton = styled.button`
