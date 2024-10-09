@@ -15,23 +15,24 @@ const ResultContainer = styled.div`
 `;
 
 const Expression = styled.div`
-  font-size: 40px;
+  font-size: 30px;
   font-weight: bold;
   margin-bottom: 20px;
 `;
 
 const Result = styled.div`
-  font-size: 30px;
+  font-size: 20px;
   margin-bottom: 10px;
 `;
 
 const Radish = styled.img`
-  width: 50%;
-  height: 50%;
+  width: 40%;
+  height: 40%;
+  margin: 15px 0;
 
   @media (min-width: 600px) {
-    width: 40%;
-    height: 40%;
+    width: 30%;
+    height: 30%;
   }
 `;
 
@@ -39,7 +40,7 @@ const Button = styled.button`
   background-color: #4caf50;
   border: none;
   color: white;
-  padding: 12px 20px;
+  padding: 12px 15px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
