@@ -8,17 +8,17 @@ VALUES
 -- 1.5. Account Product 테이블에 상품 데이터 삽입
 INSERT IGNORE INTO account_product (id, bank_Code, account_Name, account_Description, account_Type_Unique_No, bank_image)
 VALUES
-(1, '090', '카카오뱅크 자유입출금계좌', '카카오뱅크의 자유입출금 계좌로, 모바일에서 간편하게 관리할 수 있는 현대적인 계좌입니다.', '090-1-5673fb2930a740', 'https://s3.seungki-cho.lol/moobeing/kakao.png'),
-(2, '003', 'IBK기업은행 자유입출금통장', 'IBK기업은행의 개인 및 소상공인을 위한 자유입출금 계좌입니다.', '003-1-c13adbc5193e4e', 'https://s3.seungki-cho.lol/moobeing/ibk.svg'),
-(3, '004', 'KB국민은행 자유입출금통장', 'KB국민은행의 인기 있는 자유입출금 계좌로, 다양한 금융 서비스를 편리하게 이용할 수 있습니다.', '004-1-3e3de8b682fb43', 'https://s3.seungki-cho.lol/moobeing/kookmin.svg'),
-(4, '020', '우리은행 자유입출금계좌', '우리은행의 기본 자유입출금 계좌로, 입출금이 자유롭고 다양한 혜택을 제공합니다.', '020-1-ed57896c14f04d', 'https://s3.seungki-cho.lol/moobeing/woori.svg'),
-(5, '081', '하나은행 자유입출금계좌', '하나은행의 자유입출금 계좌로, 입출금이 자유롭고 다양한 금융 서비스를 제공합니다.', '081-1-8b171a6b846c4e', 'https://s3.seungki-cho.lol/moobeing/hana.svg'),
-(6, '088', '신한은행 자유통장', '신한은행의 자유로운 입출금 계좌로, 편리한 금융 생활을 위한 필수 계좌입니다.', '088-1-ba3e624fcec04c', 'https://s3.seungki-cho.lol/moobeing/shinhan.svg'),
-(7, '088', '신한 MY 통장', '신한은행의 자유로운 입출금 계좌로, 다양한 금융 서비스를 제공합니다.', '088-7-my', 'https://s3.seungki-cho.lol/moobeing/shinhan.svg'),
-(8, '088', '신한 S 드림 적금', '신한은행의 장기 적금을 위한 통장.', '088-8-dream', 'https://s3.seungki-cho.lol/moobeing/shinhan.svg'),
-(9, '088', '신한 S 행복 적금', '신한은행의 장기 적금을 위한 또 다른 상품.', '088-9-happy', 'https://s3.seungki-cho.lol/moobeing/shinhan.svg'),
-(10, '088', '신한 주니어 저축예금', '신한은행의 주니어를 위한 저축 계좌.', '088-10-junior', 'https://s3.seungki-cho.lol/moobeing/shinhan.svg'),
-(11, '088', '신한 S-20 정기예금', '신한은행의 장기 정기예금 상품.', '088-11-s20', 'https://s3.seungki-cho.lol/moobeing/shinhan.svg');
+(1, '090', '카카오뱅크 자유입출금계좌', '카카오뱅크의 자유입출금 계좌로, 모바일에서 간편하게 관리할 수 있는 현대적인 계좌입니다.', '090-1-5673fb2930a740', 'kakaoBank'),
+(2, '003', 'IBK기업은행 자유입출금통장', 'IBK기업은행의 개인 및 소상공인을 위한 자유입출금 계좌입니다.', '003-1-c13adbc5193e4e', 'ibk'),
+(3, '004', 'KB국민은행 자유입출금통장', 'KB국민은행의 인기 있는 자유입출금 계좌로, 다양한 금융 서비스를 편리하게 이용할 수 있습니다.', '004-1-3e3de8b682fb43', 'kb'),
+(4, '020', '우리은행 자유입출금계좌', '우리은행의 기본 자유입출금 계좌로, 입출금이 자유롭고 다양한 혜택을 제공합니다.', '020-1-ed57896c14f04d', 'uri'),
+(5, '081', '하나은행 자유입출금계좌', '하나은행의 자유입출금 계좌로, 입출금이 자유롭고 다양한 금융 서비스를 제공합니다.', '081-1-8b171a6b846c4e', 'hana'),
+(6, '088', '신한은행 자유통장', '신한은행의 자유로운 입출금 계좌로, 편리한 금융 생활을 위한 필수 계좌입니다.', '088-1-ba3e624fcec04c', 'shinhan'),
+(7, '088', 'MG새마을금고 MY 통장', '새마을금고의 자유로운 입출금 계좌로, 다양한 금융 서비스를 제공합니다.', '088-7-my', 'mg'),
+(8, '088', '토스 S 드림 적금', '토스뱅크의 장기 적금을 위한 통장.', '088-8-dream', 'toss'),
+(9, '088', '신한 S 행복 적금', '신한은행의 장기 적금을 위한 또 다른 상품.', '088-9-happy', 'shinhan'),
+(10, '088', '신한 주니어 저축예금', '신한은행의 주니어를 위한 저축 계좌.', '088-10-junior', 'shinhan'),
+(11, '088', '신한 S-20 정기예금', '신한은행의 장기 정기예금 상품.', '088-11-s20', 'shinhan');
 
 
 SELECT member_id FROM member WHERE email = 'test@gmail.com';
