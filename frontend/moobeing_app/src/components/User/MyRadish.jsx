@@ -24,6 +24,8 @@ const ChooseButtonContainer = styled.div`
   width: 100%;
   margin-bottom: 5px;
   margin-right: 30px;
+  background-color: transparent !important;
+  z-index: 1000;
 `;
 
 const ChooseButton = styled.button`
