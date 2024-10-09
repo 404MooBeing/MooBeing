@@ -185,9 +185,7 @@ public class DealService {
                     .filter(deal -> deal.getDealCategory() == category)
                     .mapToLong(Deal::getAbsPrice)
                     .sum();
-            if (totalAmount > 0) {
                 totalAmountsByCategory.put(category, totalAmount);
-            }
         }
 
         // PiChart DTO 생성
