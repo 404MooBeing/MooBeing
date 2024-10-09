@@ -132,7 +132,7 @@ const fadeIn = keyframes`
 
 const CardWrapper = styled.div`
   position: absolute;
-  top: 47%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;

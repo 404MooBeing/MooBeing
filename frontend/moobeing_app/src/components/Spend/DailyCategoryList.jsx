@@ -166,7 +166,7 @@ const DailyCategoryList = ({ payments }) => {
                   {/* payment.id를 고유한 키로 사용 */}
                   <Icon src={iconSrc} alt={payment.categoryName} />
                   <PaymentInfo>
-                    {title.length > 7 ? `${title.slice(0, 7)} ...` : title}
+                    {title.length > 7 ? `${title.slice(0, 7)}` : title}
                     <Price>{price.toLocaleString()}원</Price>
                   </PaymentInfo>
                 </PaymentItem>
