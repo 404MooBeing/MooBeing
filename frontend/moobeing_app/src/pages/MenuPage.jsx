@@ -66,9 +66,9 @@ const SearchContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  width: 90%;
-  max-width: 400px;
-  margin: 15px 0 10px 0;
+  width: 90%; /* 부모 요소의 전체 너비 사용 */
+  /* max-width: 420px; 최대 너비 설정 */
+  margin: 15px auto 10px auto; /* 중앙 정렬을 위해 margin 변경 */
   height: 40px;
   box-sizing: border-box;
 `;

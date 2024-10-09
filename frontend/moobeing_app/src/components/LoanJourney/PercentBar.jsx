@@ -10,7 +10,7 @@ const BarContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 0px;
-  padding: 10%;
+  padding: 30px 0;
 `;
 
 const GraphContainer = styled.div`
