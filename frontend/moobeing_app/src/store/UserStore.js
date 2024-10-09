@@ -22,8 +22,10 @@ const useUserStore = create(
       setCreditRate: (rate) => set({ creditRate: rate }),
 
       // 로그아웃 기능: 사용자 정보를 초기화
-      logout: () =>
-        set({ userInfo: null, creditRate: null, canAccessQuiz: false }),
+      logout: () => {
+        set({ userInfo: null, creditRate: null, canAccessQuiz: false });
+        sessionStorage.removeItem("user-store");
+      },
     }),
     {
       name: "user-store", // 이름은 SessionStorage에 저장될 key
