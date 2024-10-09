@@ -6,6 +6,15 @@ import leftButton from "../../assets/button/leftButton.svg";
 import rightButton from "../../assets/button/rightButton.svg";
 import leftButtonBlack from "../../assets/button/leftButtonBlack.svg";
 import rightButtonBlack from "../../assets/button/rightButtonBlack.svg";
+import ibk from "../../assets/banks/금융아이콘_SVG_IBK.svg";
+import kb from "../../assets/banks/금융아이콘_SVG_KB.svg";
+import mg from "../../assets/banks/금융아이콘_SVG_MG새마을금고.svg";
+import nh from "../../assets/banks/금융아이콘_SVG_농협.svg";
+import shinhan from "../../assets/banks/금융아이콘_SVG_신한.svg";
+import uri from "../../assets/banks/금융아이콘_SVG_우리.svg";
+import kakaoBank from "../../assets/banks/금융아이콘_SVG_카카오뱅크.svg";
+import toss from "../../assets/banks/금융아이콘_SVG_토스.svg";
+import hana from "../../assets/banks/금융아이콘_SVG_하나.svg";
 
 const BankLogo = styled.img`
   width: 40px;
@@ -129,6 +138,18 @@ const LoadingContainer = styled.div`
   color: #858585;
 `;
 
+const bankLogos = {
+  ibk: ibk,
+  kb: kb,
+  mg: mg,
+  nh: nh,
+  shinhan: shinhan,
+  uri: uri,
+  kakaoBank: kakaoBank,
+  toss: toss,
+  hana: hana,
+};
+
 function LoanList({ loans }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -178,7 +199,7 @@ function LoanList({ loans }) {
               key={index}
               onClick={() => handleLoanItemClick(loan.loanProductName)}
             >
-              <BankLogo src={loan.bankImageUrl} alt="로고" />
+              <BankLogo src={bankLogos[loan.bankImageUrl]} alt={loan.bankImageUrl} />
               <LoanInfo>
                 <LoanName>
                   <div>{loan.loanProductName}</div>
