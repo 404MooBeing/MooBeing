@@ -12,17 +12,19 @@ import useCapsuleStore from "../store/CapsuleStore";
 import useRadishStore from "../store/RadishStore";
 
 const Container = styled.div`
+  width: 80%;
+  max-width: 500px;
+  margin: 0 auto;
   margin-top: 10%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   padding: 20px;
 `;
 
 const Title = styled.h1`
   align-self: flex-start;
-
-  margin-bottom: 10px;
+  margin-bottom: -5px;
   font-size: 28px;
 `;
 
@@ -39,6 +41,38 @@ const CharacterContainer = styled.div`
   align-items: center;
   width: 100%;
   position: relative;
+`;
+
+const CharacterSizes = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+  width: 230px;
+`;
+
+const DateInfo = styled.p`
+  color: #348833;
+  margin-top: 25px;
+  align-self: center;
+`;
+
+const NextButton = styled.button`
+  width: 80%;
+  max-width: 500px;
+  background-color: #e0eed2;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
 `;
 
 const CharacterCard = styled.div`
@@ -63,7 +97,7 @@ const CharacterImg = styled.img`
 const CharacterName = styled.div`
   position: absolute;
   bottom: 0;
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border-radius: 0px 0px 20px 20px;
   border-top: 1px solid #c9c9c9;
@@ -93,17 +127,6 @@ const RightButton = styled(NavigationButton)`
   right: 10px;
 `;
 
-const CharacterSizes = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  margin-top: 40px;
-  width: 230px;
-  margin-left: auto;
-  margin-right: auto;
-`;
-
 const CharacterSize = styled.button`
   padding: 5px 10px;
   border-radius: 10px;
@@ -112,29 +135,11 @@ const CharacterSize = styled.button`
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
   flex: 1;
   max-width: 100px;
+  color: black;
   height: 40px;
   cursor: pointer;
   outline: ${(props) => (props.selected ? "2px solid #348833" : "none")};
   font-weight: bold;
-`;
-
-const NextButton = styled.button`
-  width: 100%;
-  background-color: #e0eed2;
-  color: black;
-  border: none;
-  margin-top: 10%;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  align-self: center;
-`;
-
-const DateInfo = styled.p`
-  color: #348833;
-  margin-top: 20px;
-  align-self: center;
 `;
 
 function ChooseCharacter() {

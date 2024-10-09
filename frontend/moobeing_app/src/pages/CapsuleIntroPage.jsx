@@ -81,22 +81,27 @@ const ContentText = styled.p`
 `;
 
 const Radish = styled.img`
-  width: 35%;
+  width: 45%;
   height: auto;
   align-self: center;
-  margin: 10%;
+  margin-top: 20%;
 `;
 
 const StartButton = styled.button`
-  width: 100%;
+  width: 80%;
+  max-width: 500px;
   background-color: #e0eed2;
   color: black;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
+  font-weight: bold;
   border-radius: 5px;
   cursor: pointer;
-  align-self: center;
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
 `;
 
 function CapsuleIntro() {

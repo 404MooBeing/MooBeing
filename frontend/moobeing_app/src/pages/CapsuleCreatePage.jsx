@@ -11,7 +11,7 @@ const Container = styled.div`
   width: 80%;
   max-width: 500px;
   margin: 0 auto;
-  margin-top: 2vh;
+  margin-top: -10%;
   height: 80vh;
 `;
 
@@ -126,7 +126,8 @@ const CharCount = styled.span`
 `;
 
 const NextButton = styled.button`
-  width: 100%;
+  width: 80%;
+  max-width: 500px;
   background-color: #e0eed2;
   color: black;
   border: none;
@@ -135,8 +136,10 @@ const NextButton = styled.button`
   font-weight: bold;
   border-radius: 5px;
   cursor: pointer;
-  align-self: center;
-  margin-top: 15%;
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
 `;
 
 function CapsuleMessage() {
