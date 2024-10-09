@@ -25,6 +25,18 @@ public class RadishController {
     private final RadishService radishService;
     private final RadishCapsuleRepository radishCapsuleRepository;
 
+    @Operation(summary = "테스트용 메서드, 모든 캡슐 조회", description = "엔티티를 가져오는 메서드입니다.")
+    @GetMapping("/test/all")
+    public ResponseEntity<List<TestCapsuleResponse>> getAllCapsules() {
+        return ResponseEntity.ok(radishService.getAllCapsules());
+    }
+
+    @Operation(summary = "테스트용 메서드, 무 다시 심기", description = "id에 따라 isHarvested를 조정합니다")
+    @PostMapping("/test/{id}")
+    public ResponseEntity<TestCapsuleResponse> reviveCapsule(@PathVariable Long id) {
+        return ResponseEntity.ok(radishService.reviveCapsule(id));
+    }
+
     @Operation(summary = "나의 무들 확인", description = "보유 중인 무를 반환합니다. 이후 radishId를 함께 요청")
     @GetMapping("/characters")
     public ResponseEntity<List<CharactersResponse>> getCharacters(@AuthenticationPrincipal Member member) {

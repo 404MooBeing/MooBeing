@@ -37,6 +37,18 @@ public class RadishService {
     private final MemberRadishRepository memberRadishRepository;
     private final PointService pointService;
 
+    public List<TestCapsuleResponse> getAllCapsules() {
+        return radishCapsuleRepository.findAll().stream().map(TestCapsuleResponse::of).toList();
+    }
+
+    public TestCapsuleResponse reviveCapsule(Long capsuleId) {
+        RadishCapsule radishCapsule = radishCapsuleRepository.findById(capsuleId)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.RD_NO_RADISH));
+        radishCapsule.revive();
+        radishCapsuleRepository.save(radishCapsule);
+        return TestCapsuleResponse.of(radishCapsule);
+    }
+
     public CreateRadishCapsuleResponse createRadishCapsule(Member member, CreateRadishCapsuleRequest requestDto) {
 
         throwIfNearbyCapsule(requestDto.getLat(), requestDto.getLng(), radishCapsuleRepository.findByMemberAndNotHarvested(member.getId()), 20);

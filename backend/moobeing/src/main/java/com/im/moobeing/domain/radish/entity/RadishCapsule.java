@@ -88,4 +88,8 @@ public class RadishCapsule {
         }
         isHarvested = true;
     }
+
+    public void revive() { // 테스트용 메서드
+        isHarvested = false;
+    }
 }
