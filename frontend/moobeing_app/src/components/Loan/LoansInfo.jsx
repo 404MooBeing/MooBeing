@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import LoanList from "./LoanList";
 import goToJourney from "../../assets/button/goToJourney.svg";
 import { getLoanSort, getLoanPercent } from "../../apis/LoanApi.js";
-import basicRad from "../../assets/radishes/basicRad.svg"; // basicRad 이미지 임포트
+import basicRad from "../../assets/radishes/basicRad.png"; // basicRad 이미지 임포트
 
 const fadeOut = keyframes`
   from {

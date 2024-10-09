@@ -2,17 +2,6 @@ import { create } from 'zustand';
 
 // 더미 데이터 정의
 const dummySpendData = [
-  {
-    "date": "2024-10-01",
-    "totalSpend": -1000,
-    "history": [
-      {
-        "title": "KFC",
-        "categoryName": "식비",
-        "price": -1000
-      }
-    ]
-  }
 ];
 
 const dummyPieChartData = [

@@ -3,7 +3,7 @@ import Logo from "../assets/logo/HorizontalLogo.png";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { postLogin } from "../apis/UserApi";
-import { requestToken } from "../utils/fcm"
+import { requestToken } from "../utils/fcm";
 
 const ScreenWrapper = styled.div`
   display: flex;
@@ -58,6 +58,7 @@ const LoginButton = styled.button`
   cursor: pointer;
   margin-top: 20px;
   border: none;
+  font-family: 'mainFont';
 `;
 
 const PasswordLostContainer = styled.div`
@@ -150,7 +151,7 @@ const Login = () => {
 
       if (response && response.name) {
         console.log("로그인 성공:", response);
-        navigate("/");
+        navigate("/welcome");
         requestToken();
       } else {
         // 오류 처리: response.data와 response.data.message의 존재 여부를 확인

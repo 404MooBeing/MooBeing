@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { getAccountInfo } from "../../apis/AccountApi";
 import goToJourney from "../../assets/button/goToJourney.svg";
 import leftButton from "../../assets/button/leftButton.svg";
 import rightButton from "../../assets/button/rightButton.svg";
 import leftButtonBlack from "../../assets/button/leftButtonBlack.svg";
 import rightButtonBlack from "../../assets/button/rightButtonBlack.svg";
-import basicRad from "../../assets/radishes/basicRad.svg";
-import useTransactionStore from "../../store/TransactionStore";
+import basicRad from "../../assets/radishes/basicRad.png";
 import ibk from "../../assets/banks/금융아이콘_SVG_IBK.svg";
 import kb from "../../assets/banks/금융아이콘_SVG_KB.svg";
 import mg from "../../assets/banks/금융아이콘_SVG_MG새마을금고.svg";
@@ -18,6 +16,8 @@ import uri from "../../assets/banks/금융아이콘_SVG_우리.svg";
 import kakaoBank from "../../assets/banks/금융아이콘_SVG_카카오뱅크.svg";
 import toss from "../../assets/banks/금융아이콘_SVG_토스.svg";
 import hana from "../../assets/banks/금융아이콘_SVG_하나.svg";
+import useUserStore from "../../store/UserStore";
+import { getAccountInfo } from "../../apis/AccountApi";
 
 const bankLogos = {
   ibk: ibk,
@@ -153,21 +153,18 @@ const NoAccountText = styled.p`
 `;
 
 const AccountList = () => {
-  const { accounts, setAccounts } = useTransactionStore();
+  const { accounts, setAccounts } = useUserStore();
+  const [loading, setLoading] = useState(true);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const accountsPerPage = 3;
   const totalPages = Math.ceil(accounts.length / accountsPerPage);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
-  // API 호출을 통한 계좌 정보 가져오기
   useEffect(() => {
-    const fetchAccountInfo = async () => {
+    const fetchAccounts = async () => {
       try {
-        const accountData = await getAccountInfo(); // API 호출
-        console.log(accountData); // 데이터 구조 확인을 위한 콘솔 로그
-
-        // accountData.getAccountDtoList를 상태에 저장
+        const accountData = await getAccountInfo();
         if (accountData && Array.isArray(accountData.getAccountDtoList)) {
           const processedAccounts = accountData.getAccountDtoList.map(account => ({
             id: account.id,
@@ -176,17 +173,19 @@ const AccountList = () => {
             accountNum: account.accountNum,
             remainingBalance: account.remainingBalance,
           }));
-          setAccounts(processedAccounts);
+          setAccounts(processedAccounts); // Store에 계좌 정보 저장
         } else {
           console.error("계좌 목록이 배열이 아닙니다.");
         }
       } catch (error) {
         console.error("계좌 정보 불러오기 실패:", error);
+      } finally {
+        setLoading(false); // 로딩 완료
       }
     };
 
-    fetchAccountInfo(); // 함수 실행
-  }, [setAccounts]); // 컴포넌트 마운트 시 한 번만 실행
+    fetchAccounts();
+  }, [setAccounts]);
 
   const handleScrollNext = () => {
     setCurrentIndex((prevIndex) => {

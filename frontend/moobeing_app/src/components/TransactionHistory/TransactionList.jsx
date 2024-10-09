@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { postAccountHistory } from "../../apis/AccountApi";
 import useTransactionStore from "../../store/TransactionStore";
-import basicRad from "../../assets/radishes/basicRad.svg";
+import basicRad from "../../assets/radishes/basicRad.png";
 import useCapsuleStore from "../../store/CapsuleStore";
 
 const ListContainer = styled.div`
@@ -111,6 +111,27 @@ const NoTransactionText = styled.p`
   margin: 0;
 `;
 
+const AlertContainer = styled.div`
+  position: fixed;
+  top: 23vh;
+  left: 50%;
+  width: 75%;
+  transform: translateX(-50%);
+  background-color: rgba(192, 221, 165, 0.8);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+`;
+
 const TransactionList = () => {
   const { updateTransactionInfo } = useCapsuleStore();
   const navigate = useNavigate();
@@ -119,6 +140,7 @@ const TransactionList = () => {
   const [page, setPage] = useState(1); // 페이지 상태 추가
   const [hasMore, setHasMore] = useState(true); // 추가 데이터가 있는지 여부
   const observer = useRef();
+  const [alertMessage, setAlertMessage] = useState(""); // 경고 메시지 상태 추가
 
   // Zustand에서 필요한 상태와 함수들 가져오기
   const { account, isRadishSelected, sortCriteria } = useTransactionStore();
@@ -170,19 +192,33 @@ const TransactionList = () => {
     [hasMore]
   );
 
-  const handleSelectTransaction = (index) => {
+  const handleSelectTransaction = (index, event) => {
     if (isRadishSelected) {
-      setSelectedTransactionIndex(index);
-      const selectedTransaction = transactions[index];
-      updateTransactionInfo(
-        selectedTransaction.id,
-        selectedTransaction.title,
-        selectedTransaction.amount,
-        selectedTransaction.date
-      );
+      event.preventDefault();
+      event.stopPropagation();
+      // 이미 선택된 항목을 다시 누르면 선택 해제
+      if (index === selectedTransactionIndex) {
+        setSelectedTransactionIndex(null);
+      } else {
+        setSelectedTransactionIndex(index);
+        const selectedTransaction = transactions[index];
+        updateTransactionInfo(
+          selectedTransaction.id,
+          selectedTransaction.title,
+          selectedTransaction.amount,
+          selectedTransaction.date
+        );
+      }
     }
   };
-
+  
+  const showAlert = (message) => {
+    setAlertMessage(message);
+    setTimeout(() => {
+      setAlertMessage("");
+    }, 3000); // 3초 후 경고창 사라짐
+  };
+  
   const handleSelectButton = () => {
     if (selectedTransactionIndex !== null) {
       const selectedTransaction = transactions[selectedTransactionIndex];
@@ -190,7 +226,7 @@ const TransactionList = () => {
         state: { selectedTransaction }
       });
     } else {
-      alert("내역을 선택해주세요!");
+      showAlert("내역을 선택해주세요!");
     }
   };
 
@@ -203,7 +239,7 @@ const TransactionList = () => {
               <DateHeader>{transaction.date}</DateHeader>
             ) : null}
             <TransactionItem
-              onClick={() => handleSelectTransaction(index)}
+              onClick={(event) => handleSelectTransaction(index, event)}
               isSelected={index === selectedTransactionIndex}
               isRadishSelected={isRadishSelected}
             >
@@ -226,6 +262,7 @@ const TransactionList = () => {
           <NoTransactionText>계좌 내역이 없습니다.</NoTransactionText>
         </NoTransactionContainer>
       )}
+      {alertMessage && <AlertContainer>{alertMessage}</AlertContainer>}
       {isRadishSelected && <SelectButton onClick={handleSelectButton}>선택하기</SelectButton>}
     </ListContainer>
   );

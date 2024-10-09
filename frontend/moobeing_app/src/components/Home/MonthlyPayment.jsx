@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import goToJourney from "../../assets/button/goToJourney.svg";
+import useUserStore from "../../store/UserStore";
 import { getSpendSummary } from "../../apis/AccountApi";
 
 const Container = styled.div`
@@ -89,6 +90,7 @@ const ComparisonText = styled.div`
 `;
 
 const MonthlyPayment = () => {
+  const { spendSummary, setSpendSummary } = useUserStore();
   const [paymentSum, setPaymentSum] = useState({ monthlyPaymentAmount: 0 });
   const [compareText, setCompareText] = useState('지난 달 지출내역이 없습니다')
   const [isMorePaid, setIsMorePaid] = useState(true);
@@ -99,6 +101,7 @@ const MonthlyPayment = () => {
     const fetchSpendSummary = async () => {
       try {
         const summary = await getSpendSummary();
+        setSpendSummary(summary); // store에 데이터 업데이트
         setPaymentSum({ monthlyPaymentAmount: summary.monthlyPaymentAmount });
         setCompareText(summary.compareText);
         setIsMorePaid(summary.isMorePaid);

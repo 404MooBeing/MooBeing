@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import basicRad from "../../assets/radishes/basicRad.svg";
+import basicRad from "../../assets/radishes/basicRad.png";
 
 const ResultContainer = styled.div`
   border-radius: 10px;

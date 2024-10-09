@@ -218,8 +218,8 @@ function GetRadishCharacter() {
         setShowCard(true);
         fireConfetti();
         setTimeout(() => {
-          handleCollectionClick(); // 2초 후 자동으로 페이지 이동
-        }, 2000);
+          handleCollectionClick(); // 3초 후 자동으로 페이지 이동
+        }, 3000);
       }, 500);
     }
   }, [pullCount]);

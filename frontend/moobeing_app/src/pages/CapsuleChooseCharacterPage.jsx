@@ -6,7 +6,7 @@ import nextIcon from "../assets/button/NextIcon.svg";
 import blushRad from "../assets/radishes/blushRad.svg";
 import rainbowRad from "../assets/radishes/rainbowRad.svg";
 import musinsaRad from "../assets/radishes/musinsaRad.svg";
-import basicRad from "../assets/radishes/basicRad.svg";
+import basicRad from "../assets/radishes/basicRad.png";
 import { getUserRadishCollection } from "../apis/RadishApi";
 import useCapsuleStore from "../store/CapsuleStore";
 import useRadishStore from "../store/RadishStore";
