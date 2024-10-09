@@ -374,27 +374,6 @@ const MyRadish = () => {
     window.location.reload();
   };
 
-  const renderCharacterContent = (char) => {
-    if (char.growthStage === "growing") {
-      return (
-        <AnimationContainer>
-          <ExplosionEffect />
-          <SmokeEffect />
-        </AnimationContainer>
-      );
-    } else if (char.growthStage === "complete") {
-      return (
-        <AnimationContainer>
-          <NewCharacterEffect>
-            <CharacterImage src={Radishs[char.radishImageUrl]} /> {/* 수정된 부분 */}
-          </NewCharacterEffect>
-        </AnimationContainer>
-      );
-    } else {
-      return <CharacterImage src={Radishs[char.radishImageUrl]} />;
-    }
-  };
-
   return (
     <Container>
       <ChooseButtonContainer>
