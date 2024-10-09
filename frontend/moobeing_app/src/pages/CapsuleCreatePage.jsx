@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import useCapsuleStore from "../store/CapsuleStore";
+import AddImgIcon from "../assets/capsules/AddImgIcon.png";
 
 const Container = styled.div`
   display: flex;
@@ -59,7 +60,7 @@ const ImgForm = styled.div`
 const ImagePreview = styled.img`
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 const ImageInput = styled.input`
@@ -68,9 +69,15 @@ const ImageInput = styled.input`
 
 const ImageLabel = styled.label`
   cursor: pointer;
-  padding: 10px 15px;
-  background-color: #e0eed2;
-  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  background-image: url(${AddImgIcon});
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const ReselectionButton = styled.button`
@@ -86,8 +93,8 @@ const ReselectionButton = styled.button`
 
 const TextForm = styled.div`
   background-color: #f5fded;
-  height: 20vh;
-  padding: 15px;
+  height: 23vh;
+  padding: 20px;
   border: 1px solid #ccc;
   border-top: none;
   border-bottom-left-radius: 10px;
@@ -101,11 +108,12 @@ const TextArea = styled.textarea`
   border: none;
   background-color: transparent;
   resize: none;
-  font-family: inherit;
+  font-size: 17px;
+  font-family: "EarlyFontDiary";
   outline: none;
 
   &:focus {
-    outline: 2px solid darkgreen;
+    outline: 1px solid darkgreen;
   }
 `;
 
@@ -124,6 +132,7 @@ const NextButton = styled.button`
   border: none;
   padding: 10px 20px;
   font-size: 16px;
+  font-weight: bold;
   border-radius: 5px;
   cursor: pointer;
   align-self: center;
@@ -151,7 +160,7 @@ function CapsuleMessage() {
   };
 
   const handleTextChange = (e) => {
-    if (e.target.value.length <= 100) {
+    if (e.target.value.length <= 200) {
       setText(e.target.value);
     }
   };
@@ -187,7 +196,7 @@ function CapsuleMessage() {
             </ReselectionButton>
           </>
         ) : (
-          <ImageLabel onClick={handleImageSelection}>이미지 추가</ImageLabel>
+          <ImageLabel onClick={handleImageSelection}></ImageLabel>
         )}
         <ImageInput
           type="file"
@@ -203,7 +212,7 @@ function CapsuleMessage() {
           onChange={handleTextChange}
           placeholder="메시지를 입력하세요..."
         />
-        <CharCount>{text.length} / 100</CharCount>
+        <CharCount>{text.length} / 200</CharCount>
       </TextForm>
 
       <NextButton onClick={handleNext}>다음</NextButton>
