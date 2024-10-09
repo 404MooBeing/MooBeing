@@ -6,6 +6,16 @@ import LocationSearch from "../components/CapsuleChooseLocation/LocationSearch";
 import useCapsuleStore from "../store/CapsuleStore";
 import { postPlantCapsule } from "../apis/CapsuleApi";
 import useRadishStore from "../store/RadishStore";
+import FindingLocation from "../components/CapsuleChooseLocation/FindingLocation";
+import CurrentLocationIcon from "../assets/capsules/CurrentLocationIcon.png";
+
+const CurrentLocationMarker = styled.img`
+  width: 20px; /* 너비를 20px로 설정 */
+  height: 20px; /* 높이를 20px로 설정 */
+  position: absolute;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+`;
 
 const OverlayContainer = styled.div`
   position: fixed;
@@ -54,12 +64,21 @@ const DecisionButton = styled.button`
   font-size: 16px;
 `;
 
+const SearchContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px; /* 선택사항: 모서리를 둥글게 만듦 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 아래쪽에만 그림자 효과 */
+`;
+
 function CapsuleChooseLocationPage() {
   const [places, setPlaces] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [mapCenter, setMapCenter] = useState(null); // 지도 중심 상태 추가
   const [customMarkers, setCustomMarkers] = useState([]);
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
   const navigate = useNavigate();
   const {
     updateLocationInfo,
@@ -85,7 +104,7 @@ function CapsuleChooseLocationPage() {
             {
               lat: userCoords.lat,
               lng: userCoords.lng,
-              imageUrl: radishImageUrl,
+              imageUrl: CurrentLocationIcon, // 마커 타입을 구분
             },
           ]);
 
@@ -95,16 +114,19 @@ function CapsuleChooseLocationPage() {
             "현재위치",
             "사용자 위치"
           );
+          setLoading(false); // 로딩 완료
         },
         (error) => {
           console.error("사용자 위치를 가져오는 데 실패했습니다:", error);
           alert("사용자의 위치 정보에 접근할 수 없습니다.");
+          setLoading(false); // 로딩 실패 시에도 로딩창 닫기
         }
       );
     } else {
       alert("사용자의 브라우저가 위치 서비스를 지원하지 않습니다.");
+      setLoading(false);
     }
-  }, [updateLocationInfo, radishImageUrl]);
+  }, [updateLocationInfo]);
 
   const searchPlaces = useCallback(
     (keyword) => {
@@ -147,12 +169,9 @@ function CapsuleChooseLocationPage() {
 
   const handleSelectPlace = (place) => {
     setSelectedPlace(place);
-    setMapCenter({ lat: place.y, lng: place.x }); // 선택한 장소를 지도 중심으로 설정
-    setPlaces([]); // 검색 결과 리스트를 숨김
+    setMapCenter({ lat: place.y, lng: place.x });
+    setPlaces([]);
 
-    console.log("radishImageUrl (항목 선택 시):", radishImageUrl); // 이미지 URL 확인
-
-    // 사용자의 radishImageUrl로 마커쓰긔
     setCustomMarkers([
       {
         lat: place.y,
@@ -186,7 +205,6 @@ function CapsuleChooseLocationPage() {
         formData.append("radishId", radishId);
 
         const response = await postPlantCapsule(formData);
-        console.log("서버 응답:", response);
         navigate("/capsule-planting", { state: { coin: response.coin } });
       } catch (error) {
         console.error("캡슐 심기 실패:", error);
@@ -200,34 +218,43 @@ function CapsuleChooseLocationPage() {
 
   return (
     <>
-      <LocationSearch
-        onSearch={searchPlaces}
-        places={places}
-        onSelectPlace={handleSelectPlace}
-      />
-      <MapComponent
-        markers={customMarkers}
-        userLocation={userLocation}
-        center={mapCenter} // 중심 위치를 전달
-      />
-      {selectedPlace && (
-        <OverlayContainer>
-          <LocationInfo>
-            <PlaceName>
-              {selectedPlace.place_name}
-              <CategoryName>
-                {selectedPlace.category_name.split(" > ")[1] ||
-                  selectedPlace.category_name.split(" > ")[0]}
-              </CategoryName>
-            </PlaceName>
-            <AddressName>
-              {selectedPlace.address_name
-                ? selectedPlace.address_name
-                : "없지롱"}
-            </AddressName>
-          </LocationInfo>
-          <DecisionButton onClick={handleDecision}>결정</DecisionButton>
-        </OverlayContainer>
+      {loading ? (
+        <FindingLocation />
+      ) : (
+        <>
+          <SearchContainer>
+            <LocationSearch
+              onSearch={searchPlaces}
+              places={places}
+              onSelectPlace={handleSelectPlace}
+            />
+          </SearchContainer>
+
+          <MapComponent
+            markers={customMarkers}
+            userLocation={userLocation}
+            center={mapCenter}
+          />
+          {selectedPlace && (
+            <OverlayContainer>
+              <LocationInfo>
+                <PlaceName>
+                  {selectedPlace.place_name}
+                  <CategoryName>
+                    {selectedPlace.category_name.split(" > ")[1] ||
+                      selectedPlace.category_name.split(" > ")[0]}
+                  </CategoryName>
+                </PlaceName>
+                <AddressName>
+                  {selectedPlace.address_name
+                    ? selectedPlace.address_name
+                    : "없지롱"}
+                </AddressName>
+              </LocationInfo>
+              <DecisionButton onClick={handleDecision}>결정</DecisionButton>
+            </OverlayContainer>
+          )}
+        </>
       )}
     </>
   );

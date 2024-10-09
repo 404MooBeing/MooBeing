@@ -6,6 +6,7 @@ import NotGrownYetPopup from "../components/CapsuleMap/popups/NotGrownYet";
 import NotOpenedYetPopup from "../components/CapsuleMap/popups/NotOpenedYet";
 import OpenedPopup from "../components/CapsuleMap/popups/Opened";
 import NotGrownImg from "../assets/capsules/NotGrownYet.png";
+import FindingLocation from "../components/CapsuleChooseLocation/FindingLocation";
 
 // 애니메이션 정의
 const bounce = keyframes`
@@ -270,7 +271,7 @@ function MyMap() {
 
   return (
     <MapWrapper ref={mapRef}>
-      {isLoading && <LoadingWrapper>사용자 위치를 찾는 중...</LoadingWrapper>}
+      {isLoading && <FindingLocation />}
       {popupData && (
         <PopupComponent
           popupType={popupData.type}
