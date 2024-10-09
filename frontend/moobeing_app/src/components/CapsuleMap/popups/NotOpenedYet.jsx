@@ -45,6 +45,14 @@ const InfoText = styled.div`
   align-items: center;
 `;
 
+const CreatedDateText = styled.div`
+  font-size: 12px;
+  color: #348833;
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+`;
+
 const CopyButton = styled.button`
   margin-left: 10px;
   padding: 4px 8px;
@@ -61,7 +69,7 @@ const DateText = styled.div`
   background-color: #f0f0f0;
   border-radius: 10px;
   padding: 8px;
-  margin: 10px 0;
+  margin: 5px 0;
   width: fit-content;
 `;
 
@@ -115,14 +123,15 @@ function NotGrownYetPopup({ data, onClose }) {
         <CloseButton onClick={onClose}>X</CloseButton>
         <Title>아직 열 수 없습니다</Title>
         <Message>이런, 무를 열기에 멀리 계시네요</Message>
-        <DateText>D-{data.remainingDays}</DateText>
+        <DateText>D-{data.remainingDays < 0 ? 0 : data.remainingDays}</DateText>
         <InfoText>
           {data.addressName}
           <CopyButton onClick={handleCopyAddress}>복사</CopyButton>
         </InfoText>
-        <InfoText>
-          Created At: {new Date(data.createdAt).toLocaleString()}
-        </InfoText>
+        <CreatedDateText>
+          이 무는 {new Date(data.createdAt).toLocaleDateString()}에
+          심어졌습니다.
+        </CreatedDateText>
       </PopupContainer>
       {showToast && (
         <ToastMessage style={{ opacity: 1 }}>
