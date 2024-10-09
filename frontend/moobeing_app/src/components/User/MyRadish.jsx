@@ -358,27 +358,6 @@ const MyRadish = () => {
     window.location.reload();
   };
 
-  const renderCharacterContent = (char) => {
-    if (char.growthStage === "growing") {
-      return (
-        <AnimationContainer>
-          <ExplosionEffect />
-          <SmokeEffect />
-        </AnimationContainer>
-      );
-    } else if (char.growthStage === "complete") {
-      return (
-        <AnimationContainer>
-          <NewCharacterEffect>
-            <CharacterImage src={char.radishImageUrl} />
-          </NewCharacterEffect>
-        </AnimationContainer>
-      );
-    } else {
-      return <CharacterImage src={char.radishImageUrl} />;
-    }
-  };
-
   return (
     <Container>
       <ChooseButtonContainer>
