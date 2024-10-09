@@ -5,11 +5,12 @@ import upArrow from "../assets/quiz/circle.svg";
 import downArrow from "../assets/quiz/x.svg";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../store/UserStore";
+import { SyncLoader } from "react-spinners";
 
 const PageContainer = styled.div`
   background-color: #e0eed2;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -124,15 +125,30 @@ function Quiz() {
     if (!quizData) return;
     try {
       const result = await submitEconomicQuizAnswer(quizData.quizId, answer);
-      result.quizType = "economy"
-      console.log(result.isCorrect)
+      result.quizType = "economy";
+      console.log(result.isCorrect);
       navigate(`/quiz/result/${quizData.quizId}`, { state: result });
     } catch (error) {
       console.error("답변 제출 실패:", error);
     }
   };
 
-  if (!quizData) return <div>잠시만용!!</div>;
+  useEffect(() => {
+    if (!quizData) {
+      const timeout = setTimeout(() => {
+        navigate("/"); // 홈으로 이동
+      }, 2000); // 2초 후에 홈으로 이동
+
+      return () => clearTimeout(timeout);
+    }
+  }, [quizData, navigate]);
+
+  if (!quizData)
+    return (
+      <PageContainer>
+        <SyncLoader color="#348833" size={8} />
+      </PageContainer>
+    );
 
   const timerPercentage = ((15 - timeLeft) / 15) * 100;
 
@@ -162,9 +178,7 @@ function Quiz() {
           </TimerCircle>
           <TimerText>{timeLeft}</TimerText>
         </TimerContainer>
-        <QuizText>
-          {quizData.question}
-        </QuizText>
+        <QuizText>{quizData.question}</QuizText>
         <ButtonContainer>
           <UpButton onClick={() => handleAnswer("true")}>
             <ArrowIcon src={upArrow} alt="true" />

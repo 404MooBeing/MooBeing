@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled, { keyframes, css } from "styled-components";
-import { useLocation, useNavigate } from "react-router-dom"; // useNavigate 가져오기
+import { useLocation, useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
 import soil from "../assets/pot/soill.png";
 import basicRad from "../assets/radishes/babyRad.svg";
@@ -162,7 +162,6 @@ function GetRadishCharacter() {
   const [bottom, setBottom] = useState(0);
   const [showCard, setShowCard] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [showCollectionButton, setShowCollectionButton] = useState(false);
   const confettiCanvasRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -176,9 +175,8 @@ function GetRadishCharacter() {
         } else if (location.state && location.state.source === "loan") {
           data = await getRandomRadish();
         } else {
-          // Handle unexpected case
           console.error("Unexpected navigation source");
-          navigate("/"); // Redirect to home or show an error
+          navigate("/"); // 홈으로 리디렉트
           return;
         }
 
@@ -203,7 +201,28 @@ function GetRadishCharacter() {
       setBottom((prev) => prev + 3);
       setTimeout(() => setIsShaking(false), 500);
     }
+
+    if (pullCount === 5) {
+      sessionStorage.setItem("hasPulledRadish", "true"); // 무를 뽑았다는 상태 저장
+    }
   };
+
+  const handleCollectionClick = () => {
+    navigate("/user?tab=collection");
+  };
+
+  useEffect(() => {
+    if (pullCount === 5) {
+      setBottom(30);
+      setTimeout(() => {
+        setShowCard(true);
+        fireConfetti();
+        setTimeout(() => {
+          handleCollectionClick(); // 2초 후 자동으로 페이지 이동
+        }, 2000);
+      }, 500);
+    }
+  }, [pullCount]);
 
   const fireConfetti = () => {
     const myConfetti = confetti.create(confettiCanvasRef.current, {
@@ -222,23 +241,6 @@ function GetRadishCharacter() {
       spread: 130,
       origin: { x: 1, y: 0.8 },
     });
-  };
-
-  useEffect(() => {
-    if (pullCount === 5) {
-      setBottom(30);
-      setTimeout(() => {
-        setShowCard(true);
-        fireConfetti();
-        setTimeout(() => {
-          setShowCollectionButton(true);
-        }, 500);
-      }, 500);
-    }
-  }, [pullCount]);
-
-  const handleCollectionClick = () => {
-    navigate("/radish-collection");
   };
 
   return (
@@ -264,21 +266,14 @@ function GetRadishCharacter() {
         </ButtonWrapper>
       </Container>
       {showCard && (
-        <>
-          <CardWrapper>
-            <RadishCard
-              name={radishInfo.radishName}
-              rank={radishInfo.radishRank}
-              description={radishInfo.radishMessage}
-              imageUrl={radishInfo.radishImageUrl}
-            />
-          </CardWrapper>
-          {showCollectionButton && (
-            <CollectionButton onClick={handleCollectionClick}>
-              무들 보러가기
-            </CollectionButton>
-          )}
-        </>
+        <CardWrapper>
+          <RadishCard
+            name={radishInfo.radishName}
+            rank={radishInfo.radishRank}
+            description={radishInfo.radishMessage}
+            imageUrl={radishInfo.radishImageUrl}
+          />
+        </CardWrapper>
       )}
       <ConfettiCanvas ref={confettiCanvasRef} />
     </PageWrapper>
