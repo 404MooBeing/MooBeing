@@ -83,12 +83,12 @@ public class RadishService {
 
         radishCapsuleRepository.save(radishCapsule);
 
-        if (radishCapsule.getCharacter().getId() == 1) { // 기본 무
+        if (radishCapsule.getCharacter().getCoin() == 0) { // 기본 무
             return new CreateRadishCapsuleResponse(radishCapsule.getEndAt(), radishCapsule.getLat(), radishCapsule.getLng(), radishCapsule.getImgUrl(), 0L);
         }
 
-        pointService.depositPoints(member, 500L);
-        return new CreateRadishCapsuleResponse(radishCapsule.getEndAt(), radishCapsule.getLat(), radishCapsule.getLng(), radishCapsule.getImgUrl(), 500L);
+        pointService.depositPoints(member, radishCapsule.getCharacter().getCoin());
+        return new CreateRadishCapsuleResponse(radishCapsule.getEndAt(), radishCapsule.getLat(), radishCapsule.getLng(), radishCapsule.getImgUrl(), radishCapsule.getCharacter().getCoin());
     }
 
     public void throwIfNearbyCapsule(double userLat, double userLon, List<RadishCapsule> capsules, double maxDistance) {
