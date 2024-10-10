@@ -1,5 +1,9 @@
 package com.im.moobeing.global.fcm.service;
 
+import com.google.firebase.messaging.AndroidConfig;
+import com.google.firebase.messaging.AndroidNotification;
+import com.google.firebase.messaging.ApnsConfig;
+import com.google.firebase.messaging.Aps;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
@@ -108,13 +112,29 @@ public class FCMService {
     // 메시지 생성 메서드 추가
     private Message createMessage(String targetToken, String title, String body) {
         return Message.builder()
-                .setToken(targetToken)
-                .setNotification(Notification.builder()
-                        .setTitle(title)
-                        .setBody(body)
-                        .setImage("https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9")
-                        .build())
-                .build();
+            .setToken(targetToken)
+            .setNotification(Notification.builder()
+                .setTitle(title)
+                .setBody(body)
+                .setImage("https://github.com/user-attachments/assets/19eff918-f0cd-4f7c-b56b-ddf5069749b9")
+                .build())
+
+            // AndroidConfig 설정
+            .setAndroidConfig(AndroidConfig.builder()
+                .setNotification(AndroidNotification.builder()
+                    .setClickAction("OPEN_APP")  // Android 인텐트 필터와 연결될 액션 설정
+                    .build())
+                .build())
+
+            // ApnsConfig 설정 (iOS)
+            .setApnsConfig(ApnsConfig.builder()
+                .setAps(Aps.builder()
+                    .setCategory("OPEN_APP")  // iOS에서 카테고리로 설정
+                    .build())
+                .build())
+
+            .build();
+
     }
 
     // 무비티아이 확인 알림
