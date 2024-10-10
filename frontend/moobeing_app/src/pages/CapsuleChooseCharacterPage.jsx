@@ -222,7 +222,7 @@ function ChooseCharacter() {
         </LeftButton>
         <CharacterCard>
           <CharacterImg
-            src={Radishs[characters[currentCharacter].radishImageUrl]}
+            src={characters[currentCharacter].radishImageUrl}
             alt={characters[currentCharacter].radishName}
           />
           <CharacterName>

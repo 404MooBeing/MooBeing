@@ -546,11 +546,11 @@ const MyRadish = () => {
                   <ExplosionEffect />
                   <SmokeEffect />
                   <NewCharacterEffect>
-                    <CharacterImage src={Radishs[char.radishImageUrl]} />
+                    <CharacterImage src={char.radishImageUrl} />
                   </NewCharacterEffect>
                 </AnimationContainer>
               ) : (
-                <CharacterImage src={Radishs[char.radishImageUrl]} />
+                <CharacterImage src={char.radishImageUrl} />
               )}
               <CharacterName rank={char.radishRank}>
                 {char.radishName}
