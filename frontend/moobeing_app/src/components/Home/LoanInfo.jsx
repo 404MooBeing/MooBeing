@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import goToJourney from "../../assets/button/goToJourney.svg";
+import useUserStore from "../../store/UserStore";
 import { getLoanSum } from "../../apis/LoanApi";
 import { getAccountBenefit } from "../../apis/AccountApi";
 
@@ -86,47 +87,34 @@ const RepaymentButton = styled.button`
 `
 
 const LoanInfo = () => {
-  // eslint-disable-next-line
-  const [loanSum, setLoanSum] = useState(0);
-  // eslint-disable-next-line
-  const [accountBenefit, setAccountBenefit] = useState({});
-  const [remainingBalance, setRemainingBalance] = useState(0);
-  const [loanList, setLoanList] = useState([]); // 초기값을 빈 배열로 설정
-  // eslint-disable-next-line
-  const [isLoading, setIsLoading] = useState(true);
+  const { loanSum, accountBenefit, setLoanSum, setAccountBenefit } = useUserStore(); // Store에서 데이터 및 함수 가져오기
+  const [loanList, setLoanList] = useState(accountBenefit.LoanList || []); // accountBenefit에서 loanList 가져오기
+  const [remainingBalance, setRemainingBalance] = useState(accountBenefit.accountLeftMoney || 0);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchAccountBenefitData();
-  }, []); // 컴포넌트가 마운트될 때만 실행
-
-  const fetchAccountBenefitData = async () => {
-    setIsLoading(true);
-    try {
-      const response = await getAccountBenefit();
-      setAccountBenefit(response);
-      setRemainingBalance(response.accountLeftMoney || 0);
-      setLoanList(Array.isArray(response.LoanList) ? response.LoanList : []); // 배열인지 확인 후 설정
-    } catch (error) {
-      console.error("계좌 혜택 데이터를 가져오는 중 오류 발생:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const fetchLoanSum = async () => {
+    // API 호출을 통해 데이터를 업데이트하는 함수
+    const fetchLoanData = async () => {
+      setIsLoading(true);
       try {
-        const data = await getLoanSum();
-        setLoanSum(data.sumLoanValue)
+        const loanData = await getLoanSum();
+        setLoanSum(loanData.sumLoanValue); // Store에 대출 합계 저장
+
+        const accountBenefitData = await getAccountBenefit();
+        setAccountBenefit(accountBenefitData); // Store에 계좌 혜택 데이터 저장
+        setLoanList(accountBenefitData.LoanList || []); // loanList 업데이트
+        setRemainingBalance(accountBenefitData.accountLeftMoney || 0); // 남은 잔액 업데이트
       } catch (error) {
-        console.error("대출 총잔액 불러오기 실패:", error)
+        console.error("대출 정보 불러오기 실패:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchLoanSum();
+    fetchLoanData();
   }, []);
 
-  const navigate = useNavigate();
 
   const goToLoanPage = () => {
     navigate("/loan");

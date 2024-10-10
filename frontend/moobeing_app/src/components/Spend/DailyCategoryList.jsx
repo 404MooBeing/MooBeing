@@ -11,7 +11,7 @@ import leisureIcon from "../../assets/SpendIcons/leisureIcon.png";
 import loanIcon from "../../assets/SpendIcons/loanIcon.png";
 import pleasureIcon from "../../assets/SpendIcons/pleasureIcon.png";
 import trafficIcon from "../../assets/SpendIcons/trafficIcon.png";
-import basicRad from "../../assets/radishes/basicRad.svg";
+import basicRad from "../../assets/radishes/basicRad.png";
 
 const iconMapping = {
   식비: foodIcon,
