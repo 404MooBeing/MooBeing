@@ -19,7 +19,7 @@ const KimpaPanel = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: #F5FDED;
-  padding: 25px 15px;
+  padding: 25px 0;
   margin-bottom: 10px;
 `;
 
@@ -27,7 +27,7 @@ const KimpaInfo = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 90%;
+  width: 88%;
   margin-bottom: 15px;
 `;
 
@@ -66,7 +66,7 @@ const SearchContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  width: 90%;
+  width: 88%;
   height: 40px;
   box-sizing: border-box;
   overflow: hidden;
@@ -92,7 +92,7 @@ const SearchInput = styled.input`
 
 const SearchIcon = styled.img`
   position: absolute;
-  right: 5%;
+  right: 3%;
   width: 20px;
   height: 20px;
   cursor: pointer;

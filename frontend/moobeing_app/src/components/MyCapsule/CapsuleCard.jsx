@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Card = styled.div`
   background-color: white;  // 카드 배경을 하얀색으로 설정
   border-radius: 10px;
-  padding: 15px;
+  padding: 30px 30px 20px 30px;
   margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 `;
@@ -20,7 +20,7 @@ const CardTitle = styled.div`
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: 19.2px;
+  font-size: 16px;
 `;
 
 const CardIcon = styled.div`
@@ -36,28 +36,16 @@ const CardIcon = styled.div`
 
 const CardAmount = styled.div`
   font-weight: bold;
+  font-size: 14px;
 `;
 
 const CardImageContainer = styled.div`
   width: 100%;
-  padding-top: 80%; // 10:8 비율을 위해 80%로 설정
+  padding-top: 80%;
   position: relative;
-  margin-bottom: 16px;
+  margin: 20px auto; /* 위, 아래 16px, 양옆 자동으로 중간 정렬 */
   overflow: hidden;
   border-radius: 10px;
-`;
-
-const BlurredBackground = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url(${props => props.url});
-  background-size: cover;
-  background-position: center;
-  filter: blur(10px);
-  transform: scale(1.1);
 `;
 
 const CardImage = styled.div`
@@ -67,15 +55,25 @@ const CardImage = styled.div`
   right: 0;
   bottom: 0;
   background-image: url(${props => props.url});
-  background-size: contain;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 `;
 
+const GradientOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
+
 const CardContent = styled.div`
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
   white-space: pre-wrap;
+  font-family: 'EarlyFontDiary';
+  padding-left: 5px;
 `;
 
 const CapsuleCard = ({ title, amount, imageUrl, iconUrl, content }) => {
@@ -113,11 +111,11 @@ const CapsuleCard = ({ title, amount, imageUrl, iconUrl, content }) => {
       </CardHeader>
       
       <CardImageContainer>
-        <BlurredBackground url={imgUrl} />
         <CardImage 
           url={imgUrl} 
           onError={handleImageError}
         />
+        <GradientOverlay />
       </CardImageContainer>
       
       <CardContent>{formatContent(content)}</CardContent>

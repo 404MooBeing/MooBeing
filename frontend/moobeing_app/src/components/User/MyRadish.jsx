@@ -3,7 +3,7 @@ import styled, { keyframes, css } from "styled-components";
 // import MonthlyRecord from "../components/Radish/MonthlyRecord";
 import aniRad from "../../assets/radishes/aniRad.png"
 import babyRad from "../../assets/radishes/babyRad.png"
-import basicRad from "../../assets/radishes/basicRad.png"
+import basicRad from "../../assets/radishes/basicRad.svg"
 import blushRad from "../../assets/radishes/blushRad.png"
 import flippedRad from "../../assets/radishes/flippedRad.png"
 import hairlotRad from "../../assets/radishes/hairlotRad.png"

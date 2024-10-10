@@ -34,19 +34,21 @@ const Header = styled.div`
   margin-bottom: 20px;
 `;
 
-const Title = styled.h2`
-  font-size: 24px;
+const Title = styled.div`
+  font-size: 22px;
   font-weight: bold;
 `;
 
 const AllViewButton = styled.button`
-  background-color: #f0f0f0;
+  background-color: #E0EED2;
   border: none;
   border-radius: 20px;
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   cursor: pointer;
+  font-family: 'mainFont';
+
   &:hover {
     background-color: #e0e0e0;
   }
@@ -106,6 +108,8 @@ const MonthButton = styled.button`
   font-size: 18px;
   cursor: pointer;
   transition: background-color 0.3s;
+  border-radius: 20px;
+  font-family: 'mainFont';
 
   &:hover {
     background-color: #f0f0f0;
@@ -115,6 +119,7 @@ const MonthButton = styled.button`
     background-color: #f0f0f0;
     color: #ccc;
     cursor: not-allowed;
+    border-radius: 20px;
   }
 
   &:focus {

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { postAccountHistory } from "../../apis/AccountApi";
 import useTransactionStore from "../../store/TransactionStore";
-import basicRad from "../../assets/radishes/basicRad.png";
+import basicRad from "../../assets/radishes/basicRad.svg";
 import useCapsuleStore from "../../store/CapsuleStore";
 
 const ListContainer = styled.div`

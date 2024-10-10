@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import radish from "../../assets/radishes/basicRad.png";
+import radish from "../../assets/radishes/basicRad.svg";
 import { getStreamCnt } from "../../apis/UserApi";
 import CoinPopUp from "../../components/CoinPopUp/PopUp";
 

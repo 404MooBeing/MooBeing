@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import radishImage from "../../assets/radishes/basicRad.png";
+import radishImage from "../../assets/radishes/basicRad.svg";
 import useUserStore from "../../store/UserStore";
 
 const BarContainer = styled.div`

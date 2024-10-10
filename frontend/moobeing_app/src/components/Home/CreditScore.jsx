@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { darken } from "polished"; // polished에서 darken 가져오기
-import radish from "../../assets/radishes/basicRad.png";
+import radish from "../../assets/radishes/basicRad.svg";
 import useUserStore from "../../store/UserStore";
 import { getCreditRate } from "../../apis/UserApi";
 

@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import styled from 'styled-components';
-import basicRad from "../../assets/radishes/basicRad.png";
+import basicRad from "../../assets/radishes/basicRad.svg";
 import FlexRad from "../../assets/moobti/flexRad.png";
 import jjantechgosuRad from "../../assets/moobti/jjantechgosuRad.png";
 import mohumgaRad from "../../assets/moobti/mohumgaRad.png";

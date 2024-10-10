@@ -20,6 +20,7 @@ const TransactionInfoContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   padding: 10px;
   margin-bottom: 10px;
 `;
@@ -31,19 +32,21 @@ const TransactionDetails = styled.div`
   gap: 8px;
 `;
 
-const TransactionName = styled.p`
+const TransactionName = styled.div`
   margin: 0;
   font-weight: bold;
+  font-size: 16px;
 `;
 
-const TransactionAmount = styled.p`
+const TransactionAmount = styled.div`
   margin: 0;
+  font-size: 14px;
 `;
 
-const TransactionDate = styled.h2`
+const TransactionDate = styled.div`
   margin-right: 20px;
-  align-self: flex-end;
-  font-size: 24px;
+  font-size: 16px;
+  font-weight: bold;
 `;
 
 const ImageContainer = styled.div`
@@ -76,6 +79,7 @@ const OpenButton = styled.button`
   cursor: pointer;
   margin-top: 10px;
   margin-bottom: 10px;
+  font-family: 'mainFont';
 
   &:hover {
     background-color: #8bc8a5;

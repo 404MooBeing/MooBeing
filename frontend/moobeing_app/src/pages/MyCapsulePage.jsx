@@ -6,6 +6,7 @@ import LeftButton from "../assets/button/leftButtonBlack.svg";
 import RightButton from "../assets/button/rightButtonBlack.svg";
 import { getCapsulesByYearMonth, getAllCapsules } from "../apis/MyCapsuleApi";
 import { useLocation } from "react-router-dom";
+import { SyncLoader } from "react-spinners";
 
 const Screen = styled.div`
   display: flex;
@@ -51,7 +52,7 @@ const TitleText = styled.span`
   }
 
   & > span {
-    font-size: 25px;
+    font-size: 22px;
     margin: 0 22px;
     user-select: none;
     cursor: pointer;
@@ -71,12 +72,14 @@ const DateLabelContainer = styled.div`
 `;
 
 const DateLabel = styled.div`
-  background-color: #d0d0d0;
+  background-color: #dedcdc;
+  opacity: 80%;
   padding: 8px 15px;
   border-radius: 20px;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 600;
   display: inline-block;
+  margin-bottom: 5px;
 `;
 
 const BlurOverlay = styled.div`
@@ -88,6 +91,30 @@ const BlurOverlay = styled.div`
   background-color: rgba(128, 128, 128, 0.2);
   backdrop-filter: blur(1px);
   z-index: 10;
+`;
+
+const NoMoreCapsule = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 -10px 0 #E0EED2;
+  padding: 5px 10px;
+  font-size: 15px;
+  width: fit-content; /* 텍스트 길이에 맞춰 박스 너비 설정 */
+  margin: 0 auto; /* 화면 중앙 정렬 */
+`;
+
+const LoaderWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8); // 로딩 중일 때 배경색 약간 투명하게
+  z-index: 100; // 다른 요소들 위에 나타나도록 z-index 설정
 `;
 
 const MyCapsulePage = () => {
@@ -150,7 +177,6 @@ const MyCapsulePage = () => {
         }
       } catch (err) {
         setError("캡슐을 불러오는 데 실패했습니다.");
-        console.error("Error fetching capsules:", err);
       } finally {
         setLoading(false);
         loadingRef.current = false;
@@ -237,18 +263,13 @@ const MyCapsulePage = () => {
   };
 
   const changeMonth = (increment) => {
-    if(isAllView) {
-      handleMonthSelect(selectedYear, selectedMonth);
-      return
-    }
-
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
-
-    let newMonth = selectedMonth + increment;
-    let newYear = selectedYear;
-
+  
+    let newMonth = parseInt(selectedMonth, 10) + increment;
+    let newYear = parseInt(selectedYear, 10);
+  
     if (newMonth > 12) {
       newMonth = 1;
       newYear += 1;
@@ -256,7 +277,7 @@ const MyCapsulePage = () => {
       newMonth = 12;
       newYear -= 1;
     }
-
+  
     // 현재 날짜보다 미래인 경우 변경하지 않음
     if (
       newYear > currentYear ||
@@ -264,7 +285,7 @@ const MyCapsulePage = () => {
     ) {
       return;
     }
-
+  
     handleMonthSelect(newYear, newMonth);
   };
 
@@ -295,7 +316,7 @@ const MyCapsulePage = () => {
             </TitleText>
           </Title>
 
-          {loading && <p>로딩 중...</p>}
+          {loading && <LoaderWrapper><SyncLoader color={"#348833"} size={10} /></LoaderWrapper>}
           {error && <p>{error}</p>}
           {!loading &&
             !error &&
@@ -313,7 +334,13 @@ const MyCapsulePage = () => {
                 />
               </React.Fragment>
             ))}
-          {!hasMore && <p>더 이상 캡슐이 없습니다.</p>}
+            {!loading && !error && capsules.length === 0 && (
+              <NoMoreCapsule>캡슐이 없습니다!</NoMoreCapsule> // 캡슐이 아예 없는 경우
+            )}
+
+            {!loading && !error && capsules.length > 0 && !hasMore && (
+              <NoMoreCapsule>마지막 캡슐입니다!</NoMoreCapsule> // 캡슐이 있지만 마지막 페이지인 경우
+            )}
         </ContentWrapper>
 
         {isDateSortOpen && (
