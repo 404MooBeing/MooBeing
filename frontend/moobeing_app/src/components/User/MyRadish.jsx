@@ -9,6 +9,9 @@ import {
 import useUserStore from "../../store/UserStore";
 import checkBox from "../../assets/checkBox.svg";
 import { useNavigate } from "react-router-dom";
+import Info from "../../assets/button/infoButton.png";
+import RadishCoinImgSrc from "../../assets/coin/RadishCoin.png";
+import basicRad from "../../assets/radishes/basicRad.png";
 
 const Container = styled.div`
   width: 100%;
@@ -19,12 +22,11 @@ const Container = styled.div`
 
 const ChooseButtonContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
-  background-color: rgba(255, 255, 255, 1);
-
-  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  width: 87%;
   margin-bottom: 5px;
-  margin-right: 30px;
+  padding: 0 30px 0 26px;
   background-color: transparent !important;
   z-index: 1000;
 `;
@@ -72,7 +74,7 @@ const CharacterCard = styled.div`
   max-width: 180px;
   height: 170px;
   margin-bottom: 30px;
-  margin-left: 10px;
+  margin-left: 30px;
   background-color: #f5fded;
   display: flex;
   flex-direction: column;
@@ -90,8 +92,8 @@ const CharacterCard = styled.div`
     `}
 
   @media (max-width: 400px) {
-    width: calc(50% - 10px);
-    margin-left: 0;
+    width: calc(50% - 7px);
+    margin-left: 5px;
   }
 `;
 
@@ -131,6 +133,22 @@ const CharacterCount = styled.span`
   font-size: 13px;
   font-weight: 700;
   color: #5E5054;
+`;
+
+const CharacterCoin = styled.span`
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #5E5054;
+  display: flex;
+  align-items: center;  // 이미지와 텍스트를 세로 중앙 정렬
+  gap: 5px;             // 이미지와 텍스트 간격 설정
+  img {
+    width: 16px;        // 이미지 크기 조정
+    height: 16px;
+  }
 `;
 
 const CheckBoxOverlay = styled.img`
@@ -258,6 +276,81 @@ const AcquireButton = styled(ButtonBase)`
   animation: ${fadeIn} 0.5s ease-in;
 `;
 
+const InfoButton = styled.img`
+  height: 22px;
+  width: 22px;
+  margin-right: 10px;
+  cursor: pointer;
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const InfoCard = styled.div`
+  background-color: #FFFFFF;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  z-index: 1001;
+  text-align: center;
+  font-family: 'mainFont', sans-serif;
+`;
+
+const RadishImg = styled.img`
+  width: 80px;
+  height: 80px;
+`;
+
+const CardTitle = styled.div`
+  color: #348833;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  font-weight: 700;
+`;
+
+const InfoText = styled.p`
+  color: #5E5054;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  line-height: 1.4;
+`;
+
+const RankInfo = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+`;
+
+const RankItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const RankCircle = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-bottom: 5px;
+  background-color: ${props => props.color};
+`;
+
+const RankText = styled.span`
+  font-size: 0.8rem;
+  color: #5E5054;
+`;
+
 const MyRadish = () => {
   const [sortBy, setSortBy] = useState(null);
   const [isChooseActive, setIsChooseActive] = useState(false);
@@ -267,7 +360,27 @@ const MyRadish = () => {
   const [growingCharacter, setGrowingCharacter] = useState(null);
   const [isGrowthComplete, setIsGrowthComplete] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [showInfoCard, setShowInfoCard] = useState(false); // Info 카드 상태 관리
   const navigate = useNavigate();
+
+  const handleInfoClick = () => {
+    setShowInfoCard(true); // Info 카드 표시
+  };
+
+  useEffect(() => {
+    if (showInfoCard) {
+      const timer = setTimeout(() => {
+        setShowInfoCard(false); // 3초 후 자동으로 닫기
+      }, 3000);
+      return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 정리
+    }
+  }, [showInfoCard]);
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setShowInfoCard(false); // 카드 외부 클릭 시 닫기
+    }
+  };
 
   useEffect(() => {
     const fetchRadishCollection = async () => {
@@ -364,6 +477,31 @@ const MyRadish = () => {
   return (
     <Container>
       <ChooseButtonContainer>
+        <InfoButton src={Info} alt='정보' onClick={handleInfoClick}/>
+        {showInfoCard && (
+        <Overlay onClick={handleOverlayClick}>
+          <InfoCard>
+            <RadishImg src={basicRad} alt='무'/>
+            <CardTitle>무 카드 정보</CardTitle>
+            <InfoText>무 이름 배경색은 등급을 나타냅니다.</InfoText>
+            <InfoText>각 등급별로 획득 가능한 코인이 다릅니다!</InfoText>
+            <RankInfo>
+              <RankItem>
+                <RankCircle color="#FBB4AE" />
+                <RankText>S등급</RankText>
+              </RankItem>
+              <RankItem>
+                <RankCircle color="#FFFFCC" />
+                <RankText>A등급</RankText>
+              </RankItem>
+              <RankItem>
+                <RankCircle color="#D6F2CE" />
+                <RankText>B등급</RankText>
+              </RankItem>
+            </RankInfo>
+          </InfoCard>
+        </Overlay>
+      )}
         <ChooseButton
           onClick={handleChoose}
           isactive={isChooseActive.toString()}
@@ -394,6 +532,7 @@ const MyRadish = () => {
               <CharacterName rank={char.radishRank}>
                 {char.radishName}
               </CharacterName>
+              <CharacterCoin><img src={RadishCoinImgSrc} alt='코인'/>{char.coin}</CharacterCoin>
               <CharacterCount>x {char.count}</CharacterCount>
               {((!isChooseActive &&
                 char.radishName === userInfo.radishName) ||
