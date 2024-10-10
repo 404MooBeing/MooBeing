@@ -54,6 +54,7 @@ const DecisionButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  white-space: nowrap;
 `;
 
 const SearchContainer = styled.div`
