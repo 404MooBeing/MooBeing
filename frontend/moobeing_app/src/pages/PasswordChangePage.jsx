@@ -93,7 +93,7 @@ const ErrorMessage = styled.div`
 
 const AlertContainer = styled.div`
   position: fixed;
-  top: 100px;
+  top: 45%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;

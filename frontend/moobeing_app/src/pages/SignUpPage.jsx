@@ -224,14 +224,16 @@ const SignUpButton = styled.button`
   font-weight: bold;
   border: none;
   cursor: pointer;
+  font-family: 'mainFont';
 `;
+
 const AlertContainer = styled.div`
   position: fixed;
-  top: 23vh;
+  top: 30%;
   left: 50%;
   width: 75%;
   transform: translateX(-50%);
-  background-color: rgba(192, 221, 165, 0.8);
+  background-color: rgba(53, 53, 53, 0.5);
   color: white;
   padding: 10px 20px;
   border-radius: 10px;

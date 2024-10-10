@@ -113,17 +113,16 @@ const NoTransactionText = styled.p`
 
 const AlertContainer = styled.div`
   position: fixed;
-  top: 23vh;
-  left: 50%;
+  top: 45%;
+  left: 48%;
   width: 75%;
   transform: translateX(-50%);
-  background-color: rgba(192, 221, 165, 0.8);
+  background-color: rgba(53, 53, 53, 0.5);
   color: white;
   padding: 10px 20px;
   border-radius: 10px;
   font-size: 16px;
   z-index: 1000;
-  opacity: 1;
   transition: opacity 0.3s ease-in-out;
 
   display: flex;

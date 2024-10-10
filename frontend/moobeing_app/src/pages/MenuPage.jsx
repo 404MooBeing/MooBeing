@@ -70,11 +70,11 @@ const SearchContainer = styled.div`
   margin: 15px auto 10px auto; /* 중앙 정렬을 위해 margin 변경 */
   height: 40px;
   box-sizing: border-box;
+  overflow: hidden;
 
   @media (max-width: 600px) {
-    SearchContainer {
-      max-width: 350px;/* 모바일 화면에서 너비 조정 */
-    }
+    max-width: 400px;/* 모바일 화면에서 너비 조정 */
+    padding-right: 10px;
   }
 `;
 
@@ -92,7 +92,7 @@ const SearchInput = styled.input`
 
 const SearchIcon = styled.img`
   position: absolute;
-  right: 10px;
+  right: 20px;
   width: 20px;
   height: 20px;
   cursor: pointer;
