@@ -54,6 +54,7 @@ const DecisionButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  white-space: nowrap;
 `;
 
 const SearchContainer = styled.div`
@@ -64,6 +65,21 @@ const SearchContainer = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 아래쪽에만 그림자 효과 */
 `;
 
+const Popup = styled.div`
+  position: fixed;
+  bottom: 50%;
+  left: 50%;
+  width: 250px;
+  text-align: center;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  z-index: 2000;
+  font-size: 14px;
+`;
+
 function CapsuleChooseLocationPage() {
   const [places, setPlaces] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
@@ -71,6 +87,10 @@ function CapsuleChooseLocationPage() {
   const [mapCenter, setMapCenter] = useState(null); // 지도 중심 상태 추가
   const [customMarkers, setCustomMarkers] = useState([]);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [showNearbyPopup, setShowNearbyPopup] = useState(false); // 추가
+
   const navigate = useNavigate();
   const {
     updateLocationInfo,
@@ -148,9 +168,13 @@ function CapsuleChooseLocationPage() {
           if (status === window.kakao.maps.services.Status.OK) {
             setPlaces(data);
           } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-            alert("검색 결과가 존재하지 않습니다.");
+            setPopupMessage("검색 결과가 존재하지 않습니다.");
+            setShowPopup(true);
+            setTimeout(() => setShowPopup(false), 3000);
           } else if (status === window.kakao.maps.services.Status.ERROR) {
-            alert("검색 중 오류가 발생했습니다.");
+            setPopupMessage("검색 중 오류가 발생했습니다.");
+            setShowPopup(true);
+            setTimeout(() => setShowPopup(false), 3000);
           }
         },
         searchOption
@@ -198,15 +222,19 @@ function CapsuleChooseLocationPage() {
 
         const response = await postPlantCapsule(formData);
 
-        console.log("1. 심기 눌렀을때 response", response);
-
         navigate("/capsule-planting", { state: { response } });
       } catch (error) {
         console.error("캡슐 심기 실패:", error);
         if (error.response) {
-          console.error("서버 응답 데이터:", error.response.data);
+          console.log(error.response);
+          if (error.response.data.code === "RD002") {
+            setShowNearbyPopup(true);
+            setTimeout(() => setShowNearbyPopup(false), 3000);
+          } else {
+            console.error("서버 응답 데이터:", error.response.data);
+            alert("캡슐 심기에 실패했습니다. 다시 시도해주세요.");
+          }
         }
-        alert("캡슐 심기에 실패했습니다. 다시 시도해주세요.");
       }
     }
   };
@@ -251,6 +279,8 @@ function CapsuleChooseLocationPage() {
           )}
         </>
       )}
+      {showPopup && <Popup>{popupMessage}</Popup>}
+      {showNearbyPopup && <Popup>이미 가까운곳에 무가 심겨져있어요</Popup>}
     </>
   );
 }

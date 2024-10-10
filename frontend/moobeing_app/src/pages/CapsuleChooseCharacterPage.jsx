@@ -3,13 +3,33 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import previousIcon from "../assets/button/PreviousIcon.svg";
 import nextIcon from "../assets/button/NextIcon.svg";
-import blushRad from "../assets/radishes/blushRad.svg";
-import rainbowRad from "../assets/radishes/rainbowRad.svg";
-import musinsaRad from "../assets/radishes/musinsaRad.svg";
-import basicRad from "../assets/radishes/basicRad.png";
 import { getUserRadishCollection } from "../apis/RadishApi";
 import useCapsuleStore from "../store/CapsuleStore";
 import useRadishStore from "../store/RadishStore";
+
+import aniRad from "../assets/radishes/aniRad.png"
+import babyRad from "../assets/radishes/babyRad.png"
+import basicRad from "../assets/radishes/basicRad.png"
+import blushRad from "../assets/radishes/blushRad.png"
+import flippedRad from "../assets/radishes/flippedRad.png"
+import hairlotRad from "../assets/radishes/hairlotRad.png"
+import musinsaRad from "../assets/radishes/musinsaRad.png"
+import rainbowRad from "../assets/radishes/rainbowRad.png"
+import vacationRad from "../assets/radishes/vacationRad.png"
+import weightRad from "../assets/radishes/weightRad.png"
+
+const Radishs = {
+  aniRad: aniRad,
+  babyRad: babyRad,
+  basicRad: basicRad,
+  blushRad: blushRad,
+  flippedRad: flippedRad,
+  hairlotRad: hairlotRad,
+  musinsaRad: musinsaRad,
+  rainbowRad: rainbowRad,
+  vacationRad: vacationRad,
+  weightRad: weightRad,
+};
 
 const Container = styled.div`
   width: 80%;
@@ -61,14 +81,14 @@ const DateInfo = styled.p`
 const NextButton = styled.button`
   width: 80%;
   max-width: 500px;
-  background-color: #e0eed2;
+  background-color: ${(props) => (props.disabled ? "#cccccc" : "#e0eed2")};
   color: black;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
   font-weight: bold;
   border-radius: 5px;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   position: absolute;
   bottom: 15%;
   left: 50%;
@@ -196,7 +216,7 @@ function ChooseCharacter() {
         </LeftButton>
         <CharacterCard>
           <CharacterImg
-            src={characters[currentCharacter].radishImageUrl}
+            src={Radishs[characters[currentCharacter].radishImageUrl]}
             alt={characters[currentCharacter].radishName}
           />
           <CharacterName>
@@ -223,7 +243,9 @@ function ChooseCharacter() {
           {getHarvestDate(sizes[currentSize].day)}에 수확가능해요!
         </DateInfo>
       )}
-      <NextButton onClick={handleNext}>다음</NextButton>
+      <NextButton onClick={handleNext} disabled={currentSize === null}>
+        다음
+      </NextButton>
     </Container>
   );
 }
