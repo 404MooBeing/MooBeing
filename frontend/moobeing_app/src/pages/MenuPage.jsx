@@ -19,7 +19,7 @@ const KimpaPanel = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: #F5FDED;
-  padding: 25px 30px;
+  padding: 25px 15px;
   margin-bottom: 10px;
 `;
 
@@ -67,15 +67,10 @@ const SearchContainer = styled.div`
   align-items: center;
   position: relative;
   width: 90%;
-  margin: 15px auto 10px auto; /* 중앙 정렬을 위해 margin 변경 */
   height: 40px;
   box-sizing: border-box;
   overflow: hidden;
-
-  @media (max-width: 400px) {
-    max-width: 300px;/* 모바일 화면에서 너비 조정 */
-    padding-right: 10px;
-  }
+  margin: 10px 0;
 `;
 
 const SearchInput = styled.input`
@@ -88,11 +83,16 @@ const SearchInput = styled.input`
   padding: 0 15px;
   font-family: 'mainFont';
   box-sizing: border-box;
+
+  
+  @media (max-width: 350px) {
+    width: 200px;/* 모바일 화면에서 너비 조정 */
+  }
 `;
 
 const SearchIcon = styled.img`
   position: absolute;
-  right: 20px;
+  right: 5%;
   width: 20px;
   height: 20px;
   cursor: pointer;
