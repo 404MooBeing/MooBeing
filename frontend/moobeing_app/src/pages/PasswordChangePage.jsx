@@ -50,6 +50,10 @@ const ChangeButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #348833;
+  font-size: 13px;
+  font-weight: bold;
+  font-family: 'mainFont';
 
   @media (min-width: 600px) {
     width: 125px;
@@ -153,7 +157,6 @@ const PasswordChange = () => {
     }
 
     try {
-      console.log(oldPassword + " " + newPassword)
       const response = await postPasswordChange(oldPassword, newPassword); // 비밀번호 변경 요청
       setSuccessMessage("비밀번호가 성공적으로 변경되었습니다."); // 성공 메시지 설정
       setErrorMessage(""); // 에러 메시지 리셋

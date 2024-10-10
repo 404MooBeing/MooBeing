@@ -183,7 +183,6 @@ function GetRadishCharacter() {
         if (data) {
           setRadishInfo(data);
         } else {
-          console.log("무가 없어요");
         }
       } catch (error) {
         console.error("무 뽑기 실패", error);

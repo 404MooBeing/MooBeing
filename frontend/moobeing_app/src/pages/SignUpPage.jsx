@@ -379,7 +379,6 @@ const SignUp = () => {
         name,
         formattedHumanNumber
       );
-      console.log("회원가입 성공:", response);
       navigate("/");
     } catch (error) {
       console.error("회원가입 실패:", error);

@@ -87,7 +87,6 @@ function MonthlyLoanPayment() {
     try {
       const response = await getLoanMonthly();
       setLoanSum(response);
-      console.log(loanSum)
     } catch (error) {
       console.error("월별 대출 정보 불러오기 실패:", error);
       setLoanSum({ monthlyLoanAmount: 0 });

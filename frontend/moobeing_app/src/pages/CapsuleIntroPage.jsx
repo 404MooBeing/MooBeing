@@ -116,8 +116,6 @@ function CapsuleIntro() {
       try {
         const charactersData = await getCharacter();
         setCharacters(charactersData);
-        // console.log(charactersData);
-        // console.log(characters);
       } catch (error) {
         setError(error.message);
       } finally {
