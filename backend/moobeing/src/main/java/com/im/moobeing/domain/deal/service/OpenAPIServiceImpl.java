@@ -169,7 +169,7 @@ public class OpenAPIServiceImpl implements OpenAPIService {
             "jjantechgosu",
             "jjantechgosu",
             "munhwamisick",
-            "jjantechgosu",
+            "Flex",
             "munhwamisick",
             "munhwamisick",
             "jjantechgosu",
@@ -232,7 +232,7 @@ public class OpenAPIServiceImpl implements OpenAPIService {
         }
         MoobtiCharacterDto moobtiCharacterDto = MoobtiCharacterDto.builder()
                                                                   .type("소비 유형")
-                                                                  .imageUrl(images[idx])
+                                                                  .imageUrl(images[idx] + "Rad")
                                                                   .name(names[idx])
                                                                   .description(descriptions[idx])
                                                                   .build();
