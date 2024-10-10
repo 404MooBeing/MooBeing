@@ -2,6 +2,7 @@ package com.im.moobeing.domain.radish.dto.request;
 
 import com.im.moobeing.domain.radish.entity.CapsuleType;
 import lombok.*;
+import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CreateRadishCapsuleRequest {
 
     private Long dealId;
+    @Nullable
     private MultipartFile imgFile;
     private String description;
     private CapsuleType type;
