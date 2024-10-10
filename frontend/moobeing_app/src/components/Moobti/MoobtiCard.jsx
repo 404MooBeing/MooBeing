@@ -1,9 +1,29 @@
 import React, { forwardRef } from 'react';
 import styled from 'styled-components';
+import basicRad from "../../assets/radishes/basicRad.png";
+import FlexRad from "../../assets/moobti/flexRad.png";
+import jjantechgosuRad from "../../assets/moobti/jjantechgosuRad.png";
+import mohumgaRad from "../../assets/moobti/mohumgaRad.png";
+import futurereadyRad from "../../assets/moobti/futurereadyRad.png";
+import misicktamnickRad from "../../assets/moobti/misicktamnickRad.png";
+import munhwamisickRad from "../../assets/moobti/munhwamisickRad.png";
+import balancesaenghwal from "../../assets/moobti/balancesaenghwalRad.png";
+import husickRad from "../../assets/moobti/husickRad.png";
 import downloadButtonImage from "../../assets/button/DownloadButton.png";
 
 // const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 // const isAndroid = /Android/.test(navigator.userAgent);
+
+const MoobtiRad = {
+  FlexRad: FlexRad,
+  jjantechgosuRad: jjantechgosuRad,
+  mohumgaRad: mohumgaRad,
+  futurereadyRad: futurereadyRad,
+  misicktamnickRad: misicktamnickRad,
+  munhwamisickRad: munhwamisickRad,
+  balancesaenghwal: balancesaenghwal,
+  husickRad: husickRad,
+}
 
 const Card = styled.div`
   background-color: #e8f5e9;
@@ -112,6 +132,11 @@ const StyledDownloadButton = styled.img`
 `;
 
 const MoobtiCard = forwardRef(({ onDownload, categories, character }, ref) => {
+  
+  const handleImageError = (event) => {
+    event.target.src = basicRad; // 이미지 로드 실패 시 기본 이미지로 대체
+  };
+
   return (
     <Card ref={ref}>
       <Buttondiv>
@@ -122,7 +147,11 @@ const MoobtiCard = forwardRef(({ onDownload, categories, character }, ref) => {
           {character.type}<br />
           <span>{character.name}</span>
         </CharacterName>
-        <CharacterImage src={character.imageUrl} alt={character.name === "FlexRad" ? "FlexRad" : character.name} />
+        <CharacterImage
+          src={MoobtiRad[character.imageUrl] || basicRad} 
+          alt={character.name === "BasicRad" ? "BasicRad" : character.name}
+          onError={handleImageError} // 이미지 로드 실패 시 기본 이미지로 대체
+        />
         <Description>{character.description}</Description>
       </CardHeader>
       <StatusSection>

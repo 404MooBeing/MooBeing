@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { postSignUp, postEmailCheck } from "../apis/UserApi";
 import { useNavigate } from "react-router-dom";
+import dot from "../assets/dot.png";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -64,8 +65,14 @@ const InputGroupHumanNumber = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 `;
+
+const Slash = styled.span`
+  margin: 0 5px;
+  font-size: 25px;
+  color: #348833;
+`
 
 const InputLabel = styled.div`
   color: #348833;
@@ -79,7 +86,7 @@ const InputLabel = styled.div`
 const InputField = styled.input`
   width: 100%;
   padding: 12px 20px;
-  border: 1px solid #348833;
+  border: 1.5px solid #348833;
   border-radius: 10px;
   font-size: 15px;
   font-family: "Inter-Regular", Helvetica;
@@ -102,20 +109,24 @@ const HumanInputField = styled.input`
 `;
 
 const MaskedDisplay = styled.div`
-  width: 80%;
+  width: 83%;
   border: none;
   border-radius: 10px;
-  font-size: 25px;
-  font-family: "Inter-Regular", Helvetica;
   box-sizing: border-box;
   background-color: #ffffff;
   text-align: center;
-  color: #000000;
-  letter-spacing: 1px;
+  display: flex;
+  justify-content: space-between; /* 이미지를 균등하게 배치 */
+  padding: 5px 0; /* 적절한 여백 추가 */
+`;
 
-  @media (min-width: 500px) {
-    font-size: 30px;
-    letter-spacing: 4px;
+const DotImage = styled.img`
+  width: 12px;  /* dot 이미지의 크기 조정 */
+  height: 12px;
+
+  @media (min-width: 600px) {
+    width: 18px;  /* dot 이미지의 크기 조정 */
+    height: 18px;
   }
 `;
 
@@ -252,6 +263,7 @@ const SignUp = () => {
   const [emailChecked, setEmailChecked] = useState(false);
   const [alertMessage, setAlertMessage] = useState(""); // 경고 메시지 상태 추가
   const [isAlertVisible, setIsAlertVisible] = useState(false); // 경고창 가시성 상태 추가
+  const dots = Array(6).fill(null); // 6개의 dot을 배열로 생성
 
   const regEmail =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
@@ -408,14 +420,18 @@ const SignUp = () => {
                   value={humanNumber.part1}
                   onChange={handleHumanNumberPart1Change}
                 />
-                -
+                <Slash>-</Slash>
                 <HumanInputField
                   type="text"
                   maxLength={1}
                   value={humanNumber.part2}
                   onChange={handleHumanNumberPart2Change}
                 />
-                <MaskedDisplay>●●●●●●</MaskedDisplay>
+                <MaskedDisplay>
+                  {dots.map((_, index) => (
+                    <DotImage key={index} src={dot} alt="masked dot" />
+                  ))}
+                </MaskedDisplay>
               </InputGroupHumanNumber>
               <ButtonGroup>
                 <PrevButton onClick={handlePreviousStep}>이전</PrevButton>

@@ -92,9 +92,15 @@ const BlurOverlay = styled.div`
 
 const MyCapsulePage = () => {
   const [isDateSortOpen, setIsDateSortOpen] = useState(false);
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-  const [isAllView, setIsAllView] = useState(false);
+  const params = new URLSearchParams(window.location.search);
+  const dateParam = params.get("data");
+  const initialYear = dateParam ? parseInt(dateParam.split("-")[0], 10) : new Date().getFullYear();
+  const initialMonth = dateParam ? parseInt(dateParam.split("-")[1], 10) : new Date().getMonth() + 1;
+
+  const [selectedYear, setSelectedYear] = useState(initialYear);
+  const [selectedMonth, setSelectedMonth] = useState(initialMonth);
+  const [isAllView, setIsAllView] = useState(!dateParam); // dateParam이 없으면 전체 조회로 설정
+
   const [capsules, setCapsules] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -117,7 +123,9 @@ const MyCapsulePage = () => {
         let data;
         if (isAllView) {
           data = await getAllCapsules(currentPage);
+          console.log("이거 year 설정함22222222")
         } else {
+          console.log(selectedMonth)
           data = await getCapsulesByYearMonth(
             selectedYear,
             selectedMonth,
@@ -185,28 +193,6 @@ const MyCapsulePage = () => {
     }
   }, [handleScroll]);
 
-  // 수현쓰
-  // 페이지 로드 시 쿼리 파라미터에서 date 값을 가져와 해당 날짜로 이동
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const dateParam = params.get("date");
-
-    if (dateParam) {
-      const [year, month] = dateParam.split("-");
-      setSelectedYear(parseInt(year, 10));
-      setSelectedMonth(parseInt(month, 10));
-      setIsAllView(false);
-    } else {
-      setSelectedYear(new Date().getFullYear());
-      setSelectedMonth(new Date().getMonth() + 1);
-    }
-
-    setHasMore(true);
-    fetchCapsules(true);
-  }, [isAllView]);
-
-  ///
-
   const toggleDateSort = () => {
     setIsDateSortOpen(!isDateSortOpen);
   };
@@ -230,6 +216,11 @@ const MyCapsulePage = () => {
   };
 
   const changeMonth = (increment) => {
+    if(isAllView) {
+      handleMonthSelect(selectedYear, selectedMonth);
+      return
+    }
+
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
