@@ -24,6 +24,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/quiz")
@@ -111,5 +114,11 @@ public class QuizController {
 			@RequestBody EconomicQuizAnswerRequest quizAnswerRequest,
 			@PathVariable long quizNum) {
 		return ResponseEntity.ok(quizService.confirmEconomicQuizAnswer(member, quizNum, quizAnswerRequest));
+	}
+
+	@Operation(summary = "퀴즈 목록 확인", description = "퀴즈 목록 확인")
+	@GetMapping("/test/all")
+	public ResponseEntity<List<TestQuizResponse>> getAllQuiz() {
+		return ResponseEntity.ok(quizService.getAllQuiz());
 	}
 }

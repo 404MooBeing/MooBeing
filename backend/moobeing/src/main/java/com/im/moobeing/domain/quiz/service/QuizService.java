@@ -244,4 +244,10 @@ public class QuizService {
 		quizRepository.save(quiz);
 		return quiz;
 	}
+
+	public List<TestQuizResponse> getAllQuiz() {
+		return quizRepository.findAll().stream()
+				.map(TestQuizResponse::of)
+				.toList();
+	}
 }
