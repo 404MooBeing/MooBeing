@@ -543,7 +543,7 @@ INSERT IGNORE INTO radish_capsule (member_id, deal_id, character_id, description
 (1, 163, 10, '독서 모임 후 무를 심었습니다.', 'https://s3.seungki-cho.lol/moobeing/163.jpg', 'SMALL_RADISH', 37.477942, 126.980520, '서울 독서 모임 장소', '서울시 서대문구 신촌', DATE_SUB(now(), INTERVAL 21 DAY), DATE_SUB(now(), INTERVAL 1 DAY), true),
 (1, 178, 2, '헬스장에서 운동 후 작은 무를 심었습니다.', 'https://s3.seungki-cho.lol/moobeing/178.jpg', 'SMALL_RADISH', 37.476282, 126.981818, '서울 독서 모임 장소', '서울시 서대문구 신촌', DATE_SUB(now(), INTERVAL 22 DAY), DATE_SUB(now(), INTERVAL 2 DAY), true),
 (1, 100, 4, '농협은행에서 대출 상환 후 무를 심었습니다.', 'https://s3.seungki-cho.lol/moobeing/100.jpg', 'SMALL_RADISH', 37.478078, 126.982473, '서울 독서 모임 장소', '서울시 서대문구 신촌', DATE_SUB(now(), INTERVAL 23 DAY), DATE_SUB(now(), INTERVAL 3 DAY), true),
-(1, 80, 1, '멀티캠퍼스 역삼점에서 커피를 마셨습니다..', 'https://s3.seungki-cho.lol/moobeing/F6F17FC7-8C5B-4323-A0C8-17CF3B561E76.jpg', 'SMALL_RADISH', 37.501268, 127.039634, '멀티캠퍼스 역삼점', '서울시 강남구 테헤란로', DATE_SUB(NOW(), INTERVAL 21 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY), false),
+(1, 80, 1, '포동포동 조와 첫 회식! 아직 만난 지 얼마 안 돼서 어색하다ㅎㅎ 이 무캡슐을 열 때쯤이면 프젝 마지막 날이겠네! 프로젝트를 성공적으로 마무리하고 한층 더 성장해 있길 바라! ', 'https://s3ui.seungki-cho.lol/moobeing/A4B56F36-EE14-4133-ADE8-18F52F68E983.jpg', 'SMALL_RADISH', 37.501268, 127.039634, '멀티캠퍼스 역삼점', '서울시 강남구 테헤란로', DATE_SUB(NOW(), INTERVAL 41 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY), false),
 (1, 47, 2, '바나프레소 테헤란로점에서 커피를 샀습니다.', 'https://s3.seungki-cho.lol/moobeing/sangwoocoffee.png', 'SMALL_RADISH', 37.501111, 127.039073, '바나프레소 테헤란로점', '서울시 강남구 테헤란로', DATE_SUB(NOW(), INTERVAL 23 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 23 DAY), INTERVAL 20 DAY), false),
 (1, 179, 3, '매머드익스프레스 역삼언주로점에서 커피를 샀습니다.', 'https://s3.seungki-cho.lol/moobeing/97947112.1.jpg', 'SMALL_RADISH', 37.500775, 127.040461, '매머드익스프레스 역삼언주로점', '서울시 강남구 언주로', DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_ADD(NOW(), INTERVAL 10 DAY), false),
 (1, 179, 3, '매머드익스프레스 강남역 할리스 2점에서 커피를 샀습니다.', 'https://s3.seungki-cho.lol/moobeing/97947112.1.jpg', 'SMALL_RADISH', 37.500418, 127.027108, '할리스 강남역 2점', '서울시 강남구 역삼동', DATE_SUB(NOW(), INTERVAL 23 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 23 DAY), INTERVAL 20 DAY) , false),
@@ -583,8 +583,7 @@ INSERT INTO point_transaction (member_id, amount, remain_balance, create_at) VAL
 (1, 500, 3600, DATE_SUB(NOW(), INTERVAL 1 DAY)),
 (1, -300, 3300, NOW());
 
-INSERT IGNORE INTO quiz_data (id, word, question, answer, explanation, quiz_date)
-    VALUES
+INSERT IGNORE INTO quiz_data (id, word, question, answer, explanation, quiz_date) VALUES
 (1, '죄수의 딜레마', '죄수의 딜레마는 두 명의 죄수가 협력하면 더 큰 이익을 얻는 상황을 말한다.', FALSE, '죄수의 딜레마는 두 명의 죄수가 서로 협력하지 못해 최선의 결과를 얻지 못하는 상황을 의미합니다.', '2024-10-07'),
 (2, '주가수익비율(PER)', '주가수익비율(PER)은 주가를 주당순이익으로 나눈 값이다.', TRUE, 'PER은 주가를 주당순이익으로 나누어, 주식의 수익성을 평가하는 지표입니다.', '2024-10-08'),
 (3, '주가연계증권(ELS)', '주가연계증권(ELS)은 주가의 변동에 따라 수익이 결정되는 금융상품이다.', TRUE, 'ELS는 기초자산인 주가에 따라 수익이 달라지는 금융 상품입니다.', '2024-10-09'),

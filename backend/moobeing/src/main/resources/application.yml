@@ -29,7 +29,6 @@ spring:
     password: ${USER_PASSWORD}
 
   jpa:
-    show-sql: true
     hibernate:
       ddl-auto: create-drop
     defer-datasource-initialization: true
