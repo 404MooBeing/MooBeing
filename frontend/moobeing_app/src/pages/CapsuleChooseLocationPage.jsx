@@ -9,14 +9,6 @@ import useRadishStore from "../store/RadishStore";
 import FindingLocation from "../components/CapsuleChooseLocation/FindingLocation";
 import CurrentLocationIcon from "../assets/capsules/CurrentLocationIcon.png";
 
-const CurrentLocationMarker = styled.img`
-  width: 20px; /* 너비를 20px로 설정 */
-  height: 20px; /* 높이를 20px로 설정 */
-  position: absolute;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
-`;
-
 const OverlayContainer = styled.div`
   position: fixed;
   bottom: 100px;
@@ -205,7 +197,10 @@ function CapsuleChooseLocationPage() {
         formData.append("radishId", radishId);
 
         const response = await postPlantCapsule(formData);
-        navigate("/capsule-planting", { state: { coin: response.coin } });
+
+        console.log("1. 심기 눌렀을때 response", response);
+
+        navigate("/capsule-planting", { state: { response } });
       } catch (error) {
         console.error("캡슐 심기 실패:", error);
         if (error.response) {

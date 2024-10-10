@@ -108,12 +108,17 @@ const Z3 = styled(ZText)`
 
 function CapsulePlanting() {
   const location = useLocation();
-  const coin = location.state?.coin || 0;
+  const coin = location.state?.response?.coin || 0;
   const [showPlanted, setShowPlanted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(true);
   const [showCoinPopUp, setShowCoinPopUp] = useState(false);
 
   useEffect(() => {
+    console.log("coin 잘 들어왔나요?", coin);
+    console.log(
+      "무심기 로딩창으로 response 잘 왔나요?",
+      location.state.response
+    );
     const timer = setTimeout(() => {
       setShowPlanted(true);
       setIsAnimating(false);
@@ -131,7 +136,11 @@ function CapsulePlanting() {
   return (
     <>
       <Container>
-        {!showPlanted ? <Planting /> : <Planted />}
+        {!showPlanted ? (
+          <Planting />
+        ) : (
+          <Planted response={location.state.response} />
+        )}
         <RadishInSoil src={plantingRad} alt="Radish in soil" />
         <ZContainer>
           <Z1 delay={0} isAnimating={isAnimating}>
