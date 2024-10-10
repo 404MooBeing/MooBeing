@@ -193,6 +193,29 @@ const MyCapsulePage = () => {
     }
   }, [handleScroll]);
 
+  // 수현쓰
+  // 페이지 로드 시 쿼리 파라미터에서 date 값을 가져와 해당 날짜로 이동
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const dateParam = params.get("data"); // "data"로 수정
+
+    if (dateParam) {
+      const [year, month] = dateParam.split("-");
+      setSelectedYear(parseInt(year, 10));
+      setSelectedMonth(parseInt(month, 10));
+      setIsAllView(false);
+      handleMonthSelect(year, month);
+    } else {
+      setSelectedYear(new Date().getFullYear());
+      setSelectedMonth(new Date().getMonth() + 1);
+    }
+
+    setHasMore(true);
+    fetchCapsules(true);
+  }, []);
+
+  ///
+
   const toggleDateSort = () => {
     setIsDateSortOpen(!isDateSortOpen);
   };
