@@ -94,7 +94,7 @@ const MyCapsulePage = () => {
   const [isDateSortOpen, setIsDateSortOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-  const [isAllView, setIsAllView] = useState(false);
+  const [isAllView, setIsAllView] = useState(true);
   const [capsules, setCapsules] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -230,6 +230,11 @@ const MyCapsulePage = () => {
   };
 
   const changeMonth = (increment) => {
+    if(isAllView) {
+      handleMonthSelect(selectedYear, selectedMonth);
+      return
+    }
+
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
