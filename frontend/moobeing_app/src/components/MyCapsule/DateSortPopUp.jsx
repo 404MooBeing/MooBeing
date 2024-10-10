@@ -39,7 +39,7 @@ const Title = styled.div`
   font-weight: bold;
 `;
 
-const AllViewButton = styled.button`
+const AllViewButton = styled.div`
   background-color: #E0EED2;
   border: none;
   border-radius: 20px;
@@ -100,11 +100,13 @@ const MonthGrid = styled.div`
   height: 200px; // 고정 높이 설정
 `;
 
-const MonthButton = styled.button`
+const MonthButton = styled.div`
   width: 60px;
   height: 60px;
-  border: none; // 테두리 제거
   background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 18px;
   cursor: pointer;
   transition: background-color 0.3s;

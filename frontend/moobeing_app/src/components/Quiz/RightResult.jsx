@@ -50,6 +50,7 @@ const Button = styled.button`
   border-radius: 12px;
   transition: background-color 0.3s ease;
   width: 180px;
+  font-family: 'mainFont';
 
   &:hover {
     background-color: #45a049;

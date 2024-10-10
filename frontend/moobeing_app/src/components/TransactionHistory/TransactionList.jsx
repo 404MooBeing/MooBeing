@@ -154,8 +154,15 @@ const TransactionList = () => {
           transactionType: sortCriteria.type,
           page: currentPage, // 현재 페이지로 요청
         };
-        const response = await postAccountHistory(accountHistoryData);
-        
+        let response = await postAccountHistory(accountHistoryData);
+  
+        // 거래구분에 따라 필터링
+        if (sortCriteria.type === '입금') {
+          response = response.filter(transaction => transaction.amount > 0);
+        } else if (sortCriteria.type === '출금') {
+          response = response.filter(transaction => transaction.amount < 0);
+        }
+  
         if (response.length > 0) {
           setTransactions((prevTransactions) => [...prevTransactions, ...response]); // 이전 데이터에 추가
         } else {
@@ -231,8 +238,14 @@ const TransactionList = () => {
 
   return (
     <ListContainer selected={isRadishSelected}>
-      {transactions.length > 0 ? (
-        transactions.map((transaction, index) => (
+    {transactions.length > 0 ? (
+      transactions
+        .filter(transaction => {
+          if (sortCriteria.type === '입금') return transaction.amount > 0;
+          if (sortCriteria.type === '출금') return transaction.amount < 0;
+          return true; // 전체 선택 시 필터링 없음
+        })
+        .map((transaction, index) => (
           <div key={index} ref={index === transactions.length - 1 ? lastTransactionRef : null}>
             {index === 0 || transactions[index - 1].date !== transaction.date ? (
               <DateHeader>{transaction.date}</DateHeader>
@@ -255,12 +268,12 @@ const TransactionList = () => {
             </TransactionItem>
           </div>
         ))
-      ) : (
-        <NoTransactionContainer>
-          <NoTransactionImage src={basicRad} alt="계좌 내역이 없습니다." />
-          <NoTransactionText>계좌 내역이 없습니다.</NoTransactionText>
-        </NoTransactionContainer>
-      )}
+    ) : (
+      <NoTransactionContainer>
+        <NoTransactionImage src={basicRad} alt="계좌 내역이 없습니다." />
+        <NoTransactionText>계좌 내역이 없습니다.</NoTransactionText>
+      </NoTransactionContainer>
+    )}
       {alertMessage && <AlertContainer>{alertMessage}</AlertContainer>}
       {isRadishSelected && <SelectButton onClick={handleSelectButton}>선택하기</SelectButton>}
     </ListContainer>

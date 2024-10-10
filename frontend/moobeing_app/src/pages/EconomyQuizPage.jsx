@@ -4,7 +4,6 @@ import { getNotStartedEconomicQuiz, submitEconomicQuizAnswer } from "../apis/Qui
 import upArrow from "../assets/quiz/circle.svg";
 import downArrow from "../assets/quiz/x.svg";
 import { useNavigate } from "react-router-dom";
-import useUserStore from "../store/UserStore";
 import { SyncLoader } from "react-spinners";
 
 const PageContainer = styled.div`
@@ -22,7 +21,7 @@ const QuizContainer = styled.div`
   width: 50%;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
   padding: 30px;
-  margin-bottom: 30px;
+  margin-bottom: 45%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,7 +87,6 @@ function Quiz() {
   const [quizData, setQuizData] = useState(null);
   const [timeLeft, setTimeLeft] = useState(15);
   const navigate = useNavigate();
-  const { userInfo } = useUserStore();
 
   useEffect(() => {
     async function fetchQuiz() {

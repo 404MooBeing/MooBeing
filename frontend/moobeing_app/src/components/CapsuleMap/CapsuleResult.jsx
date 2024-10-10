@@ -80,6 +80,7 @@ const OpenButton = styled.button`
   margin-top: 10px;
   margin-bottom: 10px;
   font-family: 'mainFont';
+  color: black;
 
   &:hover {
     background-color: #8bc8a5;

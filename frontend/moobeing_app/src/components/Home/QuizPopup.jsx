@@ -42,8 +42,8 @@ const Container = styled.div`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 6px;
-  right: 5px;
+  top: 3%;
+  right: 1%;
   background: none;
   border: none;
   font-size: 1.3rem;

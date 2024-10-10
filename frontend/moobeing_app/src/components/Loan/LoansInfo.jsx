@@ -19,6 +19,7 @@ const Container = styled.div`
   background-color: #f5fded;
   border-radius: 20px;
   width: 90%;
+  margin-top: 15px;
   margin-bottom: 5%;
   position: relative;
   display: flex;

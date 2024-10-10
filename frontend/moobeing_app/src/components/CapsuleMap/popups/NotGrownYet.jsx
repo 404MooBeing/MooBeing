@@ -75,6 +75,8 @@ const CloseButton = styled.button`
   align-items: center;
   cursor: pointer;
   font-size: 14px;
+  color: black;
+  font-family: 'mainFont';
 `;
 
 function NotGrownYetPopup({ data, onClose }) {

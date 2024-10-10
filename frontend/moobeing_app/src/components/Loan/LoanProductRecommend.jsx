@@ -20,7 +20,7 @@ const Container = styled.div`
   border: 3.5px solid #348833;
   border-radius: 20px;
   width: 90%;
-  margin: 8% 0 3% 0;
+  margin: 8% 0 1% 0;
   position: relative;
   display: flex;
   flex-direction: column;
