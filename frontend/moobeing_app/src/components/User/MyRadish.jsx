@@ -47,9 +47,9 @@ const ChooseButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 87%;
+  width: 90%;
   margin-bottom: 5px;
-  padding: 0 30px 0 26px;
+  padding: 0 30px 0 25px;
   background-color: transparent !important;
   z-index: 1000;
 `;
@@ -324,15 +324,15 @@ const InfoCard = styled.div`
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  width: 250px;
   z-index: 1001;
   text-align: center;
   font-family: 'mainFont', sans-serif;
 `;
 
 const RadishImg = styled.img`
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
 `;
 
 const CardTitle = styled.div`
@@ -529,7 +529,7 @@ const MyRadish = () => {
           onClick={handleChoose}
           isactive={isChooseActive.toString()}
         >
-          선택
+          내 무 선택
         </ChooseButton>
       </ChooseButtonContainer>
       <ScrollContainer>

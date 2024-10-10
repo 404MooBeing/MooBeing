@@ -103,7 +103,7 @@ const TextForm = styled.div`
 `;
 
 const TextArea = styled.textarea`
-  width: 100%;
+  width: 98%;
   height: calc(100% - 20px);
   border: none;
   background-color: transparent;
