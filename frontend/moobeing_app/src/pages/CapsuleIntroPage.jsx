@@ -21,6 +21,7 @@ const Title = styled.h1`
 
 const ContentContainer = styled.div`
   align-self: stretch;
+  margin-bottom: 10px;
 `;
 
 const ContentList = styled.ol`
@@ -81,7 +82,7 @@ const ContentText = styled.p`
 `;
 
 const Radish = styled.img`
-  width: 45%;
+  width: 150px;
   height: auto;
   align-self: center;
   margin-top: 0;

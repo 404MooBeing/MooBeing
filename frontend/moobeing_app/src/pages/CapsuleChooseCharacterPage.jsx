@@ -35,7 +35,7 @@ const Container = styled.div`
   width: 80%;
   max-width: 500px;
   margin: 0 auto;
-  margin-top: 10%;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,14 +45,14 @@ const Container = styled.div`
 const Title = styled.h1`
   align-self: flex-start;
   margin-bottom: -5px;
-  font-size: 28px;
+  font-size: 23px;
 `;
 
 const LeftDay = styled.p`
   align-self: flex-start;
   color: #616161;
-  margin-bottom: 50px;
-  font-size: 28px;
+  margin-bottom: 40px;
+  font-size: 22px;
 `;
 
 const CharacterContainer = styled.div`
@@ -69,12 +69,12 @@ const CharacterSizes = styled.div`
   align-items: center;
   gap: 16px;
   margin-top: 40px;
-  width: 230px;
+  width: 220px;
 `;
 
 const DateInfo = styled.p`
   color: #348833;
-  margin-top: 25px;
+  margin-top: 30px;
   align-self: center;
 `;
 
@@ -96,8 +96,8 @@ const NextButton = styled.button`
 `;
 
 const CharacterCard = styled.div`
-  width: 200px;
-  height: 220px;
+  width: 50%;
+  height: 200px;
   border-radius: 20px;
   background: #f5fded;
   box-shadow: 0.3px 0.3px 6px 0px rgba(0, 0, 0, 0.12);
@@ -106,6 +106,11 @@ const CharacterCard = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+
+  @media (max-width: 400px) {
+    height: 180px;
+  }
+
 `;
 
 const CharacterImg = styled.img`
@@ -160,6 +165,7 @@ const CharacterSize = styled.button`
   cursor: pointer;
   outline: ${(props) => (props.selected ? "2px solid #348833" : "none")};
   font-weight: bold;
+  font-family: 'mainFont';
 `;
 
 function ChooseCharacter() {
