@@ -22,7 +22,6 @@ import checkBox from "../../assets/checkBox.svg";
 import { useNavigate } from "react-router-dom";
 import Info from "../../assets/button/infoButton.png";
 import RadishCoinImgSrc from "../../assets/coin/RadishCoin.png";
-import basicRad from "../../assets/radishes/basicRad.png";
 
 const Radishs = {
   aniRad: aniRad,
