@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { darken } from "polished"; // polished에서 darken 가져오기
-import radish from "../../assets/radishes/basicRad.svg";
-import { getCreditRate } from "../../apis/UserApi"; // API import
+import radish from "../../assets/radishes/basicRad.png";
 import useUserStore from "../../store/UserStore";
+import { getCreditRate } from "../../apis/UserApi";
 
 // 신용등급별 색상
 const GraphColors = {
@@ -110,30 +110,28 @@ const CreditText = styled.div`
 `;
 
 const CreditScore = () => {
-  const { userInfo } = useUserStore();
-  const [creditInfo, setCreditInfo] = useState({
-    ratingName: "A", // 기본값
-    ratingPercent: 100, // 기본값
-  });
+  const { userInfo, creditRate, setCreditRate } = useUserStore(); // creditRate 가져오기 및 setCreditRate 추가
+  const [creditInfo, setCreditInfo] = useState(creditRate); // userStore에서 가져온 기본값 사용
 
-
-  // API 호출을 통한 신용등급 데이터 가져오기
+  // API 호출을 통한 신용등급 데이터 가져오기 및 상태 업데이트
   useEffect(() => {
     const fetchCreditRate = async () => {
       try {
         const data = await getCreditRate(); // API 호출
         // 신용등급 값이 음수일 경우 최소값 0으로 설정
-        setCreditInfo({
+        const updatedCreditInfo = {
           ratingName: data.ratingName,
           ratingPercent: Math.max(data.ratingPercent, 0),
-        });
+        };
+        setCreditInfo(updatedCreditInfo); // 로컬 상태 업데이트
+        setCreditRate(updatedCreditInfo); // userStore 업데이트
       } catch (error) {
         console.error("신용등급 데이터를 불러오는 중 오류 발생:", error);
       }
     };
 
     fetchCreditRate(); // 컴포넌트가 마운트될 때 API 호출
-  }, []);
+  }, [setCreditRate]);
 
   // 다음 등급 달성 시까지 남은 퍼센트
   const remainingPercent = 100 - creditInfo.ratingPercent;

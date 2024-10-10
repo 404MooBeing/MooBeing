@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import styled from "styled-components";
 import Header from "./components/Fixed/Header";
 import Footer from "./components/Fixed/Footer";
 import Home from "./pages/HomePage";
@@ -39,11 +40,88 @@ import ChatbotPage from "./pages/ChatbotPage";
 import ChatBot from "./assets/radishes/chatbotRad.png";
 import closeButton from "./assets/button/closeButton.svg";
 
+const ChatbotWrapper = styled.div`
+  position: fixed;
+  bottom: ${(props) => props.position.bottom}px;
+  right: ${(props) => props.position.right}px;
+  z-index: 1000;
+  cursor: grab;
+  touch-action: none;
+`;
+
 function Router() {
   const location = useLocation();
   const navigate = useNavigate();
   const userInfo = useUserStore((state) => state.userInfo);
   const [showChatbot, setShowChatbot] = useState(true); // 챗봇 표시 여부 상태
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ bottom: 90, right: 23 });
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+
+  // 허용된 경로 설정
+  const allowedRoutes = [
+    "/",
+    "/login",
+    "/signup",
+    "/welcome",
+    "/alarm",
+    "/choose-character",
+    "/choose-location",
+    "/capsule-harvest",
+    "/capsule-intro",
+    "/capsule-create",
+    "/capsule-planting",
+    "/capsule-search",
+    "/coin-exchange",
+    "/coin",
+    "/get-radish",
+    "/total-journey",
+    "/each-journey/:loanName",
+    "/loan",
+    "/loan-payment",
+    "/menu",
+    "/moobti",
+    "/my-capsule",
+    "/my-map",
+    "/user",
+    "/password-change",
+    "/quiz",
+    "/economy-quiz",
+    "/quiz/result/:quizId",
+    "/spend",
+    "/transaction-history/:accountId",
+    "/chatbot",
+  ];
+
+  // 잘못된 경로 접근 시 경고창 표시 및 리다이렉트
+  useEffect(() => {
+    if (!allowedRoutes.includes(location.pathname)) {
+      window.alert("잘못된 접근입니다."); // 경고창 표시
+
+      if (userInfo) {
+        // 로그인이 되어 있으면 홈으로 리다이렉트
+        navigate("/", { replace: true });
+      } else {
+        // 로그인이 되어 있지 않으면 로그인 페이지로 리다이렉트
+        navigate("/login", { replace: true });
+      }
+    }
+  }, [location.pathname, userInfo, navigate]);
+
+  useEffect(() => {
+    // 사용자가 로그인하지 않은 경우에만 로딩 페이지를 표시
+    if (!userInfo && location.pathname !== "/signup") {
+      const timer = setTimeout(() => {
+        setIsLoading(false); // 로딩 종료
+        navigate("/login"); // 로그인 페이지로 이동
+      }, 3000); // 3초 후 이동
+
+      return () => clearTimeout(timer); // 클린업 함수
+    } else {
+      setIsLoading(false); // 로그인 상태이거나 signup 페이지이면 로딩 종료
+    }
+  }, [navigate, userInfo, location.pathname]);
 
   // 뒤로 가기를 막는 로직
   useEffect(() => {
@@ -63,8 +141,7 @@ function Router() {
 
   // Header와 Footer를 표시하지 않을 경로 목록
   const noHeaderFooterRoutes = ["/loading", "/login", "/signup", "/welcome"];
-
-  // 챗봇을 표시하지 않을 경로 목록
+  // 챗봇을 표시할 경로
   const chatbotRoutes = ["/", "/loan", "/spend", "/menu"];
 
   // 챗봇 페이지에서는 챗봇 이미지 표시하지 않음
@@ -74,22 +151,58 @@ function Router() {
 
   const shouldShowChatbot = chatbotRoutes.includes(location.pathname) && !isChatbotPage;
 
-  // 페이지 이동 시 챗봇 다시 표시
-  useEffect(() => {
-    if (chatbotRoutes.includes(location.pathname)) {
-      setShowChatbot(true); // 페이지가 변경될 때 챗봇 다시 표시
-    }
-  }, [location.pathname]);
+    // 챗봇 드래그 시작
+    const handleMouseDown = (e) => {
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX || e.touches[0].clientX,
+        y: e.clientY || e.touches[0].clientY,
+      });
+    };
+  
+    // 챗봇 드래그 중
+    const handleMouseMove = (e) => {
+      if (!isDragging) return;
+      const clientX = e.clientX || e.touches[0].clientX;
+      const clientY = e.clientY || e.touches[0].clientY;
+  
+      const deltaX = dragStart.x - clientX;
+      const deltaY = dragStart.y - clientY;
+  
+      setPosition((prevPosition) => ({
+        bottom: prevPosition.bottom + deltaY,
+        right: prevPosition.right + deltaX,
+      }));
+  
+      setDragStart({ x: clientX, y: clientY });
+    };
+  
+    // 챗봇 드래그 끝
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
 
-  // 챗봇 클릭 시 챗봇 페이지로 이동
-  const handleChatbotClick = () => {
-    navigate("/chatbot");
-  };
+    // 페이지가 변경될 때마다 챗봇 위치를 초기화
+    useEffect(() => {
+      setPosition({ bottom: 90, right: 23 }); // 기본 위치로 초기화
+    }, [location.pathname]);
 
-  // 챗봇 닫기 버튼 클릭 시 챗봇 숨김
-  const handleChatbotClose = () => {
-    setShowChatbot(false);
-  };
+    // 페이지 이동 시 챗봇 다시 표시
+    useEffect(() => {
+      if (chatbotRoutes.includes(location.pathname)) {
+        setShowChatbot(true); // 페이지가 변경될 때 챗봇 다시 표시
+      }
+    }, [location.pathname]);
+
+    // 챗봇 클릭 시 챗봇 페이지로 이동
+    const handleChatbotClick = () => {
+      navigate("/chatbot");
+    };
+
+    // 챗봇 닫기 버튼 클릭 시 챗봇 숨김
+    const handleChatbotClose = () => {
+      setShowChatbot(false);
+    };
 
   return (
     <>
@@ -98,12 +211,15 @@ function Router() {
         style={{
           minHeight: shouldShowHeaderFooter ? "calc(100vh - 120px)" : "100vh",
         }}
-      >
+      > 
+        {isLoading ? ( // 로딩 중이면 Loading 컴포넌트 표시
+          <Loading isLoading={isLoading} />
+        ) : (
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/welcome" element={userInfo ? <Welcome /> : <Navigate replace to="/login" />} />
           <Route path="/" element={userInfo ? <Home /> : <Navigate replace to="/login" />} />
-          <Route path="/loading" element={userInfo ? <Loading /> : <Navigate replace to="/login" />} />
           <Route path="/alarm" element={userInfo ? <Alarm /> : <Navigate replace to="/login" />} />
           <Route path="/choose-character" element={userInfo ? <CapsuleChooseCharacter /> : <Navigate replace to="/login" />} />
           <Route path="/choose-location" element={userInfo ? <CapsuleChooseLocation /> : <Navigate replace to="/login" />} />
@@ -130,22 +246,29 @@ function Router() {
           <Route path="/quiz/result/:quizId" element={userInfo ? <QuizResult /> : <Navigate replace to="/login" />} />
           <Route path="/spend" element={userInfo ? <Spend /> : <Navigate replace to="/login" />} />
           <Route path="/transaction-history/:accountId" element={userInfo ? <TransactionHistory /> : <Navigate replace to="/login" />} />
-          <Route path="/welcome" element={userInfo ? <Welcome /> : <Navigate replace to="/login" />} />
           <Route path="/chatbot" element={userInfo ? <ChatbotPage /> : <Navigate replace to="/login" />} />
         </Routes>
+        )}
       </div>
       {shouldShowHeaderFooter && <Footer />}
 
       {/* Chatbot 이미지 (챗봇 페이지 또는 특정 페이지에서는 표시 안함, 챗봇이 활성화된 경우만 표시) */}
-      {!isChatbotPage && showChatbot && shouldShowChatbot && (
-        <div style={{ position: "fixed", bottom: "90px", right: "23px", zIndex: 1000 }}>
+      {!isChatbotPage && showChatbot && shouldShowChatbot && !isLoading && (
+        <ChatbotWrapper
+          position={position}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onTouchStart={handleMouseDown} // 터치 드래그 시작
+          onTouchMove={handleMouseMove} // 터치 드래그 중
+          onTouchEnd={handleMouseUp} // 터치 드래그 끝
+        >
           <img
             src={ChatBot}
             alt="Chatbot"
             style={{
               width: "70px",
               height: "80px",
-              cursor: "pointer",
               filter: "drop-shadow(4px 3px 3px #c3c3c3)",
             }}
             onClick={handleChatbotClick}
@@ -163,7 +286,7 @@ function Router() {
             }}
             onClick={handleChatbotClose}
           />
-        </div>
+        </ChatbotWrapper>
       )}
     </>
   );

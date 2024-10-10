@@ -132,7 +132,7 @@ const fadeIn = keyframes`
 
 const CardWrapper = styled.div`
   position: absolute;
-  top: 47%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
@@ -218,8 +218,8 @@ function GetRadishCharacter() {
         setShowCard(true);
         fireConfetti();
         setTimeout(() => {
-          handleCollectionClick(); // 2초 후 자동으로 페이지 이동
-        }, 2000);
+          handleCollectionClick(); // 3초 후 자동으로 페이지 이동
+        }, 3000);
       }, 500);
     }
   }, [pullCount]);

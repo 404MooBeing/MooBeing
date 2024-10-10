@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { differenceInSeconds, intervalToDuration } from "date-fns";
-import basicRadish from "../../assets/radishes/basicRad.svg";
+import basicRadish from "../../assets/radishes/basicRad.png";
 import { getRadishSummary } from "../../apis/RadishApi";
+import useUserStore from "../../store/UserStore";
 
 const Container = styled.div`
   background-color: #f5fded;
@@ -79,6 +80,7 @@ const ComingSoon = styled.div`
 `;
 
 const RadishInfo = () => {
+  const { radishSummary, setRadishSummary } = useUserStore(); // store에서 데이터 가져오기
   const [timeLeft, setTimeLeft] = useState("뽑을 무가 없습니다");
   const [count, setCount] = useState(0);
   const [targetDate, setTargetDate] = useState(null); // 목표 시간을 상태로 저장
@@ -109,17 +111,16 @@ const RadishInfo = () => {
     const fetchRadishSummary = async () => {
       try {
         const summary = await getRadishSummary();
-        const { remainTime, count } = summary;
-
-        setCount(count);
-        setTargetDate(remainTime); // 목표 시간을 설정
+        setRadishSummary(summary); // store에 데이터 업데이트
+        setCount(summary.count); // 상태 업데이트
+        setTargetDate(summary.remainTime);
       } catch (error) {
         console.error("무 요약 데이터를 가져오지 못했습니다.", error);
       }
     };
 
     fetchRadishSummary();
-  }, []);
+  }, [setRadishSummary]);
 
   useEffect(() => {
     if (!targetDate) return;

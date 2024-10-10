@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import AccountList from "./AccountList";
 import { getAccountSum } from "../../apis/AccountApi";
+import useUserStore from "../../store/UserStore";
 
 const Container = styled.div`
   background-color: #f5fded;
@@ -59,8 +60,7 @@ const AccountListContainer = styled.div`
 `;
 
 const AccountInfo = () => {
-  // eslint-disable-next-line
-  const [totalAccountAmount, setTotalAccountAmount] = useState(0); 
+  const { totalAccountAmount, setTotalAccountAmount } = useUserStore();
 
   useEffect(() => {
     const fetchAccountSum = async () => {
@@ -73,7 +73,7 @@ const AccountInfo = () => {
     };
 
     fetchAccountSum(); // useEffect 안에서 API 호출
-  }, []); // 빈 배열을 두 번째 인수로 전달하여 컴포넌트가 마운트될 때 한 번만 실행
+  }, [setTotalAccountAmount]); // 의존성에 setTotalAccountAmount 추가
   
   return (
     <Container>

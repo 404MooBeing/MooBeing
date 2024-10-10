@@ -2,6 +2,9 @@ import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 import downloadButtonImage from "../../assets/button/DownloadButton.png";
 
+// const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+// const isAndroid = /Android/.test(navigator.userAgent);
+
 const Card = styled.div`
   background-color: #e8f5e9;
   border-radius: 20px;
@@ -36,8 +39,8 @@ const CharacterName = styled.h2`
   }
 `;
 
-const Description = styled.div` 
-  font-size: clamp(12px, 3vw, 15px);
+const Description = styled.div`
+  font-size: 15px;
   font-weight: bold;
   line-height: 160%;
   color: #333;

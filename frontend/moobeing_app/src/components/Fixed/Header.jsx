@@ -88,7 +88,7 @@ const Header = () => {
     <StyledHeader>
       <img className="logo" alt="logo" src={logo} onClick={handleHomeClick} />
       <div className="right-icons">
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", marginTop: '6px', marginRight: '3px' }}>
           {isAlarm && <div className="notification-dot" />} {/* isAlarm이 true일 때만 빨간 점 표시 */}
           <img
             className="alarm"

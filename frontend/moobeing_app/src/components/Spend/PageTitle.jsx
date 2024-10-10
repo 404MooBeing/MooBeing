@@ -113,7 +113,7 @@ const PageTitle = ({ totalExpense, setViewMode, viewMode }) => {
   const userName = user.userInfo.name ? user.userInfo.name : "사용자";
 
   // 현재 날짜의 월을 가져옴
-  const currentMonth = dayjs().format("MM");
+  const currentMonth = dayjs().format("MM") - 1;
 
   return (
     <>

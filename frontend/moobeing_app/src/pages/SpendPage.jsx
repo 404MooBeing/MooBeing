@@ -30,7 +30,7 @@ const Container = styled.div`
 `;
 
 const CalendarWrapper = styled.div`
-  width: 90%;
+  width: 95%;
   padding: 20px 20px 0px 20px;
   box-sizing: border-box;
 `;

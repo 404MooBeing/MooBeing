@@ -30,17 +30,16 @@ const StyledLoading = styled.div`
 
   & .text-wrapper {
     color: #348833;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 400;
     letter-spacing: 0;
-    line-height: normal;
+    line-height: 150%;
     text-align: center;
-    font-family: "S-CoreDream";
   }
 
   & .element {
-    height: 20%;
-    width: 30%;
+    height: 15%;
+    width: 20%;
   }
 `;
 
@@ -62,8 +61,8 @@ const Loading = ({ isLoading }) => {
     <StyledLoading isLoading={isLoading}>
       <img className="element" alt="Element" src={radish} />
       <p className="text-wrapper">
-        당신의 대출이 <br />
-        '무' 가 되는 그날까지
+        마음을 움직이는 <br />
+        생활 금융 서비스
       </p>
     </StyledLoading>
   );
