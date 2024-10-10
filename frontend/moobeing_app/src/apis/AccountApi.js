@@ -7,8 +7,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-console.log('Using BASE_URL:', BASE_URL);
-
 // 내가 가지고 있는 계좌 조회
 export const getAccountInfo = async () => {
   try {

@@ -35,4 +35,11 @@ messaging.onBackgroundMessage((payload) => {
 
   // 새 알림 표시
   self.registration.showNotification(notificationTitle, notificationOptions);
+
+  self.addEventListener("notificationclick", function (event) {
+    console.log("notification click");
+    const url = "/";
+    event.notification.close();
+    event.waitUntil(clients.openWindow(url));
+  });
 });

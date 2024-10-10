@@ -21,6 +21,7 @@ const Title = styled.h1`
 
 const ContentContainer = styled.div`
   align-self: stretch;
+  margin-bottom: 10px;
 `;
 
 const ContentList = styled.ol`
@@ -81,10 +82,10 @@ const ContentText = styled.p`
 `;
 
 const Radish = styled.img`
-  width: 45%;
+  width: 150px;
   height: auto;
   align-self: center;
-  margin-top: 0;
+  margin-top: 3vh;
 `;
 
 const StartButton = styled.button`
@@ -99,7 +100,7 @@ const StartButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   position: absolute;
-  bottom: 15%;
+  bottom: 12%;
   left: 50%;
   transform: translateX(-50%);
 `;
@@ -115,8 +116,6 @@ function CapsuleIntro() {
       try {
         const charactersData = await getCharacter();
         setCharacters(charactersData);
-        // console.log(charactersData);
-        // console.log(characters);
       } catch (error) {
         setError(error.message);
       } finally {

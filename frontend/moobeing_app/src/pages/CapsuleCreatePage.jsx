@@ -100,6 +100,11 @@ const TextForm = styled.div`
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   position: relative;
+
+  /* Flexbox 설정 */
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
 `;
 
 const TextArea = styled.textarea`
@@ -137,7 +142,7 @@ const NextButton = styled.button`
   border-radius: 5px;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   position: absolute;
-  bottom: 15%;
+  bottom: 12%;
   left: 50%;
   transform: translateX(-50%);
 `;
@@ -158,7 +163,6 @@ function CapsuleMessage() {
 
   const handleNext = () => {
     updateImgAndDescription(imageFile, text);
-    console.log(useCapsuleStore.getState());
     navigate("/choose-character");
   };
 

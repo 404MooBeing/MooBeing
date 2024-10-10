@@ -114,7 +114,6 @@ function HiddenRadish() {
     async function fetchLoanNum() {
       try {
         const data = await getLoanNumber();
-        console.log("Loan data:", data);
         if (data.completedCnt > 6) {
           setPaidLoanNum(6);
         } else {

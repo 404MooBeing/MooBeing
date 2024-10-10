@@ -153,7 +153,6 @@ function CapsuleHarvest() {
       async function fetchHarvestData() {
         try {
           const response = await postHarvestCapsule(location.state.id);
-          console.log("응답", response);
           setRadishImageUrl(location.state.image);
           setHarvestResponse(response);
         } catch (error) {

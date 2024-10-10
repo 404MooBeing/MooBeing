@@ -97,9 +97,7 @@ function Router() {
   // 챗봇 페이지에서는 챗봇 이미지 표시하지 않음
   const isChatbotPage = location.pathname === "/chatbot";
 
-  const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(
-    location.pathname
-  );
+  const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(location.pathname) && !isLoading && userInfo;
 
   const shouldShowChatbot =
     chatbotRoutes.includes(location.pathname) && !isChatbotPage;

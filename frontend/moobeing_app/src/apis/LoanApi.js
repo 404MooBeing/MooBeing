@@ -22,7 +22,6 @@ export const getLoanSum = async () => {
 export const getLoanMonthly = async () => {
   try {
     const response = await api.get("/loan/monthly");
-    console.log("이번 달 상환 예정 금액 불러오기 성공:", response.data);
     return response.data;
   } catch (error) {
     console.error("이번 달 상환 예정 금액 불러오기 실패:", error);
@@ -151,7 +150,6 @@ export const getLoanPercent = async () => {
 export const getRandomRadish = async () => {
   try {
     const response = await api.post("/loan/monthClick");
-    console.log("무뽑는 axios 함수가 잘잘잘 호출되었습니다.", response.data);
     return response.data;
   } catch (error) {
     console.error("랜덤 무 뽑기 실패:", error);
@@ -163,11 +161,6 @@ export const getRandomRadish = async () => {
 export const getLoanNumber = async () => {
   try {
     const response = await api.get("/loan/count");
-    console.log(response);
-    console.log(
-      "대출상품 개수 함수 잘잘잘 출력되었습니다 지금 현재 버튼 활성화 유무는:",
-      response.data.showButton
-    );
     return response.data;
   } catch (error) {
     console.error("대출상품 개수 조회에 실패하였습니다 힝힝", error);
@@ -179,7 +172,6 @@ export const getLoanNumber = async () => {
 export const changeInterestRate = async () => {
   try {
     const response = await api.post("/loan/good");
-    console.log("금리혜택을 받는 axios 함수가 호출 되었습니다");
     return response.data
   } catch (error) {
     console.error("금리혜택을 받는 함수 호출 실패", error);

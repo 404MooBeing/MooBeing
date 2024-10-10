@@ -228,7 +228,6 @@ function CapsuleChooseLocationPage() {
       } catch (error) {
         console.error("캡슐 심기 실패:", error);
         if (error.response) {
-          console.log(error.response);
           if (error.response.data.code === "RD002") {
             setShowNearbyPopup(true);
             setTimeout(() => setShowNearbyPopup(false), 3000);

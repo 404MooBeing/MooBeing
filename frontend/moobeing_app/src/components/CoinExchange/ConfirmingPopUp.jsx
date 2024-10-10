@@ -69,7 +69,6 @@ const ConfirmingPopUp = ({ selectedAccount, coinAmmount, type, closeHandler }) =
       accountId : selectedAccount.id,
       amount : coinAmmount
     }
-    console.log(requestBody)
     await withdrawCoin(requestBody)
     setShowMsg("원을 송금했습니다!")
     setShowBtnMsg("확인")

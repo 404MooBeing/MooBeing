@@ -114,11 +114,6 @@ function CapsulePlanting() {
   const [showCoinPopUp, setShowCoinPopUp] = useState(false);
 
   useEffect(() => {
-    console.log("coin 잘 들어왔나요?", coin);
-    console.log(
-      "무심기 로딩창으로 response 잘 왔나요?",
-      location.state.response
-    );
     const timer = setTimeout(() => {
       setShowPlanted(true);
       setIsAnimating(false);

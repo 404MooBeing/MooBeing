@@ -222,8 +222,10 @@ const Backdrop = styled.div`
 
 const AlertContainer = styled.div`
   position: fixed;
-  top: 80px;
-  left: 50%;
+  top: 45%;
+  left: 48%;
+  width: 75%;
+  background-color: rgba(53, 53, 53, 0.5);
   transform: translateX(-50%);
   z-index: 100000;
 `;
@@ -273,7 +275,6 @@ const CoinExchangePage = () => {
   
           setAccounts(fetchedAccounts);  // 필요한 경우 계좌 정보 설정
         } else {
-          console.log("Data is not an array");
         }
       } catch (error) {
         console.error("계좌 정보를 가져오는 중 오류가 발생했습니다:", error);

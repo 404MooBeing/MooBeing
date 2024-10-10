@@ -107,11 +107,11 @@ const SignupButton = styled.button`
 
 const AlertContainer = styled.div`
   position: fixed;
-  top: 20vh;
-  left: 50%;
+  top: 45%;
+  left: 48%;
+  width: 75%;
   transform: translateX(-50%);
-  z-index: 1000;
-  background-color: rgba(192, 221, 165, 0.8);
+  background-color: rgba(53, 53, 53, 0.5);
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
@@ -144,13 +144,10 @@ const Login = () => {
       password: password,
     };
 
-    console.log("Login data:", loginData);
-
     try {
       const response = await postLogin(email, password);
 
       if (response && response.name) {
-        console.log("로그인 성공:", response);
         navigate("/welcome");
         requestToken();
       } else {
@@ -159,7 +156,6 @@ const Login = () => {
           response.data && response.data.message
             ? response.data.message
             : "로그인 실패";
-        console.log("로그인 실패:", response.status);
         showAlert("로그인 실패: " + errorMessage); // 오류 메시지 표시
       }
     } catch (error) {
