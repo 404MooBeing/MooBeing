@@ -23,12 +23,43 @@ const MapWrapper = styled.div`
   animation: ${({ isShaking }) => (isShaking ? shake : "none")} 0.5s;
 `;
 
+const LocationWarning = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const LocationButton = styled.button`
+  margin-top: 10px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #388e3c;
+  }
+`;
+
 function MyMap() {
   const location = useLocation();
   const justPlantedLocation = location.state?.justPlantedLocation || null;
   const [userLocation, setUserLocation] = useState(null);
   const [popupData, setPopupData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLocationAllowed, setIsLocationAllowed] = useState(true);
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const userMarkerRef = useRef(null);

@@ -30,7 +30,7 @@ import MyMap from "./pages/MyMap";
 import User from "./pages/MyPage";
 import PasswordChange from "./pages/PasswordChangePage";
 import Quiz from "./pages/QuizPage";
-import EconomyQuiz from "./pages/EconomyQuizPage"
+import EconomyQuiz from "./pages/EconomyQuizPage";
 import QuizResult from "./pages/QuizResultPage";
 import Spend from "./pages/SpendPage";
 import TransactionHistory from "./pages/TransactionHistoryPage";
@@ -58,56 +58,6 @@ function Router() {
   const [position, setPosition] = useState({ bottom: 90, right: 23 });
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
-
-  // 허용된 경로 설정
-  const allowedRoutes = [
-    "/",
-    "/login",
-    "/signup",
-    "/welcome",
-    "/alarm",
-    "/choose-character",
-    "/choose-location",
-    "/capsule-harvest",
-    "/capsule-intro",
-    "/capsule-create",
-    "/capsule-planting",
-    "/capsule-search",
-    "/coin-exchange",
-    "/coin",
-    "/get-radish",
-    "/total-journey",
-    "/each-journey/:loanName",
-    "/loan",
-    "/loan-payment",
-    "/menu",
-    "/moobti",
-    "/my-capsule",
-    "/my-map",
-    "/user",
-    "/password-change",
-    "/quiz",
-    "/economy-quiz",
-    "/quiz/result/:quizId",
-    "/spend",
-    "/transaction-history/:accountId",
-    "/chatbot",
-  ];
-
-  // 잘못된 경로 접근 시 경고창 표시 및 리다이렉트
-  useEffect(() => {
-    if (!allowedRoutes.includes(location.pathname)) {
-      window.alert("잘못된 접근입니다."); // 경고창 표시
-
-      if (userInfo) {
-        // 로그인이 되어 있으면 홈으로 리다이렉트
-        navigate("/", { replace: true });
-      } else {
-        // 로그인이 되어 있지 않으면 로그인 페이지로 리다이렉트
-        navigate("/login", { replace: true });
-      }
-    }
-  }, [location.pathname, userInfo, navigate]);
 
   useEffect(() => {
     // 사용자가 로그인하지 않은 경우에만 로딩 페이지를 표시
@@ -147,62 +97,65 @@ function Router() {
   // 챗봇 페이지에서는 챗봇 이미지 표시하지 않음
   const isChatbotPage = location.pathname === "/chatbot";
 
-  const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(location.pathname);
+  const shouldShowHeaderFooter = !noHeaderFooterRoutes.includes(
+    location.pathname
+  );
 
-  const shouldShowChatbot = chatbotRoutes.includes(location.pathname) && !isChatbotPage;
+  const shouldShowChatbot =
+    chatbotRoutes.includes(location.pathname) && !isChatbotPage;
 
-    // 챗봇 드래그 시작
-    const handleMouseDown = (e) => {
-      setIsDragging(true);
-      setDragStart({
-        x: e.clientX || e.touches[0].clientX,
-        y: e.clientY || e.touches[0].clientY,
-      });
-    };
-  
-    // 챗봇 드래그 중
-    const handleMouseMove = (e) => {
-      if (!isDragging) return;
-      const clientX = e.clientX || e.touches[0].clientX;
-      const clientY = e.clientY || e.touches[0].clientY;
-  
-      const deltaX = dragStart.x - clientX;
-      const deltaY = dragStart.y - clientY;
-  
-      setPosition((prevPosition) => ({
-        bottom: prevPosition.bottom + deltaY,
-        right: prevPosition.right + deltaX,
-      }));
-  
-      setDragStart({ x: clientX, y: clientY });
-    };
-  
-    // 챗봇 드래그 끝
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
+  // 챗봇 드래그 시작
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX || e.touches[0].clientX,
+      y: e.clientY || e.touches[0].clientY,
+    });
+  };
 
-    // 페이지가 변경될 때마다 챗봇 위치를 초기화
-    useEffect(() => {
-      setPosition({ bottom: 90, right: 23 }); // 기본 위치로 초기화
-    }, [location.pathname]);
+  // 챗봇 드래그 중
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const clientX = e.clientX || e.touches[0].clientX;
+    const clientY = e.clientY || e.touches[0].clientY;
 
-    // 페이지 이동 시 챗봇 다시 표시
-    useEffect(() => {
-      if (chatbotRoutes.includes(location.pathname)) {
-        setShowChatbot(true); // 페이지가 변경될 때 챗봇 다시 표시
-      }
-    }, [location.pathname]);
+    const deltaX = dragStart.x - clientX;
+    const deltaY = dragStart.y - clientY;
 
-    // 챗봇 클릭 시 챗봇 페이지로 이동
-    const handleChatbotClick = () => {
-      navigate("/chatbot");
-    };
+    setPosition((prevPosition) => ({
+      bottom: prevPosition.bottom + deltaY,
+      right: prevPosition.right + deltaX,
+    }));
 
-    // 챗봇 닫기 버튼 클릭 시 챗봇 숨김
-    const handleChatbotClose = () => {
-      setShowChatbot(false);
-    };
+    setDragStart({ x: clientX, y: clientY });
+  };
+
+  // 챗봇 드래그 끝
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // 페이지가 변경될 때마다 챗봇 위치를 초기화
+  useEffect(() => {
+    setPosition({ bottom: 90, right: 23 }); // 기본 위치로 초기화
+  }, [location.pathname]);
+
+  // 페이지 이동 시 챗봇 다시 표시
+  useEffect(() => {
+    if (chatbotRoutes.includes(location.pathname)) {
+      setShowChatbot(true); // 페이지가 변경될 때 챗봇 다시 표시
+    }
+  }, [location.pathname]);
+
+  // 챗봇 클릭 시 챗봇 페이지로 이동
+  const handleChatbotClick = () => {
+    navigate("/chatbot");
+  };
+
+  // 챗봇 닫기 버튼 클릭 시 챗봇 숨김
+  const handleChatbotClose = () => {
+    setShowChatbot(false);
+  };
 
   return (
     <>
@@ -211,43 +164,196 @@ function Router() {
         style={{
           minHeight: shouldShowHeaderFooter ? "calc(100vh - 120px)" : "100vh",
         }}
-      > 
+      >
         {isLoading ? ( // 로딩 중이면 Loading 컴포넌트 표시
           <Loading isLoading={isLoading} />
         ) : (
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/welcome" element={userInfo ? <Welcome /> : <Navigate replace to="/login" />} />
-          <Route path="/" element={userInfo ? <Home /> : <Navigate replace to="/login" />} />
-          <Route path="/alarm" element={userInfo ? <Alarm /> : <Navigate replace to="/login" />} />
-          <Route path="/choose-character" element={userInfo ? <CapsuleChooseCharacter /> : <Navigate replace to="/login" />} />
-          <Route path="/choose-location" element={userInfo ? <CapsuleChooseLocation /> : <Navigate replace to="/login" />} />
-          <Route path="/capsule-harvest" element={userInfo ? <CapsuleHarvest /> : <Navigate replace to="/login" />} />
-          <Route path="/capsule-intro" element={userInfo ? <CapsuleIntro /> : <Navigate replace to="/login" />} />
-          <Route path="/capsule-create" element={userInfo ? <CapsuleCreate /> : <Navigate replace to="/login" />} />
-          <Route path="/capsule-planting" element={userInfo ? <CapsulePlanting /> : <Navigate replace to="/login" />} />
-          <Route path="/capsule-search" element={userInfo ? <CapsuleSearch /> : <Navigate replace to="/login" />} />
-          <Route path="/coin-exchange" element={userInfo ? <CoinExchange /> : <Navigate replace to="/login" />} />
-          <Route path="/coin" element={userInfo ? <Coin /> : <Navigate replace to="/login" />} />
-          <Route path="/get-radish" element={userInfo ? <GetRadishCharacter /> : <Navigate replace to="/login" />} />
-          <Route path="/total-journey" element={userInfo ? <TotalLoanJourney /> : <Navigate replace to="/login" />} />
-          <Route path="/each-journey/:loanName" element={userInfo ? <EachLoanJourney /> : <Navigate replace to="/login" />} />
-          <Route path="/loan" element={userInfo ? <Loan /> : <Navigate replace to="/login" />} />
-          <Route path="/loan-payment" element={userInfo ? <LoanPayment /> : <Navigate replace to="/login" />} />
-          <Route path="/menu" element={userInfo ? <Menu /> : <Navigate replace to="/login" />} />
-          <Route path="/moobti" element={userInfo ? <Moobti /> : <Navigate replace to="/login" />} />
-          <Route path="/my-capsule" element={userInfo ? <MyCapsule /> : <Navigate replace to="/login" />} />
-          <Route path="/my-map" element={userInfo ? <MyMap /> : <Navigate replace to="/login" />} />
-          <Route path="/user" element={userInfo ? <User /> : <Navigate replace to="/login" />} />
-          <Route path="/password-change" element={userInfo ? <PasswordChange /> : <Navigate replace to="/login" />} />
-          <Route path="/quiz" element={userInfo ? <Quiz /> : <Navigate replace to="/login" />} />
-          <Route path="/economy-quiz" element={userInfo ? <EconomyQuiz /> : <Navigate replace to="/login" />} />
-          <Route path="/quiz/result/:quizId" element={userInfo ? <QuizResult /> : <Navigate replace to="/login" />} />
-          <Route path="/spend" element={userInfo ? <Spend /> : <Navigate replace to="/login" />} />
-          <Route path="/transaction-history/:accountId" element={userInfo ? <TransactionHistory /> : <Navigate replace to="/login" />} />
-          <Route path="/chatbot" element={userInfo ? <ChatbotPage /> : <Navigate replace to="/login" />} />
-        </Routes>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/welcome"
+              element={
+                userInfo ? <Welcome /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="/"
+              element={userInfo ? <Home /> : <Navigate replace to="/login" />}
+            />
+            <Route
+              path="/alarm"
+              element={userInfo ? <Alarm /> : <Navigate replace to="/login" />}
+            />
+            <Route
+              path="/choose-character"
+              element={
+                userInfo ? (
+                  <CapsuleChooseCharacter />
+                ) : (
+                  <Navigate replace to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/choose-location"
+              element={
+                userInfo ? (
+                  <CapsuleChooseLocation />
+                ) : (
+                  <Navigate replace to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/capsule-harvest"
+              element={
+                userInfo ? <CapsuleHarvest /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="/capsule-intro"
+              element={
+                userInfo ? <CapsuleIntro /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="/capsule-create"
+              element={
+                userInfo ? <CapsuleCreate /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="/capsule-planting"
+              element={
+                userInfo ? (
+                  <CapsulePlanting />
+                ) : (
+                  <Navigate replace to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/capsule-search"
+              element={
+                userInfo ? <CapsuleSearch /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="/coin-exchange"
+              element={
+                userInfo ? <CoinExchange /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="/coin"
+              element={userInfo ? <Coin /> : <Navigate replace to="/login" />}
+            />
+            <Route
+              path="/get-radish"
+              element={
+                userInfo ? (
+                  <GetRadishCharacter />
+                ) : (
+                  <Navigate replace to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/total-journey"
+              element={
+                userInfo ? (
+                  <TotalLoanJourney />
+                ) : (
+                  <Navigate replace to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/each-journey/:loanName"
+              element={
+                userInfo ? (
+                  <EachLoanJourney />
+                ) : (
+                  <Navigate replace to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/loan"
+              element={userInfo ? <Loan /> : <Navigate replace to="/login" />}
+            />
+            <Route
+              path="/loan-payment"
+              element={
+                userInfo ? <LoanPayment /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="/menu"
+              element={userInfo ? <Menu /> : <Navigate replace to="/login" />}
+            />
+            <Route
+              path="/moobti"
+              element={userInfo ? <Moobti /> : <Navigate replace to="/login" />}
+            />
+            <Route
+              path="/my-capsule"
+              element={
+                userInfo ? <MyCapsule /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="/my-map"
+              element={userInfo ? <MyMap /> : <Navigate replace to="/login" />}
+            />
+            <Route
+              path="/user"
+              element={userInfo ? <User /> : <Navigate replace to="/login" />}
+            />
+            <Route
+              path="/password-change"
+              element={
+                userInfo ? <PasswordChange /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="/quiz"
+              element={userInfo ? <Quiz /> : <Navigate replace to="/login" />}
+            />
+            <Route
+              path="/economy-quiz"
+              element={
+                userInfo ? <EconomyQuiz /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="/quiz/result/:quizId"
+              element={
+                userInfo ? <QuizResult /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="/spend"
+              element={userInfo ? <Spend /> : <Navigate replace to="/login" />}
+            />
+            <Route
+              path="/transaction-history/:accountId"
+              element={
+                userInfo ? (
+                  <TransactionHistory />
+                ) : (
+                  <Navigate replace to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/chatbot"
+              element={
+                userInfo ? <ChatbotPage /> : <Navigate replace to="/login" />
+              }
+            />
+          </Routes>
         )}
       </div>
       {shouldShowHeaderFooter && <Footer />}
