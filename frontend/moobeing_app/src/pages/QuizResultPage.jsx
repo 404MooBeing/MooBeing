@@ -17,8 +17,6 @@ function QuizResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const result = location.state;
-  
-  console.log(result.isCorrect); // 객체 자체를 로그로 출력
 
   // useEffect는 항상 동일한 위치에서 호출되어야 함
   useEffect(() => {

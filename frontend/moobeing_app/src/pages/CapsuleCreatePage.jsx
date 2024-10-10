@@ -163,7 +163,6 @@ function CapsuleMessage() {
 
   const handleNext = () => {
     updateImgAndDescription(imageFile, text);
-    console.log(useCapsuleStore.getState());
     navigate("/choose-character");
   };
 

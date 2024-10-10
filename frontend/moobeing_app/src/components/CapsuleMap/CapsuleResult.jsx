@@ -86,8 +86,6 @@ const CapsuleResult = ({ response }) => {
   const navigate = useNavigate();
   const handleClick = () => {
     const formattedDate = response.date.slice(0, 7);
-    console.log(response);
-    console.log(formattedDate);
     navigate(`/my-capsule?date=${formattedDate}`);
   };
 

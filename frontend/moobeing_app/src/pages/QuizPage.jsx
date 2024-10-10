@@ -96,7 +96,6 @@ function Quiz() {
         if (data) {
           setQuizData(data);
         } else {
-          console.log("시작되지 않은 퀴즈가 없습니다.");
         }
       } catch (error) {
         console.error("퀴즈 불러오기 실패:", error);

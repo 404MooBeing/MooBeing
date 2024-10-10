@@ -275,7 +275,6 @@ const CoinExchangePage = () => {
   
           setAccounts(fetchedAccounts);  // 필요한 경우 계좌 정보 설정
         } else {
-          console.log("Data is not an array");
         }
       } catch (error) {
         console.error("계좌 정보를 가져오는 중 오류가 발생했습니다:", error);

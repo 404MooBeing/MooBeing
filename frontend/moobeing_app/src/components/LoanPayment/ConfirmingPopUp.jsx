@@ -74,7 +74,6 @@ const ConfirmingPopUp = ({ selectedLoan, selectedAccount, repaymentAmount, close
 
       // API 호출로 상환 처리
       const result = await postAccountLoan(accountData);
-      console.log("상환 성공:", result);
       setPopupMessage("원을 성공적으로 상환했습니다!");
       setButtonText("확인");
 

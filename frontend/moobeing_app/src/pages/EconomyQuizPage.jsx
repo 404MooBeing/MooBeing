@@ -97,7 +97,6 @@ function Quiz() {
         if (data) {
           setQuizData(data);
         } else {
-          console.log("시작되지 않은 퀴즈가 없습니다.");
         }
       } catch (error) {
         console.error("퀴즈 불러오기 실패:", error);
@@ -128,7 +127,6 @@ function Quiz() {
     try {
       const result = await submitEconomicQuizAnswer(quizData.quizId, answer);
       result.quizType = "economy";
-      console.log(result.isCorrect);
       navigate(`/quiz/result/${quizData.quizId}`, { state: result });
     } catch (error) {
       console.error("답변 제출 실패:", error);

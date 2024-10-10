@@ -28,10 +28,8 @@ export function requestToken() {
     .then((currentToken) => {
       if (currentToken) {
         useFCMStore.getState().setToken(currentToken);
-        console.log("Token:", currentToken);
         postFCMRegister({ token: currentToken });
       } else {
-        console.log("No registration token available. Request permission to generate one.");
       }
     })
     .catch((err) => {

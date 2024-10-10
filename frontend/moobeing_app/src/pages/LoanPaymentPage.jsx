@@ -217,7 +217,6 @@ const LoanPaymentPage = () => {
     const fetchAccountInfo = async () => {
       try {
         const accountData = await getAccountInfo(); // API 호출
-        console.log(accountData); // 데이터 구조 확인을 위한 콘솔 로그
 
         // accountData.getAccountDtoList를 상태에 저장
         if (accountData && Array.isArray(accountData.getAccountDtoList)) {

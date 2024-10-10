@@ -123,9 +123,7 @@ const MyCapsulePage = () => {
         let data;
         if (isAllView) {
           data = await getAllCapsules(currentPage);
-          console.log("이거 year 설정함22222222")
         } else {
-          console.log(selectedMonth)
           data = await getCapsulesByYearMonth(
             selectedYear,
             selectedMonth,

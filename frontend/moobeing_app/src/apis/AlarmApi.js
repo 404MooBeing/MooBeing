@@ -7,8 +7,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-console.log('Using BASE_URL:', BASE_URL);
-
 // 모든 알림 가져오기 (실제 API 호출)
 export const getAllAlarms = async () => {
   try {

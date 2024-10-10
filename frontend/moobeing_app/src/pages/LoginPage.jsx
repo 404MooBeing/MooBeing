@@ -144,13 +144,10 @@ const Login = () => {
       password: password,
     };
 
-    console.log("Login data:", loginData);
-
     try {
       const response = await postLogin(email, password);
 
       if (response && response.name) {
-        console.log("로그인 성공:", response);
         navigate("/welcome");
         requestToken();
       } else {
@@ -159,7 +156,6 @@ const Login = () => {
           response.data && response.data.message
             ? response.data.message
             : "로그인 실패";
-        console.log("로그인 실패:", response.status);
         showAlert("로그인 실패: " + errorMessage); // 오류 메시지 표시
       }
     } catch (error) {

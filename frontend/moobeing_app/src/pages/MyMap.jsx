@@ -73,7 +73,6 @@ function MyMap() {
   };
 
   useEffect(() => {
-    console.log(justPlantedLocation);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
