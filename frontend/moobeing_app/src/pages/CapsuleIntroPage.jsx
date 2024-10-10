@@ -100,7 +100,7 @@ const StartButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   position: absolute;
-  bottom: 15%;
+  bottom: 12%;
   left: 50%;
   transform: translateX(-50%);
 `;

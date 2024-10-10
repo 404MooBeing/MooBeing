@@ -44,16 +44,16 @@ const Container = styled.div`
 
 const Title = styled.div`
   align-self: flex-start;
-  margin-bottom: -5px;
+  margin-bottom: 10px;
   font-size: 22px;
   font-weight: 600;
 `;
 
-const LeftDay = styled.p`
+const LeftDay = styled.div`
   align-self: flex-start;
   color: #616161;
-  margin-bottom: 45px;
-  font-size: 18px;
+  margin-bottom: 40px;
+  font-size: 16px;
 `;
 
 const CharacterContainer = styled.div`
@@ -69,14 +69,15 @@ const CharacterSizes = styled.div`
   justify-content: center;
   align-items: center;
   gap: 16px;
-  margin-top: 40px;
+  margin-top: 38px;
   width: 220px;
 `;
 
 const DateInfo = styled.p`
   color: #348833;
-  margin-top: 30px;
+  margin-top: 25px;
   align-self: center;
+  font-size: 15px;
 `;
 
 const NextButton = styled.button`
@@ -91,7 +92,7 @@ const NextButton = styled.button`
   border-radius: 5px;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   position: absolute;
-  bottom: 15%;
+  bottom: 12%;
   left: 50%;
   transform: translateX(-50%);
 `;
@@ -162,7 +163,7 @@ const CharacterSize = styled.button`
   flex: 1;
   max-width: 100px;
   color: black;
-  height: 40px;
+  height: 33px;
   cursor: pointer;
   outline: ${(props) => (props.selected ? "2px solid #348833" : "none")};
   font-weight: bold;

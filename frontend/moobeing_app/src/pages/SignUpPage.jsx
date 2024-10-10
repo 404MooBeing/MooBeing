@@ -177,6 +177,10 @@ const NextButton = styled.button`
   background-color: #e0eed2;
   border-radius: 10px;
   border: none;
+  color: #348833;
+  font-size: 13px;
+  font-weight: bold;
+  font-family: 'mainFont';
 `;
 
 const PrevButton = styled.button`
@@ -190,6 +194,10 @@ const PrevButton = styled.button`
   background-color: #f3f8ed;
   border-radius: 10px;
   border: none;
+  color: #348833;
+  font-size: 13px;
+  font-weight: bold;
+  font-family: 'mainFont';
 `;
 
 const ConfirmButton = styled.button`
@@ -207,9 +215,9 @@ const ConfirmButton = styled.button`
 
 const ConfirmButtonText = styled.div`
   color: #348833;
-  font-family: "Inter-Regular", Helvetica;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 13px;
+  font-weight: bold;
+  font-family: 'mainFont';
 `;
 
 const SignUpButton = styled.button`
