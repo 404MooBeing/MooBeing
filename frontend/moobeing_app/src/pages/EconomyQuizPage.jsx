@@ -19,8 +19,10 @@ const PageContainer = styled.div`
 const QuizContainer = styled.div`
   background-color: white;
   border-radius: 20px;
+  width: 50%;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
   padding: 30px;
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
