@@ -42,4 +42,16 @@ public class Radish extends BaseTimeEntity {
         this.radishRank = radishRank;
         this.radishMessage = radishMessage;
     }
+
+    public static Long rankToCoin(String rank) {
+        return switch (rank) {
+            case "S" -> 500L;
+            case "A" -> 300L;
+            default -> 0L;
+        };
+    }
+
+    public Long getCoin() {
+        return rankToCoin(this.radishRank);
+    }
 }
