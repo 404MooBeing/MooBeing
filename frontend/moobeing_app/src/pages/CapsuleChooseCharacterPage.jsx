@@ -6,17 +6,17 @@ import nextIcon from "../assets/button/NextIcon.svg";
 import { getUserRadishCollection } from "../apis/RadishApi";
 import useCapsuleStore from "../store/CapsuleStore";
 import useRadishStore from "../store/RadishStore";
-
-import aniRad from "../assets/radishes/aniRad.png"
-import babyRad from "../assets/radishes/babyRad.png"
-import basicRad from "../assets/radishes/basicRad.png"
-import blushRad from "../assets/radishes/blushRad.png"
-import flippedRad from "../assets/radishes/flippedRad.png"
-import hairlotRad from "../assets/radishes/hairlotRad.png"
-import musinsaRad from "../assets/radishes/musinsaRad.png"
-import rainbowRad from "../assets/radishes/rainbowRad.png"
-import vacationRad from "../assets/radishes/vacationRad.png"
-import weightRad from "../assets/radishes/weightRad.png"
+import aniRad from "../assets/radishes/aniRad.png";
+import babyRad from "../assets/radishes/babyRad.png";
+import basicRad from "../assets/radishes/basicRad.png";
+import blushRad from "../assets/radishes/blushRad.png";
+import flippedRad from "../assets/radishes/flippedRad.png";
+import hairlotRad from "../assets/radishes/hairlotRad.png";
+import musinsaRad from "../assets/radishes/musinsaRad.png";
+import rainbowRad from "../assets/radishes/rainbowRad.png";
+import vacationRad from "../assets/radishes/vacationRad.png";
+import weightRad from "../assets/radishes/weightRad.png";
+import { SyncLoader } from "react-spinners";
 
 const Radishs = {
   aniRad: aniRad,
@@ -42,17 +42,18 @@ const Container = styled.div`
   padding: 20px;
 `;
 
-const Title = styled.h1`
+const Title = styled.div`
   align-self: flex-start;
   margin-bottom: -5px;
-  font-size: 23px;
+  font-size: 22px;
+  font-weight: 600;
 `;
 
 const LeftDay = styled.p`
   align-self: flex-start;
   color: #616161;
-  margin-bottom: 40px;
-  font-size: 22px;
+  margin-bottom: 45px;
+  font-size: 18px;
 `;
 
 const CharacterContainer = styled.div`
@@ -97,7 +98,7 @@ const NextButton = styled.button`
 
 const CharacterCard = styled.div`
   width: 50%;
-  height: 200px;
+  height: 210px;
   border-radius: 20px;
   background: #f5fded;
   box-shadow: 0.3px 0.3px 6px 0px rgba(0, 0, 0, 0.12);
@@ -114,8 +115,8 @@ const CharacterCard = styled.div`
 `;
 
 const CharacterImg = styled.img`
-  max-width: 80%;
-  max-height: 80%;
+  max-width: 75%;
+  max-height: 75%;
   margin-bottom: 13%;
 `;
 
@@ -174,6 +175,7 @@ function ChooseCharacter() {
   const navigate = useNavigate();
   const { characters } = useRadishStore();
   const { updateRadishInfo } = useCapsuleStore();
+  const [isLoading, setIsLoading] = useState(true); // 이미지 로딩 상태 추가
 
   const sizes = [
     { name: "작은무", day: 20, value: "SMALL_RADISH" },
@@ -189,25 +191,31 @@ function ChooseCharacter() {
       harvestDate,
       characters[currentCharacter].radishImageUrl
     );
-    console.log(useCapsuleStore.getState());
 
     navigate("/choose-location");
   };
 
   const nextCharacter = () => {
     setCurrentCharacter((prev) => (prev + 1) % characters.length);
+    setIsLoading(true); // 캐릭터 변경 시 로딩 상태로 전환
   };
 
   const prevCharacter = () => {
     setCurrentCharacter(
       (prev) => (prev - 1 + characters.length) % characters.length
     );
+    setIsLoading(true); // 캐릭터 변경 시 로딩 상태로 전환
   };
 
   const getHarvestDate = (days) => {
     const today = new Date();
     const harvestDate = new Date(today.setDate(today.getDate() + days));
     return harvestDate.toISOString().split("T")[0].replace(/-/g, "/");
+  };
+
+  // 이미지 로드 완료 시 로딩 상태 해제
+  const handleImageLoad = () => {
+    setIsLoading(false);
   };
 
   return (
@@ -221,9 +229,12 @@ function ChooseCharacter() {
           <img src={previousIcon} alt="Previous" />
         </LeftButton>
         <CharacterCard>
+          {isLoading && <SyncLoader color={"#348833"} size={10} />}
           <CharacterImg
             src={characters[currentCharacter].radishImageUrl}
             alt={characters[currentCharacter].radishName}
+            onLoad={handleImageLoad} // 이미지 로드 완료 시 호출
+            style={{ display: isLoading ? "none" : "block" }} // 로딩 중일 때 이미지를 숨김
           />
           <CharacterName>
             {characters[currentCharacter].radishName}

@@ -85,7 +85,7 @@ const Radish = styled.img`
   width: 150px;
   height: auto;
   align-self: center;
-  margin-top: 0;
+  margin-top: 3vh;
 `;
 
 const StartButton = styled.button`
