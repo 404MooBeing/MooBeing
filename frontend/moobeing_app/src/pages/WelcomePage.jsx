@@ -27,7 +27,7 @@ const WelcomeDiv = styled.div`
 
   & .element {
     height: 15%;
-    width: 30%;
+    width: 20%;
     object-fit: contain;
   }
 
@@ -149,11 +149,11 @@ const Welcome = () => {
     fetchSpendData(); // API 호출
   }, [setSpendSummary]);
 
-  // 2초 후에 홈으로
+  // 3초 후에 홈으로
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/"); // 홈 페이지로 이동
-    }, 2000); // 2초 후
+    }, 3000); // 3초 후
 
     return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 클리어
   }, [navigate]);

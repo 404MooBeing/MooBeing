@@ -203,7 +203,7 @@ function LoansInfo() {
   };
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return <div></div>;
   }
 
   return (

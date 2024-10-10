@@ -78,7 +78,7 @@ const RepaymentButton = styled.button`
   color: #5E5054;
   border: none;
   padding: 10px;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
   border-radius: 10px;
   cursor: pointer;
@@ -130,7 +130,7 @@ const LoanInfo = () => {
   };
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return <div></div>;
   }
  
   return (

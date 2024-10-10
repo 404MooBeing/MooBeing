@@ -2,8 +2,8 @@ import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 import downloadButtonImage from "../../assets/button/DownloadButton.png";
 
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-const isAndroid = /Android/.test(navigator.userAgent);
+// const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+// const isAndroid = /Android/.test(navigator.userAgent);
 
 const Card = styled.div`
   background-color: #e8f5e9;
@@ -40,7 +40,7 @@ const CharacterName = styled.h2`
 `;
 
 const Description = styled.div`
-  font-size: ${isAndroid ? '10px' : '15px'};
+  font-size: 15px;
   font-weight: bold;
   line-height: 160%;
   color: #333;

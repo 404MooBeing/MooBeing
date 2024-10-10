@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
-import radish from "../assets/radishes/basicRad.png";
+import radish from "../assets/radishes/basicRad.svg";
 
 const fadeIn = keyframes`
   from { opacity: 0.5; }
@@ -39,7 +39,7 @@ const StyledLoading = styled.div`
 
   & .element {
     height: 15%;
-    width: 25%;
+    width: 20%;
   }
 `;
 
