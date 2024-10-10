@@ -171,14 +171,23 @@ function LoanList({ loans }) {
   const handleScrollNext = () => {
     setCurrentIndex((prevIndex) => {
       const nextIndex = prevIndex + loansPerPage;
+      // 마지막 페이지를 넘어가면 첫 번째 페이지로 돌아가게 함
       return nextIndex >= loans.length ? 0 : nextIndex;
     });
   };
-
+  
   const handleScrollPrev = () => {
     setCurrentIndex((prevIndex) => {
       const prevIndexNew = prevIndex - loansPerPage;
-      return prevIndexNew < 0 ? loans.length - loansPerPage : prevIndexNew;
+      // 첫 번째 페이지에서 이전 버튼을 누르면 마지막 페이지로 이동
+      if (prevIndexNew < 0) {
+        const remainingAccounts = loans.length % loansPerPage;
+        const lastIndex = remainingAccounts === 0
+          ? loans.length - loansPerPage
+          : loans.length - remainingAccounts;
+        return lastIndex;
+      }
+      return prevIndexNew;
     });
   };
 

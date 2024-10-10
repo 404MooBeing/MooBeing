@@ -130,11 +130,6 @@ const QuizPopup = () => {
     fetchData();
   }, []);
 
-
-  
-
-  console.log(useUserStore.getState())
-
   const handleQuiz = () => {
     if (quizType === "expense")
       navigate(`/quiz`);

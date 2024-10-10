@@ -190,14 +190,23 @@ const AccountList = () => {
   const handleScrollNext = () => {
     setCurrentIndex((prevIndex) => {
       const nextIndex = prevIndex + accountsPerPage;
+      // 마지막 페이지를 넘어가면 첫 번째 페이지로 돌아가게 함
       return nextIndex >= accounts.length ? 0 : nextIndex;
     });
   };
-
+  
   const handleScrollPrev = () => {
     setCurrentIndex((prevIndex) => {
       const prevIndexNew = prevIndex - accountsPerPage;
-      return prevIndexNew < 0 ? accounts.length - accountsPerPage : prevIndexNew;
+      // 첫 번째 페이지에서 이전 버튼을 누르면 마지막 페이지로 이동
+      if (prevIndexNew < 0) {
+        const remainingAccounts = accounts.length % accountsPerPage;
+        const lastIndex = remainingAccounts === 0
+          ? accounts.length - accountsPerPage
+          : accounts.length - remainingAccounts;
+        return lastIndex;
+      }
+      return prevIndexNew;
     });
   };
 

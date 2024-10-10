@@ -1,5 +1,5 @@
 import axios from "axios";
-import FlexRad from "../assets/radishes/flexRadish.png"; // FlexRad를 여기에서 import
+import FlexRad from "../assets/moobti/flexRad.png"; // FlexRad를 여기에서 import
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -11,7 +11,7 @@ const api = axios.create({
 // 나의 대출 총금액 확인
 export const getMoobti = async () => {
   try {
-    const response = await api.get("/moobti");
+    const response = await api.get("/expense/moobti");
     // 실제 API 호출 대신 더미 데이터를 반환하도록 수정
     return response.data; // 더미 데이터 반환
   } catch (error) {
