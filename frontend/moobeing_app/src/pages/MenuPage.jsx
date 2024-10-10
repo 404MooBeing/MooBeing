@@ -39,7 +39,7 @@ const KimpaText = styled.span`
 `;
 
 const KimpaArrow = styled.span`
-  margin-left: 7px; /* 화살표와 텍스트 사이의 간격 */
+  margin-left: 7px;
 `;
 
 const LogoutButton = styled.button`
@@ -50,10 +50,8 @@ const LogoutButton = styled.button`
   font-weight: 900;
   font-family: 'mainFont';
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  background-color: ${(props) =>
-    props.isactive === "true" ? "#348833" : "#e0eed2"};
-  color: ${(props) => (props.isactive === "true" ? "#ffffff" : "#5E5054")};
+  background-color: ${(props) => props.isactive === "true" ? "#348833" : "#e0eed2"};
+  color: ${(props) => props.isactive === "true" ? "#ffffff" : "#5E5054"};
   border-radius: 10px;
 
   @media (min-width: 600px) {
@@ -69,30 +67,24 @@ const SearchContainer = styled.div`
   width: 88%;
   height: 40px;
   box-sizing: border-box;
-  overflow: hidden;
   margin: 10px 0;
 `;
 
 const SearchInput = styled.input`
-  flex: 1;
+  width: 100%;
   border: 2px solid #e0eed2;
   border-radius: 17px;
   font-size: 16px;
   height: 100%;
   outline: none;
-  padding: 0 15px;
+  padding: 0 40px 0 15px;
   font-family: 'mainFont';
   box-sizing: border-box;
-
-  
-  @media (max-width: 350px) {
-    width: 200px;/* 모바일 화면에서 너비 조정 */
-  }
 `;
 
 const SearchIcon = styled.img`
   position: absolute;
-  right: 3%;
+  right: 15px;
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -102,13 +94,13 @@ const MenuTitle = styled.div`
   margin-left: 4px;
   margin-bottom: 10px;
   color: #a2a2a2;
-`
+`;
 
 const MenuList = styled.ul`
   list-style-type: none;
   padding: 0;
-  margin: 20px auto 0;  /* 상단에 20px, 좌우는 자동으로 중앙 정렬 */
-  width: 85%;           /* 화면 너비의 85%로 설정 */
+  margin: 20px auto 0;
+  width: 85%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -167,8 +159,8 @@ const MenuPage = () => {
   };
 
   const handleLogout = () => {
-    logout(); // Zustand의 logout 액션 호출
-    navigate('/login'); // 로그아웃 후 로그인 페이지로 리디렉션
+    logout();
+    navigate('/login');
   };
 
   return (
