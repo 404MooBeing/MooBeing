@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import styled from 'styled-components';
-import CapsuleCard from '../components/MyCapsule/CapsuleCard';
-import DateSortPopUp from '../components/MyCapsule/DateSortPopUp';
-import LeftButton from '../assets/button/leftButtonBlack.svg';
-import RightButton from '../assets/button/rightButtonBlack.svg';
-import { getCapsulesByYearMonth, getAllCapsules } from '../apis/MyCapsuleApi';
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import styled from "styled-components";
+import CapsuleCard from "../components/MyCapsule/CapsuleCard";
+import DateSortPopUp from "../components/MyCapsule/DateSortPopUp";
+import LeftButton from "../assets/button/leftButtonBlack.svg";
+import RightButton from "../assets/button/rightButtonBlack.svg";
+import { getCapsulesByYearMonth, getAllCapsules } from "../apis/MyCapsuleApi";
+import { useLocation } from "react-router-dom";
 
 const Screen = styled.div`
   display: flex;
@@ -103,44 +104,62 @@ const MyCapsulePage = () => {
   const [isAtBottom, setIsAtBottom] = useState(false);
   const loadingRef = useRef(false);
   const containerRef = useRef(null);
+  const location = useLocation();
 
-  const fetchCapsules = useCallback(async (resetPage = false) => {
-    if (loadingRef.current || (!hasMore && !resetPage)) return;
-    loadingRef.current = true;
-    setLoading(true);
-    setError(null);
-    try {
-      const currentPage = resetPage ? 1 : page;
-      let data;
-      if (isAllView) {
-        data = await getAllCapsules(currentPage);
-      } else {
-        data = await getCapsulesByYearMonth(selectedYear, selectedMonth, currentPage);
+  const fetchCapsules = useCallback(
+    async (resetPage = false) => {
+      if (loadingRef.current || (!hasMore && !resetPage)) return;
+      loadingRef.current = true;
+      setLoading(true);
+      setError(null);
+      try {
+        const currentPage = resetPage ? 1 : page;
+        let data;
+        if (isAllView) {
+          data = await getAllCapsules(currentPage);
+        } else {
+          data = await getCapsulesByYearMonth(
+            selectedYear,
+            selectedMonth,
+            currentPage
+          );
+        }
+        if (data.length === 0) {
+          setHasMore(false);
+          setIsAtBottom(true);
+        } else {
+          setCapsules((prevCapsules) => {
+            const newCapsules = resetPage ? data : [...prevCapsules, ...data];
+            // 스크롤 위치 유지를 위해 setTimeout 사용
+            setTimeout(() => {
+              if (containerRef.current) {
+                containerRef.current.scrollTop = isAtBottom
+                  ? containerRef.current.scrollHeight
+                  : scrollPosition;
+              }
+            }, 0);
+            return newCapsules;
+          });
+          setPage((prevPage) => (resetPage ? 2 : prevPage + 1));
+        }
+      } catch (err) {
+        setError("캡슐을 불러오는 데 실패했습니다.");
+        console.error("Error fetching capsules:", err);
+      } finally {
+        setLoading(false);
+        loadingRef.current = false;
       }
-      if (data.length === 0) {
-        setHasMore(false);
-        setIsAtBottom(true);
-      } else {
-        setCapsules(prevCapsules => {
-          const newCapsules = resetPage ? data : [...prevCapsules, ...data];
-          // 스크롤 위치 유지를 위해 setTimeout 사용
-          setTimeout(() => {
-            if (containerRef.current) {
-              containerRef.current.scrollTop = isAtBottom ? containerRef.current.scrollHeight : scrollPosition;
-            }
-          }, 0);
-          return newCapsules;
-        });
-        setPage(prevPage => resetPage ? 2 : prevPage + 1);
-      }
-    } catch (err) {
-      setError('캡슐을 불러오는 데 실패했습니다.');
-      console.error('Error fetching capsules:', err);
-    } finally {
-      setLoading(false);
-      loadingRef.current = false;
-    }
-  }, [isAllView, selectedYear, selectedMonth, page, hasMore, scrollPosition, isAtBottom]);
+    },
+    [
+      isAllView,
+      selectedYear,
+      selectedMonth,
+      page,
+      hasMore,
+      scrollPosition,
+      isAtBottom,
+    ]
+  );
 
   useEffect(() => {
     setHasMore(true);
@@ -161,10 +180,32 @@ const MyCapsulePage = () => {
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => container.removeEventListener('scroll', handleScroll);
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
     }
   }, [handleScroll]);
+
+  // 수현쓰
+  // 페이지 로드 시 쿼리 파라미터에서 date 값을 가져와 해당 날짜로 이동
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const dateParam = params.get("date");
+
+    if (dateParam) {
+      const [year, month] = dateParam.split("-");
+      setSelectedYear(parseInt(year, 10));
+      setSelectedMonth(parseInt(month, 10));
+      setIsAllView(false);
+    } else {
+      setSelectedYear(new Date().getFullYear());
+      setSelectedMonth(new Date().getMonth() + 1);
+    }
+
+    setHasMore(true);
+    fetchCapsules(true);
+  }, [isAllView]);
+
+  ///
 
   const toggleDateSort = () => {
     setIsDateSortOpen(!isDateSortOpen);
@@ -205,7 +246,10 @@ const MyCapsulePage = () => {
     }
 
     // 현재 날짜보다 미래인 경우 변경하지 않음
-    if (newYear > currentYear || (newYear === currentYear && newMonth > currentMonth)) {
+    if (
+      newYear > currentYear ||
+      (newYear === currentYear && newMonth > currentMonth)
+    ) {
       return;
     }
 
@@ -214,7 +258,7 @@ const MyCapsulePage = () => {
 
   const getTitleText = () => {
     if (isAllView) {
-      return '전체조회';
+      return "전체조회";
     }
     return `${selectedYear}년 ${selectedMonth}월`;
   };
@@ -224,37 +268,47 @@ const MyCapsulePage = () => {
       <Container ref={containerRef}>
         <ContentWrapper>
           <Title>
-          <TitleText>
-              <img src={LeftButton} alt="이전 달" onClick={() => changeMonth(-1)} />
+            <TitleText>
+              <img
+                src={LeftButton}
+                alt="이전 달"
+                onClick={() => changeMonth(-1)}
+              />
               <span onClick={toggleDateSort}>{getTitleText()}</span>
-              <img src={RightButton} alt="다음 달" onClick={() => changeMonth(1)} />
+              <img
+                src={RightButton}
+                alt="다음 달"
+                onClick={() => changeMonth(1)}
+              />
             </TitleText>
           </Title>
-          
+
           {loading && <p>로딩 중...</p>}
           {error && <p>{error}</p>}
-          {!loading && !error && capsules.map((item) => (
-            <React.Fragment key={item.id}>
-              <DateLabelContainer>
-                <DateLabel>{item.date}</DateLabel>
-              </DateLabelContainer>
-              <CapsuleCard 
-                title={item.title}
-                amount={String(item.amount).slice(1)}
-                imageUrl={item.imageUrl}
-                iconUrl={item.iconUrl}
-                content={item.content}
-              />
-            </React.Fragment>
-          ))}
+          {!loading &&
+            !error &&
+            capsules.map((item) => (
+              <React.Fragment key={item.id}>
+                <DateLabelContainer>
+                  <DateLabel>{item.date}</DateLabel>
+                </DateLabelContainer>
+                <CapsuleCard
+                  title={item.title}
+                  amount={String(item.amount).slice(1)}
+                  imageUrl={item.imageUrl}
+                  iconUrl={item.iconUrl}
+                  content={item.content}
+                />
+              </React.Fragment>
+            ))}
           {!hasMore && <p>더 이상 캡슐이 없습니다.</p>}
         </ContentWrapper>
-        
+
         {isDateSortOpen && (
           <>
             <BlurOverlay />
-            <DateSortPopUp 
-              onClose={toggleDateSort} 
+            <DateSortPopUp
+              onClose={toggleDateSort}
               onSelectMonth={handleMonthSelect}
               initialYear={selectedYear}
               onSelectAllView={handleSelectAllView}

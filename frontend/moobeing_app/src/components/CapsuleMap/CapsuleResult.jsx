@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-
+import { useNavigate } from "react-router-dom";
 const Card = styled.div`
   width: 300px;
   height: auto;
@@ -83,6 +83,14 @@ const OpenButton = styled.button`
 `;
 
 const CapsuleResult = ({ response }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    const formattedDate = response.date.slice(0, 7);
+    console.log(response);
+    console.log(formattedDate);
+    navigate(`/my-capsule?date=${formattedDate}`);
+  };
+
   return (
     <Card>
       <TransactionInfoContainer>
@@ -97,7 +105,7 @@ const CapsuleResult = ({ response }) => {
         <CharacterImage src={response.imageUrl} alt="캡슐 이미지" />
       </ImageContainer>
 
-      <OpenButton>열기</OpenButton>
+      <OpenButton onClick={handleClick}>열기</OpenButton>
     </Card>
   );
 };

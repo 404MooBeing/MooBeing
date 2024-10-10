@@ -24,11 +24,12 @@ const Date = styled.p`
   margin-top: 0%;
 `;
 
-function Planted() {
+function Planted({ response }) {
   const navigate = useNavigate();
   const { harvestAt } = useCapsuleStore();
   const handleClick = () => {
-    navigate("/my-map");
+    console.log("방금심긴무 위치값 전달할 response", response);
+    navigate("/my-map", { state: { justPlantedLocation: response } });
   };
 
   return (

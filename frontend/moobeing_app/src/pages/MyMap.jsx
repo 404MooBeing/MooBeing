@@ -1,25 +1,13 @@
 /* global kakao */
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import styled, { keyframes } from "styled-components";
+import { useLocation } from "react-router-dom";
 import { postCapsulesOnMap } from "../apis/CapsuleApi";
 import NotGrownYetPopup from "../components/CapsuleMap/popups/NotGrownYet";
 import NotOpenedYetPopup from "../components/CapsuleMap/popups/NotOpenedYet";
 import OpenedPopup from "../components/CapsuleMap/popups/Opened";
 import NotGrownImg from "../assets/capsules/NotGrownYet.png";
 import FindingLocation from "../components/CapsuleChooseLocation/FindingLocation";
-
-// 애니메이션 정의
-const bounce = keyframes`
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
-`;
 
 const shake = keyframes`
   0%, 100% { transform: translateX(0); }
@@ -35,22 +23,9 @@ const MapWrapper = styled.div`
   animation: ${({ isShaking }) => (isShaking ? shake : "none")} 0.5s;
 `;
 
-const LoadingWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  z-index: 1000;
-`;
-
 function MyMap() {
-  const [markers, setMarkers] = useState([]);
+  const location = useLocation();
+  const justPlantedLocation = location.state?.justPlantedLocation || null;
   const [userLocation, setUserLocation] = useState(null);
   const [popupData, setPopupData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,6 +42,7 @@ function MyMap() {
   };
 
   useEffect(() => {
+    console.log(justPlantedLocation);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -111,25 +87,37 @@ function MyMap() {
   const initializeMap = () => {
     if (!mapRef.current) return;
 
+    // 지도 중심을 justPlantedLocation으로 설정하고, circle은 userLocation을 사용
+    const centerCoords = justPlantedLocation
+      ? new kakao.maps.LatLng(justPlantedLocation.lat, justPlantedLocation.lng)
+      : new kakao.maps.LatLng(userLocation.lat, userLocation.lng);
+
     const mapOptions = {
-      center: new kakao.maps.LatLng(userLocation.lat, userLocation.lng),
+      center: centerCoords,
       level: 3,
     };
 
     mapInstance.current = new kakao.maps.Map(mapRef.current, mapOptions);
 
-    const circle = new kakao.maps.Circle({
-      center: new kakao.maps.LatLng(userLocation.lat, userLocation.lng),
-      radius: 10,
-      strokeWeight: 2,
-      strokeColor: "#ff0000",
-      strokeOpacity: 0.8,
-      fillColor: "#ff0000",
-      fillOpacity: 0.4,
-    });
+    // 현재 위치를 나타내는 circle만 표시
+    if (userLocation) {
+      const userCoords = new kakao.maps.LatLng(
+        userLocation.lat,
+        userLocation.lng
+      );
+      const circle = new kakao.maps.Circle({
+        center: userCoords,
+        radius: 10,
+        strokeWeight: 2,
+        strokeColor: "#ff0000",
+        strokeOpacity: 0.8,
+        fillColor: "#ff0000",
+        fillOpacity: 0.4,
+      });
 
-    circle.setMap(mapInstance.current);
-    userMarkerRef.current = circle;
+      circle.setMap(mapInstance.current);
+      userMarkerRef.current = circle;
+    }
 
     kakao.maps.event.addListener(mapInstance.current, "bounds_changed", () => {
       const bounds = mapInstance.current.getBounds();
