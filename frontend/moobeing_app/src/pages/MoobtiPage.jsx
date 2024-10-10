@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import html2canvas from "html2canvas";
+// import html2canvas from "html2canvas";
+import domtoimage from "dom-to-image";
 import saveAs from "file-saver";
 import { useRef, useState } from "react";
 import { useEffect } from 'react';
@@ -8,6 +9,7 @@ import MoobtiCard from '../components/Moobti/MoobtiCard';
 import useUserStore from '../store/UserStore';
 import dayjs from "dayjs";
 import { getMoobti } from "../apis/MoobtiApi";
+import { SyncLoader } from "react-spinners"
 
 const Screen = styled.div`
   display: flex;
@@ -69,26 +71,52 @@ const MoobtiPage = () => {
     fetchData();
   }, []);
 
+  // const handleDownload = async () => {
+  //   if (!divRef.current) return;
+  
+  //   try {
+  //     document.fonts.ready.then(async () => {
+  //       const canvas = await html2canvas(divRef.current, { scale: 3 });
+  //       canvas.toBlob((blob) => {
+  //         if (blob !== null) {
+  //           saveAs(blob, "moobti_result.png");
+  //         }
+  //       });
+  //     });
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
+
   const handleDownload = async () => {
     if (!divRef.current) return;
   
     try {
-      document.fonts.ready.then(async () => {
-        const canvas = await html2canvas(divRef.current, { scale: 3 });
-        canvas.toBlob((blob) => {
-          if (blob !== null) {
-            saveAs(blob, "moobti_result.png");
-          }
-        });
+      document.fonts.ready.then(() => {
+        domtoimage.toBlob(divRef.current)
+          .then(blob => {
+            if (blob !== null) {
+              saveAs(blob, "moobti_result.png");
+            }
+          })
+          .catch((error) => {
+            console.error("Error generating image:", error);
+          });
       });
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  if (!data) return <div>로딩 중...</div>;
 
-  const currentMonth = dayjs().format("MM");
+  if (!data) 
+    return (  
+    <PageContainer>
+      <SyncLoader color="#348833" size={8} />
+    </PageContainer>
+    );
+
+  const currentMonth = dayjs().format("MM") - 1;
 
   return (
     <Screen>

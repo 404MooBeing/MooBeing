@@ -28,7 +28,7 @@ const TitleContent = styled.div`
 const SelectDate = styled.div`
   font-weight: 600;
   margin-left: 8px;
-  font-size: 16px;
+  font-size: 15px;
 `;
 
 const LoanSort = styled.button`

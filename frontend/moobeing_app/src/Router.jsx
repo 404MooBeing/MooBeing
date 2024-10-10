@@ -59,6 +59,56 @@ function Router() {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
+  // 허용된 경로 설정
+  const allowedRoutes = [
+    "/",
+    "/login",
+    "/signup",
+    "/welcome",
+    "/alarm",
+    "/choose-character",
+    "/choose-location",
+    "/capsule-harvest",
+    "/capsule-intro",
+    "/capsule-create",
+    "/capsule-planting",
+    "/capsule-search",
+    "/coin-exchange",
+    "/coin",
+    "/get-radish",
+    "/total-journey",
+    "/each-journey/:loanName",
+    "/loan",
+    "/loan-payment",
+    "/menu",
+    "/moobti",
+    "/my-capsule",
+    "/my-map",
+    "/user",
+    "/password-change",
+    "/quiz",
+    "/economy-quiz",
+    "/quiz/result/:quizId",
+    "/spend",
+    "/transaction-history/:accountId",
+    "/chatbot",
+  ];
+
+  // 잘못된 경로 접근 시 경고창 표시 및 리다이렉트
+  useEffect(() => {
+    if (!allowedRoutes.includes(location.pathname)) {
+      window.alert("잘못된 접근입니다."); // 경고창 표시
+
+      if (userInfo) {
+        // 로그인이 되어 있으면 홈으로 리다이렉트
+        navigate("/", { replace: true });
+      } else {
+        // 로그인이 되어 있지 않으면 로그인 페이지로 리다이렉트
+        navigate("/login", { replace: true });
+      }
+    }
+  }, [location.pathname, userInfo, navigate]);
+
   useEffect(() => {
     // 사용자가 로그인하지 않은 경우에만 로딩 페이지를 표시
     if (!userInfo && location.pathname !== "/signup") {
@@ -132,22 +182,27 @@ function Router() {
       setIsDragging(false);
     };
 
-  // 페이지 이동 시 챗봇 다시 표시
-  useEffect(() => {
-    if (chatbotRoutes.includes(location.pathname)) {
-      setShowChatbot(true); // 페이지가 변경될 때 챗봇 다시 표시
-    }
-  }, [location.pathname]);
+    // 페이지가 변경될 때마다 챗봇 위치를 초기화
+    useEffect(() => {
+      setPosition({ bottom: 90, right: 23 }); // 기본 위치로 초기화
+    }, [location.pathname]);
 
-  // 챗봇 클릭 시 챗봇 페이지로 이동
-  const handleChatbotClick = () => {
-    navigate("/chatbot");
-  };
+    // 페이지 이동 시 챗봇 다시 표시
+    useEffect(() => {
+      if (chatbotRoutes.includes(location.pathname)) {
+        setShowChatbot(true); // 페이지가 변경될 때 챗봇 다시 표시
+      }
+    }, [location.pathname]);
 
-  // 챗봇 닫기 버튼 클릭 시 챗봇 숨김
-  const handleChatbotClose = () => {
-    setShowChatbot(false);
-  };
+    // 챗봇 클릭 시 챗봇 페이지로 이동
+    const handleChatbotClick = () => {
+      navigate("/chatbot");
+    };
+
+    // 챗봇 닫기 버튼 클릭 시 챗봇 숨김
+    const handleChatbotClose = () => {
+      setShowChatbot(false);
+    };
 
   return (
     <>

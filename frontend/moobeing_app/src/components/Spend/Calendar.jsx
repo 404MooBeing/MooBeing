@@ -40,7 +40,7 @@ const CalendarContainer = styled.div`
   .MuiPickersCalendarHeader-root {
     margin-top: 8px;
     margin-bottom: 8px;
-    padding-left: 15px;
+    padding-left: 10px;
     padding-right: 0px;
   }
   .MuiDayCalendar-weekContainer {
@@ -50,7 +50,7 @@ const CalendarContainer = styled.div`
   .MuiDayCalendar-weekDayLabel {
     font-size: 16px;
     font-weight: 600;
-    margin: 0px 10px;
+    margin: 0px 12px;
   }
   .MuiPickersDay-root {
     font-size: 15px;
