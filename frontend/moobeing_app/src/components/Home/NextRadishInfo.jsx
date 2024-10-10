@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { differenceInSeconds, intervalToDuration } from "date-fns";
-import basicRadish from "../../assets/radishes/basicRad.png";
+import basicRadish from "../../assets/radishes/basicRad.svg";
 import { getRadishSummary } from "../../apis/RadishApi";
 import useUserStore from "../../store/UserStore";
 

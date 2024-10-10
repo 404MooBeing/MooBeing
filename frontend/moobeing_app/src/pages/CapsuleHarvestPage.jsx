@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { postHarvestCapsule } from "../apis/CapsuleApi";
 import confetti from "canvas-confetti";
 import soil from "../assets/capsules/Soil.png";
-import radish from "../assets/radishes/basicRad.png";
+import radish from "../assets/radishes/basicRad.svg";
 import CapsuleResult from "../components/CapsuleMap/CapsuleResult";
 
 const Container = styled.div`

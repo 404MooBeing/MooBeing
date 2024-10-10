@@ -6,7 +6,7 @@ import leftButton from "../../assets/button/leftButton.svg";
 import rightButton from "../../assets/button/rightButton.svg";
 import leftButtonBlack from "../../assets/button/leftButtonBlack.svg";
 import rightButtonBlack from "../../assets/button/rightButtonBlack.svg";
-import basicRad from "../../assets/radishes/basicRad.png";
+import basicRad from "../../assets/radishes/basicRad.svg";
 import ibk from "../../assets/banks/금융아이콘_SVG_IBK.svg";
 import kb from "../../assets/banks/금융아이콘_SVG_KB.svg";
 import mg from "../../assets/banks/금융아이콘_SVG_MG새마을금고.svg";

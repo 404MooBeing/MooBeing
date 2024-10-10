@@ -6,7 +6,7 @@ import leisureIcon from "../../assets/SpendIcons/leisureIcon.png";
 import loanIcon from "../../assets/SpendIcons/loanIcon.png";
 import pleasureIcon from "../../assets/SpendIcons/pleasureIcon.png";
 import trafficIcon from "../../assets/SpendIcons/trafficIcon.png";
-import basicRad from "../../assets/radishes/basicRad.png";
+import basicRad from "../../assets/radishes/basicRad.svg";
 import useSpendStore from "../../store/SpendStore";
 
 const iconMapping = {
