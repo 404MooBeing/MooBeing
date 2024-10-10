@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -38,6 +39,7 @@ public class S3Service {
     }
 
     public String uploadImage(MultipartFile file) {
+        if (Objects.isNull(file)) return "";
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
             throw new BadRequestException(ErrorCode.BAD_REQUEST);

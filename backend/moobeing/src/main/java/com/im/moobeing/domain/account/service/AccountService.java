@@ -241,7 +241,7 @@ public class AccountService {
 				.member(member)
 				.title("로또 당첨")
 				.price(depositRequest.getTransactionBalance())
-				.remainBalance(depositRequest.getTransactionBalance() + account.getAccountBalance())
+				.remainBalance(account.getAccountBalance())
 				.build();
 
 		dealRepository.save(deal);
