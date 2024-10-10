@@ -111,12 +111,12 @@ function CapsuleChooseLocationPage() {
             lng: position.coords.longitude,
           };
           setUserLocation(userCoords);
-          setMapCenter(userCoords); // 초기 지도 중심을 사용자 위치로 설정
+          setMapCenter(userCoords);
           setCustomMarkers([
             {
               lat: userCoords.lat,
               lng: userCoords.lng,
-              imageUrl: CurrentLocationIcon, // 마커 타입을 구분
+              imageUrl: CurrentLocationIcon,
             },
           ]);
 
@@ -211,7 +211,9 @@ function CapsuleChooseLocationPage() {
       try {
         const formData = new FormData();
         formData.append("dealId", dealId);
-        formData.append("imgFile", imgFile);
+        if (imgFile) {
+          formData.append("imgFile", imgFile); // imgFile이 있을 때만 추가
+        }
         formData.append("description", description);
         formData.append("type", type);
         formData.append("lat", selectedPlace.y);
