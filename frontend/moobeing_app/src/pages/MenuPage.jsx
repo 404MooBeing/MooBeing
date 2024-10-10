@@ -72,8 +72,8 @@ const SearchContainer = styled.div`
   box-sizing: border-box;
   overflow: hidden;
 
-  @media (max-width: 500px) {
-    max-width: 350px;/* 모바일 화면에서 너비 조정 */
+  @media (max-width: 400px) {
+    max-width: 300px;/* 모바일 화면에서 너비 조정 */
     padding-right: 10px;
   }
 `;

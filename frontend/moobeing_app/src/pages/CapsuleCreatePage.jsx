@@ -100,10 +100,15 @@ const TextForm = styled.div`
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   position: relative;
+
+  /* Flexbox 설정 */
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
 `;
 
 const TextArea = styled.textarea`
-  width: 98%;
+  width: 100%;
   height: calc(100% - 20px);
   border: none;
   background-color: transparent;

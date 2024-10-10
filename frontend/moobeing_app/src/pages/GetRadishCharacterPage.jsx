@@ -219,7 +219,7 @@ function GetRadishCharacter() {
         fireConfetti();
         setTimeout(() => {
           handleCollectionClick(); // 3초 후 자동으로 페이지 이동
-        }, 3000);
+        }, 5000);
       }, 500);
     }
   }, [pullCount]);
