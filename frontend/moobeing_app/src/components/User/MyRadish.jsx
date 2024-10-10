@@ -1,6 +1,17 @@
 import React, { useState, useEffect, useMemo } from "react";
 import styled, { keyframes, css } from "styled-components";
 // import MonthlyRecord from "../components/Radish/MonthlyRecord";
+import aniRad from "../../assets/radishes/aniRad.png"
+import babyRad from "../../assets/radishes/babyRad.png"
+import basicRad from "../../assets/radishes/basicRad.png"
+import blushRad from "../../assets/radishes/blushRad.png"
+import flippedRad from "../../assets/radishes/flippedRad.png"
+import hairlotRad from "../../assets/radishes/hairlotRad.png"
+import musinsaRad from "../../assets/radishes/musinsaRad.png"
+import rainbowRad from "../../assets/radishes/rainbowRad.png"
+import vacationRad from "../../assets/radishes/vacationRad.png"
+import weightRad from "../../assets/radishes/weightRad.png"
+
 import {
   getUserRadishCollection,
   selectRadish,
@@ -9,6 +20,19 @@ import {
 import useUserStore from "../../store/UserStore";
 import checkBox from "../../assets/checkBox.svg";
 import { useNavigate } from "react-router-dom";
+
+const Radishs = {
+  aniRad: aniRad,
+  babyRad: babyRad,
+  basicRad: basicRad,
+  blushRad: blushRad,
+  flippedRad: flippedRad,
+  hairlotRad: hairlotRad,
+  musinsaRad: musinsaRad,
+  rainbowRad: rainbowRad,
+  vacationRad: vacationRad,
+  weightRad: weightRad,
+};
 
 const Container = styled.div`
   width: 100%;
@@ -385,11 +409,11 @@ const MyRadish = () => {
                   <ExplosionEffect />
                   <SmokeEffect />
                   <NewCharacterEffect>
-                    <CharacterImage src={char.radishImageUrl} />
+                    <CharacterImage src={Radishs[char.radishImageUrl]} />
                   </NewCharacterEffect>
                 </AnimationContainer>
               ) : (
-                <CharacterImage src={char.radishImageUrl} />
+                <CharacterImage src={Radishs[char.radishImageUrl]} />
               )}
               <CharacterName rank={char.radishRank}>
                 {char.radishName}
