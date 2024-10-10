@@ -61,14 +61,14 @@ const DateInfo = styled.p`
 const NextButton = styled.button`
   width: 80%;
   max-width: 500px;
-  background-color: #e0eed2;
+  background-color: ${(props) => (props.disabled ? "#cccccc" : "#e0eed2")};
   color: black;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
   font-weight: bold;
   border-radius: 5px;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   position: absolute;
   bottom: 15%;
   left: 50%;
@@ -223,7 +223,9 @@ function ChooseCharacter() {
           {getHarvestDate(sizes[currentSize].day)}에 수확가능해요!
         </DateInfo>
       )}
-      <NextButton onClick={handleNext}>다음</NextButton>
+      <NextButton onClick={handleNext} disabled={currentSize === null}>
+        다음
+      </NextButton>
     </Container>
   );
 }
