@@ -7,10 +7,11 @@ public record CharactersResponse(
         String radishName,
         String radishImageUrl,
         Long count,
-        String radishRank
+        String radishRank,
+        Long coin
 
 ) {
     public static CharactersResponse of(Radish radish, Long count) {
-        return new CharactersResponse(radish.getId(), radish.getRadishName(), radish.getRadishImageUrl(), count, radish.getRadishRank());
+        return new CharactersResponse(radish.getId(), radish.getRadishName(), radish.getRadishImageUrl(), count, radish.getRadishRank(), radish.getCoin());
     }
 }

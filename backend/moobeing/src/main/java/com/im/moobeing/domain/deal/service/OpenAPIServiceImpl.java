@@ -145,7 +145,7 @@ public class OpenAPIServiceImpl implements OpenAPIService {
         "건강도, 재정도 안정적으로 관리하는 분이시네요! 균형 잡힌 삶을 추구하는 모습이 멋집니다.",
         "건강과 재정적 안정을 꼼꼼히 챙기시는 분이시네요! 든든한 삶을 사는 분입니다.",
         "건강을 잘 챙기면서도 여유로운 삶을 추구하는 분이시네요! 몸과 마음이 모두 건강합니다.",
-        "새로운 것에 도전하는 분이시네요! 미식과 문화를 탐험하며 끊임없이 새로운 경험을 쌓아가십니다.",
+        "새로운 것에 도전하는 분이시네요! 미식과 문화를 탐험하며 끊임없이 새로운 경험을 쌓아가십니다.", // 모험가무
         "대출 걱정 없이 여가와 즐거움을 누리며 인생을 여유롭게 사시는 분이시네요!",
         "미식과 여가를 즐기며 소소한 행복을 누리시는 분이군요! 여유롭고 맛있는 삶을 사시는 모습입니다.",
         "건강도 챙기면서 문화를 탐험하시는 멋진 분이시네요! 균형 잡힌 모험을 즐기시는 모습입니다.",
@@ -160,6 +160,40 @@ public class OpenAPIServiceImpl implements OpenAPIService {
         "모든 것을 균형 있게! 고르게 소비하면서도 알찬 생활을 유지하는 분이십니다."
     };
 
+    private final static String[] images = new String[] {
+            "jjantechgosu",
+            "misicktamnick",
+            "jjantechgosu",
+            "jjantechgosu",
+            "futureready",
+            "jjantechgosu",
+            "jjantechgosu",
+            "munhwamisick",
+            "Flex",
+            "munhwamisick",
+            "munhwamisick",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "mohumga",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "husick",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "jjantechgosu",
+            "balancesaenghwal"
+    };
     @Override
     public MoobtiResponse getMoobti(Member member) {
         // 사용자 정보 넣는 부분 추가
@@ -198,7 +232,7 @@ public class OpenAPIServiceImpl implements OpenAPIService {
         }
         MoobtiCharacterDto moobtiCharacterDto = MoobtiCharacterDto.builder()
                                                                   .type("소비 유형")
-                                                                  .imageUrl("FlexRad")
+                                                                  .imageUrl(images[idx] + "Rad")
                                                                   .name(names[idx])
                                                                   .description(descriptions[idx])
                                                                   .build();
