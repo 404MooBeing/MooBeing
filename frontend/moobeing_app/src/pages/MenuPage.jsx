@@ -134,7 +134,8 @@ const MenuPage = () => {
     { name: '내 무 ZIP', path: '/user?tab=collection' },
     { name: '내 무 캡슐', path: '/my-capsule' },
     { name: '내 무비티아이', path: '/moobti' },
-    { name: '챗봇', path: '/quiz' },
+    { name: '소비 퀴즈', path: '/quiz' },
+    { name: '챗봇', path: '/chatbot' },
   ];
 
   const getChosung = (str) => {
