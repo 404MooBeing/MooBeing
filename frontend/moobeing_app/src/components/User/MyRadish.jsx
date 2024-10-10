@@ -72,7 +72,7 @@ const CharacterCard = styled.div`
   max-width: 180px;
   height: 170px;
   margin-bottom: 30px;
-  margin-left: 5px;
+  margin-left: 10px;
   background-color: #f5fded;
   display: flex;
   flex-direction: column;
