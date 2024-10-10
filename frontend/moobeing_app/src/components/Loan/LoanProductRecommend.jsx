@@ -3,6 +3,7 @@ import styled, { keyframes, css } from "styled-components";
 import closeButton from "../../assets/button/closeButton.svg";
 import shinHan from "../../assets/banks/금융아이콘_SVG_신한.svg";
 import hana from "../../assets/banks/금융아이콘_SVG_하나.svg";
+import useUserStore from "../../store/UserStore";
 
 const fadeOut = keyframes`
   from {
@@ -117,6 +118,9 @@ const ApplyButton = styled.button`
 const LoanProductRecommend = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
+  const { 
+    userInfo, 
+  } = useUserStore();
 
   const handleClose = () => {
     setIsClosing(true);
@@ -137,7 +141,7 @@ const LoanProductRecommend = () => {
       <CloseButton onClick={handleClose}>
         <CloseImg src={closeButton} alt="닫기" />
       </CloseButton>
-      <Title>싸피님 추천 대출 상품</Title>
+      <Title><span className="userName">{userInfo.name}</span>님 추천 대출 상품</Title>
         {dummyProducts.map((product, index) => (
           <ProductItem key={index}>
             <ProductInfo>
