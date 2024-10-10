@@ -16,8 +16,10 @@ public class DealHistoryResponse {
 	public static DealHistoryResponse of(Deal deal) {
 		return new DealHistoryResponse(
 				deal.getTitle(),
-				deal.getDealCategory().getDescription() == null ? "수입" : deal.getDealCategory().getDescription(),
-				Objects.equals(deal.getDealCategory().getDescription(), "대출") ? -deal.getPrice() : deal.getPrice());
+				deal.getDealCategory() == null ? "수입" : deal.getDealCategory().getDescription(),
+				deal.getDealCategory() == null ? deal.getPrice() : (
+						Objects.equals("대출", deal.getDealCategory().getDescription()) ? -deal.getPrice() : deal.getPrice()
+				));
 	}
 
 	public static DealHistoryResponse from(String title, String categoryName, Long price) {
