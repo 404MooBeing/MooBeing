@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useMemo } from "react";
 import styled, { keyframes, css } from "styled-components";
 // import MonthlyRecord from "../components/Radish/MonthlyRecord";
-import aniRad from "../../assets/radishes/aniRad.png"
-import babyRad from "../../assets/radishes/babyRad.png"
-import basicRad from "../../assets/radishes/basicRad.svg"
-import blushRad from "../../assets/radishes/blushRad.png"
-import flippedRad from "../../assets/radishes/flippedRad.png"
-import hairlotRad from "../../assets/radishes/hairlotRad.png"
-import musinsaRad from "../../assets/radishes/musinsaRad.png"
-import rainbowRad from "../../assets/radishes/rainbowRad.png"
-import vacationRad from "../../assets/radishes/vacationRad.png"
-import weightRad from "../../assets/radishes/weightRad.png"
+import aniRad from "../../assets/radishes/aniRad.png";
+import babyRad from "../../assets/radishes/babyRad.png";
+import basicRad from "../../assets/radishes/basicRad.svg";
+import blushRad from "../../assets/radishes/blushRad.png";
+import flippedRad from "../../assets/radishes/flippedRad.png";
+import hairlotRad from "../../assets/radishes/hairlotRad.png";
+import musinsaRad from "../../assets/radishes/musinsaRad.png";
+import rainbowRad from "../../assets/radishes/rainbowRad.png";
+import vacationRad from "../../assets/radishes/vacationRad.png";
+import weightRad from "../../assets/radishes/weightRad.png";
+import { SyncLoader } from "react-spinners";
 
 import {
   getUserRadishCollection,
@@ -113,11 +114,20 @@ const CharacterCard = styled.div`
     `
       filter: drop-shadow(0 0 8px #348833);
     `}
-
   @media (max-width: 400px) {
     width: calc(50% - 7px);
     margin-left: 5px;
   }
+`;
+
+const LoaderContainer = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8); /* 투명 배경을 사용하여 로딩 중임을 표시 */
 `;
 
 const CharacterImage = styled.img`
@@ -385,6 +395,12 @@ const MyRadish = () => {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [showInfoCard, setShowInfoCard] = useState(false); // Info 카드 상태 관리
   const navigate = useNavigate();
+  const [imageLoading, setImageLoading] = useState(true); // 이미지 로딩 상태 관리 추가
+
+  // 이미지 로드 완료 핸들러
+  const handleImageLoad = () => {
+    setImageLoading(false); // 이미지 로드 완료 시 로딩 상태 업데이트
+  };
 
   const handleInfoClick = () => {
     setShowInfoCard(true); // Info 카드 표시
@@ -546,11 +562,22 @@ const MyRadish = () => {
                   <ExplosionEffect />
                   <SmokeEffect />
                   <NewCharacterEffect>
-                    <CharacterImage src={char.radishImageUrl} />
+                    <CharacterImage src={char.radishImageUrl} onLoad={handleImageLoad} />
                   </NewCharacterEffect>
                 </AnimationContainer>
               ) : (
-                <CharacterImage src={char.radishImageUrl} />
+                <>
+                {imageLoading && ( // 이미지 로딩 중일 때 로더를 표시
+                  <LoaderContainer>
+                    <SyncLoader color="#348833" size={10} />
+                  </LoaderContainer>
+                )}
+                <CharacterImage
+                  src={char.radishImageUrl}
+                  onLoad={handleImageLoad} // 이미지 로드 완료 시 호출
+                  style={{ display: imageLoading ? "none" : "block" }} // 이미지가 로드될 때까지 숨김
+                />
+              </>
               )}
               <CharacterName rank={char.radishRank}>
                 {char.radishName}

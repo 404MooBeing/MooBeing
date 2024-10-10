@@ -81,6 +81,7 @@ const Button = styled.button`
   width: 170px;
   margin-left: auto;
   margin-right: auto;
+  font-family: 'mainFont';
 
   &:hover {
     background-color: #45a049;

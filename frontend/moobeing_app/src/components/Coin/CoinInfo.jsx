@@ -34,8 +34,8 @@ const RadishCoinImage = styled.div`
   background-image: url(${RadishCoinImg});
   background-size: cover;
   background-position: center;
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   margin-right: 10px;
 `;
 
@@ -70,11 +70,11 @@ const CoinBox = styled.div`
 
 const Label = styled.div`
   font-weight: bold;
-  font-size: 20px;
+  font-size: 18px;
 `;
 
 const Value = styled.div`
-  font-size: 20px;
+  font-size: 17px;
   text-align: right;
 `;
 
@@ -148,7 +148,7 @@ const CoinInfo = ({
             <RadishCoinImage />
             <Label>무 코인</Label>
           </RadishCoinText>
-          <Value>{coinCount}개</Value>
+          <Value>{coinCount.toLocaleString()}개</Value>
         </RadishCoin>
         <RadishCoinBtn onClick={() => {navigate('/coin-exchange')}}>송금하기</RadishCoinBtn>
       </CoinBox>

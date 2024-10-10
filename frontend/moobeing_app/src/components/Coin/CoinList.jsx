@@ -89,7 +89,7 @@ const CoinList = ({ isRadishSelected, sortCriteria, coinList, lastCoinElementRef
                 <Title>{Coin.amount > 0 ? "코인 적립" : "코인 사용"}</Title>
               </TitleAndTime>
               <AmountAndRemain>
-                <Amount amount={Coin.amount}>
+                <Amount amount={Coin.amount.toLocaleString()}>
                   {Coin.amount.toLocaleString()} 개
                 </Amount>
                 <Remain>잔액 {Coin.remainBalance} 개</Remain>

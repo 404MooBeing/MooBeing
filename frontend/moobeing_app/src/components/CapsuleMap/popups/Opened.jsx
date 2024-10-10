@@ -45,6 +45,8 @@ const CloseButton = styled.button`
   align-items: center;
   cursor: pointer;
   font-size: 14px;
+  color: black;
+  font-family: 'mainFont';
 `;
 
 const HarvestButton = styled.button`
@@ -58,6 +60,7 @@ const HarvestButton = styled.button`
   cursor: pointer;
   margin-top: 15px;
   border: none;
+  font-family: 'mainFont';
 
   &:hover {
     background-color: #45a049;
