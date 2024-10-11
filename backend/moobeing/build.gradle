@@ -1,0 +1,79 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.2'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.im'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springCloudVersion', "2023.0.3")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// spring security
+	implementation 'org.springframework.security:spring-security-web:6.2.4'
+	implementation 'org.springframework.security:spring-security-config:6.2.4'
+
+	// mysql and jdbc
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// swagger (http://localhost:8080/api/swagger-ui/index.html)
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+	// Feign 클라이언트
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+	// OkHttp3 라이브러리
+	implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+
+	// Feign OkHttp 통합
+	implementation 'io.github.openfeign:feign-okhttp:11.10'
+
+	// healthCheck
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	// S3
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.772'
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+	implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+
+	// FCM
+	implementation 'com.google.firebase:firebase-admin:7.1.1'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
