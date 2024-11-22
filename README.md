@@ -34,7 +34,7 @@ Moobeing은 사용자가 자신의 금융 생활을 보다 쉽게 관리하고, 
     - 지출 내역 분석을 통해 대출 상환을 독려
 
 ## 서비스 시연 영상
-<a href="https://youtu.be/zOCYsZlarX8">시연 영상 보러 가기</a>
+- 🎞<a href="https://youtu.be/zOCYsZlarX8">시연 영상 보러 가기</a>🎞
 
 ## 타 서비스와의 차별성
 
